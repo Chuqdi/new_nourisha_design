@@ -8,11 +8,15 @@ import { BREAKPOINT } from "@/config";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import MainAccount from "../sections/Modals/AccountModals/Main";
+import { useState } from "react";
+import MobileNavbar from "./MobileNavbar";
+import { AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const navbarOptions = useNavbar();
+  const [showMobileNavbar, setMobileNavbar] = useState(false);
   const sideBarOptions = [
     {
       image: "cart.svg",
@@ -82,7 +86,10 @@ export default function Navbar() {
         )}
 
         {isMobile && (
-          <button className="w-[2rem] h-[2rem] rounded-[2rem] bg-[#F2F4F7] flex justify-center items-center">
+          <button
+            onClick={() => setMobileNavbar(true)}
+            className="w-[2rem] h-[2rem] rounded-[2rem] bg-[#F2F4F7] flex justify-center items-center"
+          >
             <Icon
               color="#FE7E00"
               className="text-[1.25rem]"
@@ -91,6 +98,10 @@ export default function Navbar() {
           </button>
         )}
       </div>
+
+      <AnimatePresence>
+        {isMobile && showMobileNavbar && <MobileNavbar close={()=> setMobileNavbar(false)}/>}
+      </AnimatePresence>
     </div>
   );
 }
