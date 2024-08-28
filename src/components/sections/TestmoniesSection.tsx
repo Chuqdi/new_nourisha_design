@@ -1,8 +1,8 @@
-import { Ratings } from "@/app/page";
 import "react-multi-carousel/lib/styles.css";
 import Carousel from "react-multi-carousel";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
+import Ratings from "../ui/Rating";
 
 const responsive = {
   desktop: {
@@ -26,8 +26,8 @@ export default function TestmoniesSection() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return isMobile ? (
     <div className="flex flex-col gap-3 p-2 md:p-0">
-      {[1, 2, 3].map(() => (
-        <div className="w-full bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
+      {[1, 2, 3].map((_,index) => (
+        <div key={`mobile_carousel_item_${index}`} className="w-full bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
           <div className="flex items-center gap-3">
             <Ratings />
           </div>
@@ -49,8 +49,8 @@ export default function TestmoniesSection() {
   ) : (
     <Carousel
      responsive={responsive} autoPlay swipeable>
-      {[1, 2, 3].map(() => (
-        <div className="w-[25rem] mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
+      {[1, 2, 3].map((_,index) => (
+        <div key={`carousel_item_${index}`} className="w-[25rem] mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
           <div className="flex items-center gap-3">
             <Ratings />
           </div>
@@ -69,8 +69,8 @@ export default function TestmoniesSection() {
         </div>
       ))}
 
-      {[1, 2, 3].map(() => (
-        <div className="w-[25rem]  mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
+      {[1, 2, 3].map((_,index) => (
+        <div key={`item_${index}`} className="w-[25rem]  mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col">
           <div className="flex items-center gap-3">
             <Ratings />
           </div>

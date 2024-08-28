@@ -14,7 +14,7 @@ export default function RequestQuoteModal({ close }:{ close:()=> void }) {
         </h3>
         <p className="font-inter text-base text-black-900 tracking-[-0.015rem] leading-[1.5rem]">
           Please provide us with some details to get started. Fill out the form
-          below, and we'll be in touch with a menu proposal that suits your
+          below, and we{"'"}ll be in touch with a menu proposal that suits your
           event perfectly.
         </p>
       </div>

@@ -3,6 +3,7 @@ import Navbar from "@/components/commons/Navbar";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
 import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
 import Button from "@/components/ui/Button";
+import SelectChip from "@/components/ui/SelectChip";
 import { COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -11,101 +12,74 @@ import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+const SingleWeekendBreakDown = ({ week }:{ week:string}) => {
+  const [showBreakdown, setShowBreakdown] = useState(false);
+
+  return (
+    <div
+      onClick={() => setShowBreakdown((value) => !value)}
+      className="border-b pb-4 cursor-pointer h-fit"
+    >
+      <div className="flex items-center justify-between">
+        <h4 className="font-inter text-[#323546] text-base font-bold tracking-[-0.015rem] leading-[1.5rem]">
+          {week}
+        </h4>
+        {showBreakdown ? (
+          <Icon
+            color="#030517"
+            className="w-6 h-6"
+            icon="icon-park-outline:up"
+          />
+        ) : (
+          <Icon
+            color="#030517"
+            className="w-6 h-6"
+            icon="icon-park-outline:down"
+          />
+        )}
+      </div>
+
+      <AnimatePresence>
+        {showBreakdown && (
+          <motion.div
+            initial={{ y: -5 }}
+            exit={{ y: -5 }}
+            animate={{ y: 0 }}
+            className="mt-2"
+          >
+            <div className="flex flex-col gap-1">
+              <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                Breakfast
+              </h5>
+              <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
+                Jollof Rice, Peppered Beef, Fried Plantain Side
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                Dinner
+              </h5>
+              <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
+                Jollof Rice, Peppered Beef, Fried Plantain Side
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 const WeeksBreakDown = () => {
   return (
     <div className="flex flex-col gap-4">
-      {DAYS_OF_THE_WEEK.map((week, index) => {
-        const [showBreakdown, setShowBreakdown] = useState(false);
-
-        return (
-          <div
-            onClick={() => setShowBreakdown((value) => !value)}
-            key={`weeek_break_down_${index}`}
-            className="border-b pb-4 cursor-pointer h-fit"
-          >
-            <div className="flex items-center justify-between">
-              <h4 className="font-inter text-[#323546] text-base font-bold tracking-[-0.015rem] leading-[1.5rem]">
-                {week}
-              </h4>
-              {showBreakdown ? (
-                <Icon
-                  color="#030517"
-                  className="w-6 h-6"
-                  icon="icon-park-outline:up"
-                />
-              ) : (
-                <Icon
-                  color="#030517"
-                  className="w-6 h-6"
-                  icon="icon-park-outline:down"
-                />
-              )}
-            </div>
-
-            <AnimatePresence>
-              {showBreakdown && (
-                <motion.div
-                  initial={{ y: -5 }}
-                  exit={{ y: -5 }}
-                  animate={{ y: 0 }}
-                  className="mt-2"
-                >
-                  <div className="flex flex-col gap-1">
-                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                      Breakfast
-                    </h5>
-                    <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
-                      Jollof Rice, Peppered Beef, Fried Plantain Side
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                      Dinner
-                    </h5>
-                    <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
-                      Jollof Rice, Peppered Beef, Fried Plantain Side
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
+      {DAYS_OF_THE_WEEK.map((week, index) => (
+        <SingleWeekendBreakDown week={week} key={`weeek_break_down_${index}`} />
+      ))}
     </div>
   );
 };
 
-export const SelectChip = ({
-  title,
-  selected,
-  onClick,
-}: {
-  selected: boolean;
-  title: string;
-  onClick: () => void;
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex justify-center items-center h-[3rem] rounded-[2rem] py-[0.4375rem] px-[0.75rem] text-black-900 text-lg font-inter tracking-[-0.01688rem] leading-[1.687rem] gap-2 w-fit ${
-        selected ? "bg-[#E1F0D0]" : "bg-[#F2F4F7]"
-      }`}
-    >
-      {title}
-      {selected ? (
-        <Icon
-          color="#7DB83A"
-          className="w-4 h-4"
-          icon="streamline:check-solid"
-        />
-      ) : (
-        <Icon color="#030517" className="w-4 h-4" icon="mingcute:add-fill" />
-      )}
-    </button>
-  );
-};
 export default function FoodboxPage() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);

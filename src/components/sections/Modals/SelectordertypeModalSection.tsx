@@ -1,5 +1,5 @@
-import { SelectIndicator } from "@/app/meal_plans/page";
 import Button from "@/components/ui/Button";
+import SelectIndicator from "@/components/ui/SelectIndicator";
 import { BREAKPOINT } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";

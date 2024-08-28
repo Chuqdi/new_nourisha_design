@@ -7,6 +7,7 @@ import MealSelectionSection from "@/components/sections/MealSelectionSection";
 import TestmoniesSection from "@/components/sections/TestmoniesSection";
 import Button from "@/components/ui/Button";
 import DownloadApp from "@/components/ui/DownloadApp";
+import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
@@ -38,17 +39,6 @@ const ArrowedContainer = ({
   );
 };
 
-export const Ratings = () => {
-  return [1, 2, 3, 4].map((rate, index) => (
-    <div
-      className="bg-[#00B67A] h-8 w-8 flex justify-center items-center"
-      key={`home_page_rating_${index}`}
-    >
-      {/* TODO: Change star icons */}
-      <Icon color="#fff" icon="streamline:star-1-solid" />
-    </div>
-  ));
-};
 export default function Home() {
   const intervalRef = useRef();
   const [loadingMenuImage, setLoadingMenuImage] = useState(true);
@@ -124,13 +114,13 @@ export default function Home() {
       btnText: "Order now",
     },
   ];
-  useEffect(()=>{
+  useEffect(() => {
     //@ts-ignore
     intervalRef.current = setTimeout(() => {
-      setLoadingMenuImage(false)
+      setLoadingMenuImage(false);
     }, 5000);
-    ()=> clearInterval(intervalRef.current)
-  }, [])
+    () => clearInterval(intervalRef.current);
+  }, []);
   return (
     <div className="w-full h-full relative pt-6">
       <img
@@ -184,8 +174,11 @@ export default function Home() {
 
       <div className="  w-full py-[1.5rem] px-6.25 bg-background2 marquee-wrapper">
         <div className="marquee-slide flex items-center gap-20 ">
-          {bannerOptions.map((option, inde) => (
-            <div className="flex items-center gap-2 whitespace-nowrap ">
+          {bannerOptions.map((option, index) => (
+            <div
+              key={`banner_option${index}`}
+              className="flex items-center gap-2 whitespace-nowrap "
+            >
               <img
                 src={`/images/banner/${option.image}`}
                 className="h-[2.725rem]"
@@ -198,8 +191,11 @@ export default function Home() {
         </div>
 
         <div className="marquee-slide flex items-center gap-20 ">
-          {bannerOptions.map((option, inde) => (
-            <div className="flex items-center gap-2 whitespace-nowrap ">
+          {bannerOptions.map((option, index) => (
+            <div
+              key={`banner_image_${index}`}
+              className="flex items-center gap-2 whitespace-nowrap "
+            >
               <img
                 src={`/images/banner/${option.image}`}
                 className="h-[2.725rem]"
@@ -221,8 +217,15 @@ export default function Home() {
           Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
         </p>
       </div>
-      {loadingMenuImage && <div className="w-full flex justify-center items-center">
-        <Icon icon="line-md:loading-loop" className="w-20 h-20" color="#FE7E00" /></div>}
+      {loadingMenuImage && (
+        <div className="w-full flex justify-center items-center">
+          <Icon
+            icon="line-md:loading-loop"
+            className="w-20 h-20"
+            color="#FE7E00"
+          />
+        </div>
+      )}
       {/* <div
         style={{
           position: "relative",

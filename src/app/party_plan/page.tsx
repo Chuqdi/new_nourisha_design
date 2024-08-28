@@ -57,7 +57,7 @@ export default function AboutPage() {
             <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
               Are you planning a memorable party or event? Let us take care of
               the culinary magic for you. We specialize in crafting delectable
-              dishes that will leave your guests raving. Whether it's an
+              dishes that will leave your guests raving. Whether it{"'"}s an
               intimate gathering or a grand celebration, we have the perfect
               menu waiting for you.
             </p>
