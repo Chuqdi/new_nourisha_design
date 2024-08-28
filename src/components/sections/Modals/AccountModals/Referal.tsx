@@ -10,7 +10,7 @@ export default function Referal() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
 
   return (
-    <SidebarHOC title="Refer a friend">
+    <SidebarHOC isBack title="Refer a friend">
       <div className="flex flex-col gap-4">
         <div className="bg-[#F9FAFB] h-[3.5rem] py-2 px-3 rounded-[0.25rem]">
           <p className="font-inter text-black-900 text-[0.75rem]">

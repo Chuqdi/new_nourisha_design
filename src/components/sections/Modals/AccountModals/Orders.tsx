@@ -5,7 +5,7 @@ export default function Order() {
   const [pending, setPending] = useState(true);
 
   return (
-    <SidebarHOC title="Orders">
+    <SidebarHOC isBack title="Orders">
       <div
         onClick={() => setPending(true)}
         className="bg-[#F5F5F5] h-[2.5rem] flex p-1 justify-between"
