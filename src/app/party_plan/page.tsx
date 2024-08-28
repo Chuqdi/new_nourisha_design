@@ -4,7 +4,6 @@ import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import RequestQuoteModal from "@/components/sections/Modals/RequestQuoteModal";
 import Button from "@/components/ui/Button";
-import MessageBtn from "@/components/ui/MessageBtn";
 import Modal from "@/components/ui/Modal";
 import { BREAKPOINT } from "@/config";
 import { useState } from "react";
