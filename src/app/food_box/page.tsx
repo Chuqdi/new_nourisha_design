@@ -106,7 +106,7 @@ export const SelectChip = ({
     </button>
   );
 };
-export default function foodboxPage() {
+export default function FoodboxPage() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
   const [activeWeek, setActiveWeek] = useState(DAYS_OF_THE_WEEK[0]);
