@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'NewSpiritRegular';
+  src: url('/fonts/new_spirit/regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NewSpiritMedium';
+  src: url('/fonts/new_spirit/medium.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NewSpiritBold';
+  src: url('/fonts/new_spirit/bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'NewSpiritHeavy';
+  src: url('/fonts/new_spirit/heavy.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+
+label{
+  @apply text-[0.75rem] font-inter text-black-900 tracking-[-0.01125rem] leading-[1.125rem];
+}
+
+
+
+
+.marquee {
+  overflow: hidden;
+  padding: 60px 0;
+  background: white;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* .marquee:before,
+.marquee:after {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  content: "";
+  z-index: 2;
+} */
+
+/* .marquee:before {
+  left: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), white);
+} */
+
+/* .marquee:after {
+  right: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
+} */
+
+/* .marquee:hover .marquee-slide {
+  animation-play-state: paused;
+} */
+
+.marquee-slide {
+  display: flex;
+  animation: 35s slide infinite linear;
+}
+.marquee-wrapper {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  gap: 4rem;
+}
+
+
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
