@@ -208,15 +208,6 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="md:mx-6.25 my-[5rem] flex flex-col gap-8">
-        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
-          So many meals delivered to thousands of satisfied customers
-        </h4>
-        <TestmoniesSection />
-        <p className="text-center text-lg p-2 md:p-0 font-inter">
-          Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
-        </p>
-      </div>
       {loadingMenuImage && (
         <div className="w-full flex justify-center items-center">
           <Icon
@@ -226,31 +217,26 @@ export default function Home() {
           />
         </div>
       )}
-      {/* <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: isMobile ? "100.875rem" : "57.8125rem",
-        }}
-      >
-        <Image
-          fill
-          src={
-            isMobile
-              ? "/images/absolute_menu.png"
-              : "/images/absolute_menu_desktop.png"
-          }
-          alt="Current Image"
-          onLoadingComplete={() => setLoadingMenuImage(false)}
-          style={{ objectFit: "cover" }}
-        />
-      </div> */}
-
-      {isMobile ? (
+      <div className="mt-20" />
+       {isMobile ? (
         <img src="/images/absolute_menu.png" />
       ) : (
         <img src="/images/absolute_menu_desktop.png" />
       )}
+
+      <div className="md:mx-6.25 my-[5rem] flex flex-col gap-8">
+        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
+          So many meals delivered to thousands of satisfied customers
+        </h4>
+        <TestmoniesSection />
+        <p className="text-center text-lg p-2 md:p-0 font-inter">
+          Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
+        </p>
+      </div>
+     
+     
+
+     
 
       <div className="my-[5rem] mx-0 md:mx-6.25">
         <h3 className="font-NewSpiritBold text-4xl text-center">
