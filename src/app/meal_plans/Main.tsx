@@ -7,7 +7,12 @@ import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
 import Modal from "@/components/ui/Modal";
 import SelectIndicator from "@/components/ui/SelectIndicator";
-import { useState } from "react";
+import queryKeys from "@/config/queryKeys";
+import { IPlan } from "@/config/types";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 const SinglePlan = ({
   activeOptionIndex,
@@ -18,81 +23,88 @@ const SinglePlan = ({
   activeOptionIndex: number;
   index: number;
   setActiveOptionIndex: (value: number) => void;
-  option: {
-    advertisement: string;
-    title: string;
-    price: string;
-    total: string;
-  };
+  option: IPlan;
 }) => {
   const selected = activeOptionIndex === index;
 
   return (
     <div
       onClick={() => setActiveOptionIndex(index)}
-      className={`p-6 rounded-[0.75rem] flex-1 flex flex-col gap-8 cursor-pointer
+      className={`p-6 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer
                 ${!selected ? "bg-[#F2F4F7]" : "bg-[#E1F0D0]"}
               `}
     >
       <div className="flex justify-between items-center">
-        <p>{option.advertisement}</p>
         <SelectIndicator selected={selected} />
       </div>
-      <h3 className="font-NewSpiritBold text-2xl md:text-[3rem] text-[#323546]">
-        {option.title}
+      <h3 className="font-NewSpiritBold text-2xl md:text-[1.5rem] text-[#323546]">
+        {option.name}
       </h3>
       <div>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
-          {option.price}
-        </p>
-        <p className="font-inter text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
-          Total: <span className="font-semibold">{option.total}</span>
+          £{option.amount}
         </p>
       </div>
     </div>
   );
 };
-const MealPlanSelection = () => {
+const MealPlanSelection = ({
+  setShowOrderTypeModal,
+}: {
+  setShowOrderTypeModal: (value: boolean) => void;
+}) => {
   const [activeOptionIndex, setActiveOptionIndex] = useState(1);
-  const [options,setOptions] = useState([
-    {
-      advertisement: "Cheapest",
-      title: "6 meals",
-      price: "£6.55/meal",
-      total: "£39.33",
-    },
-    {
-      advertisement: "",
-      title: "8 meals",
-      price: "£6.55/meal",
-      total: "£39.33",
-    },
-    {
-      advertisement: "Save 20%",
-      title: "10 meals",
-      price: "5 day weekly plan",
-      total: "£70",
-    },
-    {
-      advertisement: "Save 30%",
-      title: "14 meals",
-      price: "7 day weekly plan",
-      total: "£120",
-    },
-  ]);
+  const { axiosClient } = useAuth();
+  const [options, setOptions] = useState<IPlan[]>([]);
+  const router = useRouter();
+  const getPlans = () => {
+    return axiosClient.get("plans?country=nigeria&weekend=false");
+  };
+
+  const { data, isLoading } = useQuery(queryKeys.GET_PLANS, getPlans);
+
+  useEffect(() => {
+    if (data?.data?.data?.data) {
+      setOptions(data?.data?.data?.data);
+    }
+  }, [data]);
   return (
-    <div className="grid grid-cols-2 md:flex gap-3">
-      {options.map((option, index) => {
-        return (
-          <SinglePlan
-            option={option}
-            index={index}
-            activeOptionIndex={activeOptionIndex}
-            setActiveOptionIndex={setActiveOptionIndex}
-            key={`meal_selection_${index}`}
+    <div className="mx-1.25 md:mx-6.25 my-6">
+      <div className="grid grid-cols-2 md:flex gap-3">
+        {isLoading && (
+          <div className="flex justify-center items-center w-full">
+            <p className="text-center font-inter text-sm">Loading...</p>
+          </div>
+        )}
+        {options.map((option, index) => {
+          return (
+            <SinglePlan
+              option={option}
+              index={index}
+              activeOptionIndex={activeOptionIndex}
+              setActiveOptionIndex={setActiveOptionIndex}
+              key={`meal_selection_${index}`}
+            />
+          );
+        })}
+      </div>
+      {!isLoading && (
+        <div className="flex justify-center items-center my-14 w-full md:w-[20%] mx-auto">
+          <Button
+            // onClick={() => setShowOrderTypeModal(true)}
+            onClick={() => {
+              router.push(`
+                /food_box?plan=${
+                  options.find((_, i) => i === activeOptionIndex)?.name
+                }
+                `);
+            }}
+            fullWidth
+            title="Continue"
+            variant="primary"
           />
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 };
@@ -119,17 +131,7 @@ export default function MealPlan() {
           We would like to know your preference regarding the number of meals
           you would like to receive in your Nourisha FoodBox.{" "}
         </p>
-        <div className="mx-1.25 md:mx-6.25 my-6">
-          <MealPlanSelection />
-          <div className="flex justify-center items-center my-14 w-full md:w-[20%] mx-auto">
-            <Button
-              onClick={() => setShowOrderTypeModal(true)}
-              fullWidth
-              title="Continue"
-              variant="primary"
-            />
-          </div>
-        </div>
+        <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
 
         <div className="w-full">
           <img src="/images/zigzag.png" className="w-full" />

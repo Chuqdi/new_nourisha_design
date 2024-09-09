@@ -2,18 +2,41 @@
 import Navbar from "@/components/commons/Navbar";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
 import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
+import PaymentMethodModal from "@/components/sections/Modals/PaymentMethodModal";
+import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import Button from "@/components/ui/Button";
 import SelectChip from "@/components/ui/SelectChip";
 import { COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
+import queryKeys from "@/config/queryKeys";
+import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
+import useAuth from "@/hooks/useAuth";
+import useFetch from "@/hooks/useFetch";
+import useFoodbox from "@/hooks/useFoodbox";
+import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { ATOMS } from "@/store/atoms";
+import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
-const SingleWeekendBreakDown = ({ week }:{ week:string}) => {
+const SingleWeekendBreakDown = ({ week }: { week: string }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
+  const activeDayBox = useMemo(() => {
+    if (boxStore) {
+      //@ts-ignore
+      return boxStore[week];
+    } else {
+      return {};
+    }
+  }, [boxStore]) as IFoodBox;
+  //@ts-ignore
+  const activeDayMeal = useMemo(() => activeDayBox?.meals, [activeDayBox]) as {
+    first_meal: IMeal;
+    last_meal: IMeal;
+  };
 
   return (
     <div
@@ -47,33 +70,35 @@ const SingleWeekendBreakDown = ({ week }:{ week:string}) => {
             animate={{ y: 0 }}
             className="mt-2"
           >
-            <div className="flex flex-col gap-1">
-              <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                Breakfast
-              </h5>
-              <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
-                Jollof Rice, Peppered Beef, Fried Plantain Side
-              </p>
-            </div>
+            {activeDayMeal?.first_meal?._id || activeDayMeal?.last_meal?._id ? (
+              <>
+                <div className="flex flex-col gap-1">
+                  <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                    {activeDayMeal?.first_meal?.name}
+                  </h5>
+                </div>
 
-            <div className="flex flex-col gap-1">
-              <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                Dinner
-              </h5>
-              <p className="text-black-900 text-sm font-inter tracking-[-0.01313rem] leading-[1.3125rem]">
-                Jollof Rice, Peppered Beef, Fried Plantain Side
+                <div className="flex flex-col gap-1">
+                  <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                    {activeDayMeal?.last_meal?.name}
+                  </h5>
+                </div>
+              </>
+            ) : (
+              <p className="text-sm text-center font-inter font-semibold">
+                ---No Meal selected---
               </p>
-            </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
 };
-const WeeksBreakDown = () => {
+const WeeksBreakDown = ({ weeks }: { weeks: typeof DAYS_OF_THE_WEEK }) => {
   return (
     <div className="flex flex-col gap-4">
-      {DAYS_OF_THE_WEEK.map((week, index) => (
+      {weeks.map((week, index) => (
         <SingleWeekendBreakDown week={week} key={`weeek_break_down_${index}`} />
       ))}
     </div>
@@ -83,8 +108,139 @@ const WeeksBreakDown = () => {
 export default function FoodboxPage() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
-  const [activeWeek, setActiveWeek] = useState(DAYS_OF_THE_WEEK[0]);
+  const searchParams = useSearchParams();
+  const [activeWeek, setActiveWeek] = useState<IFoodBoxDayType>(
+    DAYS_OF_THE_WEEK[0] as IFoodBoxDayType
+  );
   const setSideModal = useSetAtom(ATOMS.showSideModal);
+  const isWeekly = useMemo(
+    () => searchParams.get("plan")?.includes("5".toUpperCase()),
+    [searchParams]
+  );
+  const weeks = useMemo(() => {
+    if (isWeekly) {
+      return DAYS_OF_THE_WEEK.filter((wk) => {
+        return !(wk === "Sunday") && !(wk === "Saturday");
+      });
+    }
+
+    return DAYS_OF_THE_WEEK;
+  }, [isWeekly]);
+  const { getData } = useUnAuthRequest();
+  const [meals, setMeals] = useState<IMeal[]>([]);
+  const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
+  const { initializeFoodBox, emptyBox } = useFoodbox();
+  const { axiosClient } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState("10");
+  const [delivery_date, set_delivery_date] = useState(Date.now().toString());
+
+  const getMeals = () => {
+    return getData(
+      `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
+    );
+  };
+
+  const numberOfMealsSelected = useMemo(() => {
+    let count = 0;
+    if (boxStore) {
+      weeks.map((w) => {
+        //@ts-ignore
+        const activeDayBox = boxStore[w];
+
+        const activeDayMeal = activeDayBox?.meals as {
+          first_meal: IMeal;
+          last_meal: IMeal;
+        };
+
+        if (activeDayMeal?.first_meal?._id && activeDayMeal?.last_meal?._id) {
+          count = count + 1;
+        }
+      });
+    }
+
+    return count;
+  }, [boxStore]);
+
+  const prepareMealForBE = () => {
+    return DAYS_OF_THE_WEEK.map((week) => {
+      if (boxStore) {
+        //@ts-ignore
+        const activeDayBox = boxStore[week];
+        const meals = activeDayBox?.meals as {
+          first_meal: IMeal;
+          last_meal: IMeal;
+        };
+
+        return {
+          [week?.toLowerCase()]: {
+            lunch: {
+              mealId: meals?.first_meal?._id,
+            },
+            dinner: {
+              mealId: meals?.last_meal?._id,
+            },
+          },
+        };
+      }
+
+      return {};
+    });
+  };
+
+  const createLineUp = async () => {
+    if (numberOfMealsSelected < 7) {
+      toast({
+        variant: "default",
+        title: "Error",
+        description: "You must select meal for all week days.",
+      });
+      return;
+    }
+
+    setLoading(true);
+    const data = prepareMealForBE();
+    axiosClient
+      .post(`lineups`, { ...data, delivery_date })
+      .then((data) => {
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "Line-up created successfully.",
+        });
+        emptyBox();
+      })
+      .catch((err) => {
+        let msg = err?.response?.data?.message ?? "Line-up was not created.";
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: msg,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const { data, isLoading } = useFetch(
+    getMeals,
+    [queryKeys.GET_AVAILABLE_MEAL, activeCountry?.name, limit],
+    true
+  );
+
+  useEffect(() => {
+    //@ts-ignore
+    if (data?.data?.data) {
+      //@ts-ignore
+      setMeals(data?.data?.data?.data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    initializeFoodBox();
+  }, []);
+
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
@@ -136,11 +292,11 @@ export default function FoodboxPage() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-7  gap-5 w-fit">
-              {DAYS_OF_THE_WEEK.map((week, index) => {
+              {weeks.map((week, index) => {
                 const selected = week === activeWeek;
                 return (
                   <SelectChip
-                    onClick={() => setActiveWeek(week)}
+                    onClick={() => setActiveWeek(week as IFoodBoxDayType)}
                     title={week}
                     selected={selected}
                     key={`days_of_the_week_${index}`}
@@ -155,10 +311,24 @@ export default function FoodboxPage() {
               </h4>
               <div className="flex flex-col md:flex-row gap-4 items-start ">
                 <div className="w-full md:w-[70%]">
-                  <MealSelectionSection
-                    colCountClass="md:grid-cols-3"
-                    onlyMeals
-                  />
+                  {isLoading && (
+                    <p className="text-center my-8"> Loading meals...</p>
+                  )}
+                  <div
+                    className={`
+                    grid grid-cols-1 md:grid-cols-3 gap-4 mt-4
+                    `}
+                  >
+                    {meals.map((meal, index) => (
+                      <SingleCartItemSection
+                        country={activeCountry}
+                        isFoodBox
+                        meal={meal}
+                        activeWeek={activeWeek}
+                        key={`cart_item_${index}`}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <div className="w-full md:w-[30%] rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
                   <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
@@ -168,27 +338,42 @@ export default function FoodboxPage() {
                   <div>
                     <div className="flex items-center gap-3">
                       <div className="flex-1 h-[0.375rem] bg-[#D9D9D9]">
-                        <div className="w-[50%] h-full bg-[#04A76C]" />
+                        <div
+                          className="h-full bg-[#04A76C]"
+                          style={{
+                            width: `${
+                              (numberOfMealsSelected / weeks.length) * 100
+                            }%`,
+                          }}
+                        />
                       </div>
                       <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem]">
-                        1/7
+                        {numberOfMealsSelected}/{weeks.length}
                       </p>
                     </div>
                     <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                      Add 6 more days to complete your plan
+                      Add {7 - numberOfMealsSelected} more days to complete your
+                      plan
                     </p>
                   </div>
 
-                  <WeeksBreakDown />
+                  <WeeksBreakDown weeks={weeks} />
 
                   <Button
+                    // onClick={createLineUp}
                     onClick={() =>
                       setSideModal({
+                        component: (
+                          <DeliveryModal
+                          setDeliveryDate={set_delivery_date}
+                            proceed={createLineUp}
+                          />
+                        ),
                         show: true,
-                        component: <DeliveryModal />,
                       })
                     }
                     fullWidth
+                    disabled={loading}
                     title="Proceed"
                     variant="primary"
                   />

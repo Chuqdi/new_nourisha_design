@@ -78,6 +78,9 @@ label{
   animation-play-state: paused;
 } */
 
+.error_text {
+  @apply font-inter text-sm text-red-400;
+}
 .marquee-slide {
   display: flex;
   animation: 35s slide infinite linear;

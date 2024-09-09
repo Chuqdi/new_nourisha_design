@@ -1,10 +1,14 @@
+"use client"
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useSetAtom } from "jotai";
-import { FormEvent, useState } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { UserContext } from "@/HOC/UserContext";
 import PaymentMethodModal from "./PaymentMethodModal";
+import { toast } from "@/ui/use-toast";
+import useAuth from "@/hooks/useAuth";
 
 export const Checkbox = ({
   checked,
@@ -24,16 +28,67 @@ export const Checkbox = ({
     </button>
   );
 };
-export default function DeliveryModal() {
-  const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const [useDefaultAddress, setUseAddress] = useState(true);
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+export default function DeliveryModal({
+  proceed,
+  setDeliveryDate,
+ 
+}: {
+  proceed: () => Promise<void>;
+  setDeliveryDate:(d:string)=> void,
+}) {
+  const [delivery_date, set_delivery_date] = useState("");
+
+  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
+  const userCtx = useContext(UserContext);
+  const user = userCtx?.user;
+  const { axiosClient } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState({
+    country: user?.address?.country,
+    city: user?.address?.city,
+    address_: user?.address?.address_,
+    postcode: user?.address?.postcode,
+  });
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSideModal({
-      show: true,
-      component: <PaymentMethodModal />,
-    });
+    if (!delivery_date) {
+      toast({
+        variant: "destructive",
+        title: "Please select a delivery date",
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      await axiosClient.put(`customers/me`, { address });
+      userCtx?.setUser({
+        ...user,
+        //@ts-ignore
+        address: {
+          ...user?.address,
+          ...address,
+        },
+      });
+
+      // toast({
+      //   variant: "default",
+      //   title: "Address updated successfully",
+      // });
+
+      proceed();
+      setSideModal({
+        ...sideModal,
+        show: false,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
   };
+
+  useEffect(()=>{
+    setDeliveryDate(delivery_date)
+  }, [delivery_date])
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
@@ -56,43 +111,78 @@ export default function DeliveryModal() {
         meal will be delivered to this address
       </p>
 
-      <div className="flex items-start gap-3">
-        <Checkbox
-          checked={useDefaultAddress}
-          onSelect={() => setUseAddress((value) => !value)}
-        />
-        <p className="text-black-900 text-base font-inter leading-[1.3rem]">
-          Use default address in address book
-        </p>
-      </div>
+      <form onSubmit={onSubmit} className="flex flex-col gap-6">
+        <div>
+          <label>Delivery date</label>
+          <Input
+            value={delivery_date}
+            type="date"
+            onChange={(e) => set_delivery_date(e.target.value)}
+            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          />
+        </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <div className="">
+        <div>
           <label>Country</label>
-          <Input className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]" />
+          <Input
+            value={address?.country}
+            name="country"
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                [e.target.name]: e.target.value,
+              })
+            }
+            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          />
         </div>
-
-        <div className="">
+        <div>
           <label>Town/city</label>
-          <Input className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]" />
+          <Input
+            value={address?.city}
+            name="city"
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                [e.target.name]: e.target.value,
+              })
+            }
+            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          />
         </div>
-
-        <div className="">
+        <div>
           <label>House address</label>
-          <Input className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]" />
+          <Input
+            value={address?.address_}
+            name="address_"
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                [e.target.name]: e.target.value,
+              })
+            }
+            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          />
         </div>
-
-        <div className="">
+        <div>
           <label>Post Code</label>
-          <Input className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]" />
+          <Input
+            value={address?.postcode}
+            name="postcode"
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                [e.target.name]: e.target.value,
+              })
+            }
+            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          />
         </div>
-
         <Button
-          fullWidth
-          type="submit"
           variant="primary"
-          title="Continue"
-          className="h-[3rem]"
+          className="h-[3rem] mt-8"
+          title="Proceed"
+          disabled={loading}
         />
       </form>
     </div>

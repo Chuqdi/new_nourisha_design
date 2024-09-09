@@ -5,9 +5,22 @@ import ReferalInput from "../../ReferalInput";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import ReferalHistory from "./ReferalHistory";
+import queryKeys from "@/config/queryKeys";
+import useAuth from "@/hooks/useAuth";
+import { useQuery } from "react-query";
 
 export default function Referal() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
+  const { axiosClient} = useAuth();
+
+  const getReferalStats = () => {
+    return axiosClient.get("referrals/stats");
+  };
+  const { data, } = useQuery(
+    queryKeys.GET_REFERAL_STATS,
+    getReferalStats
+  );
+
 
   return (
     <SidebarHOC isBack title="Refer a friend">
@@ -16,7 +29,7 @@ export default function Referal() {
           <p className="font-inter text-black-900 text-[0.75rem]">
             Pending reward
           </p>
-          <h6 className="font-inter text-black-900 text-sm">£10</h6>
+          <h6 className="font-inter text-black-900 text-sm">{data?.data?.pending && `£${data?.data?.pending}`}</h6>
         </div>
 
         <div className="bg-[#F9FAFB] h-[3.5rem] py-2 px-3 rounded-[0.25rem] flex items-center justify-between">
@@ -24,7 +37,7 @@ export default function Referal() {
             <p className="font-inter text-black-900 text-[0.75rem]">
               Pending reward
             </p>
-            <h6 className="font-inter text-black-900 text-sm">£10</h6>
+            <h6 className="font-inter text-black-900 text-sm">{data?.data?.total&&`£${data?.data?.total}`}</h6>
           </div>
 
           <Button
@@ -57,7 +70,7 @@ export default function Referal() {
             <div className="h-full w-3/5 bg-[#FE7E00] rounded-[0.5rem]" />
           </div>
           <p className="text-center font-inter text-[0.75rem] text-[#303237]">
-            0 completed referrals
+            {data?.data?.completed && `${data?.data?.completed} completed referrals`} 
           </p>
         </div>
 

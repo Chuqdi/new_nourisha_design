@@ -9,8 +9,9 @@ import Button from "@/components/ui/Button";
 import DownloadApp from "@/components/ui/DownloadApp";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
+import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Image from "next/image";
+import { useAtomValue } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -121,8 +122,14 @@ export default function Home() {
     }, 5000);
     () => clearInterval(intervalRef.current);
   }, []);
+
   return (
-    <div className="w-full h-full relative pt-6">
+    <div
+      className={`
+      w-full h-full relative pt-6
+      
+      `}
+    >
       <img
         src="/images/index_screen_gray_bg.png"
         className=" absolute right-0 top-0 h-[40rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0"
@@ -218,25 +225,11 @@ export default function Home() {
         </div>
       )}
       <div className="mt-20" />
-       {isMobile ? (
+      {isMobile ? (
         <img src="/images/absolute_menu.png" />
       ) : (
         <img src="/images/absolute_menu_desktop.png" />
       )}
-
-      <div className="md:mx-6.25 my-[5rem] flex flex-col gap-8">
-        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
-          So many meals delivered to thousands of satisfied customers
-        </h4>
-        <TestmoniesSection />
-        <p className="text-center text-lg p-2 md:p-0 font-inter">
-          Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
-        </p>
-      </div>
-     
-     
-
-     
 
       <div className="my-[5rem] mx-0 md:mx-6.25">
         <h3 className="font-NewSpiritBold text-4xl text-center">
@@ -321,10 +314,17 @@ export default function Home() {
           </p>
 
           <MealSelectionSection isSingle isHome />
-          <div className="flex items-center justify-center">
-            <Button title="Load more" variant="primary" />
-          </div>
         </div>
+      </div>
+
+      <div className="md:mx-6.25 my-[5rem] flex flex-col gap-8">
+        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
+          So many meals delivered to thousands of satisfied customers
+        </h4>
+        <TestmoniesSection />
+        <p className="text-center text-lg p-2 md:p-0 font-inter">
+          Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
+        </p>
       </div>
 
       <CommonQuestionsSection />

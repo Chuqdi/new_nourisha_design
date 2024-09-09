@@ -6,8 +6,13 @@ import MealSelectionSection from "@/components/sections/MealSelectionSection";
 import MessageBtn from "@/components/ui/MessageBtn";
 
 export default function BulkMealPage() {
+
   return (
-    <div className="w-full h-full relative pt-6">
+    <div
+      className={`
+      w-full h-full relative pt-6
+      `}
+    >
       <Navbar />
       <div className="flex flex-col gap-6 mt-32">
         <MessageBtn title="OUR MEAL PLANS" />

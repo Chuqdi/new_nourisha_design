@@ -1,3 +1,5 @@
+"use client";
+
 import useNavbar from "@/hooks/useNavbar";
 import Logo from "../ui/Logo";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -8,18 +10,23 @@ import { BREAKPOINT } from "@/config";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import MainAccount from "../sections/Modals/AccountModals/Main";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import MobileNavbar from "./MobileNavbar";
 import { AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { UserContext } from "@/HOC/UserContext";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const navbarOptions = useNavbar();
+  const router = useRouter();
+  const user = useContext(UserContext);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const sideBarOptions = [
     {
       image: "cart.svg",
+      onClick:()=> router.push("/single_meals")
     },
     {
       image: "apple.svg",
@@ -57,8 +64,11 @@ export default function Navbar() {
           (option, index) =>
             !(isMobile && option.isOnlyDesktop) && (
               <div
-                className="h-8 w-10 rounded-[2rem] flex justify-center items-center bg-[#F2F4F7] gap-1 p-[0.5rem]"
+                className="cursor-pointer h-8 w-10 rounded-[2rem] flex justify-center items-center bg-[#F2F4F7] gap-1 p-[0.5rem]"
                 key={`sidebar_${index}`}
+                onClick={()=> {
+                  option?.onClick && option?.onClick();
+                }}
               >
                 <img
                   className="h-[1.25rem]"
@@ -73,13 +83,15 @@ export default function Navbar() {
         {!isMobile && (
           <div>
             <Button
-              onClick={() =>
-                setSideModal({
-                  show: true,
-                  component: <MainAccount />,
-                })
-              }
-              title="Login"
+              onClick={() => {
+                user?.user?._id
+                  ? setSideModal({
+                      show: true,
+                      component: <MainAccount />,
+                    })
+                  : router.push("/auth");
+              }}
+              title={user?.user?._id ? "Dashboard" : "Login"}
               variant="secondary"
             />
           </div>
@@ -100,7 +112,9 @@ export default function Navbar() {
       </div>
 
       <AnimatePresence>
-        {isMobile && showMobileNavbar && <MobileNavbar close={()=> setMobileNavbar(false)}/>}
+        {isMobile && showMobileNavbar && (
+          <MobileNavbar close={() => setMobileNavbar(false)} />
+        )}
       </AnimatePresence>
     </div>
   );

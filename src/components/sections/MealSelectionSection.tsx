@@ -1,22 +1,55 @@
 import { COUNTRIES } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
+import useUnAuthRequest from "@/hooks/useUnAuthRequest";
+import useFetch from "@/hooks/useFetch";
+import queryKeys from "@/config/queryKeys";
+import { IMeal } from "@/config/types";
+import Button from "../ui/Button";
+import { useAtomValue } from "jotai";
+import { ATOMS } from "@/store/atoms";
 
 export default function MealSelectionSection({
   isSingle,
   isHome,
   onlyMeals,
-  colCountClass
+  colCountClass,
 }: {
   isSingle?: boolean;
   isHome?: boolean;
   onlyMeals?: boolean;
-  colCountClass?:string;
+  colCountClass?: string;
 }) {
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
+  const { getData } = useUnAuthRequest();
+  const [meals, setMeals] = useState<IMeal[]>([]);
+  const [limit, setLimit] = useState("10");
+  const getMeals = () => {
+    return getData(
+      `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
+    );
+  };
+
+  const { data, isLoading } = useFetch(
+    getMeals,
+    [queryKeys.GET_AVAILABLE_MEAL, activeCountry?.name, limit],
+    true
+  );
+
+  useEffect(() => {
+    //@ts-ignore
+    if (data?.data?.data) {
+      //@ts-ignore
+      setMeals(data?.data?.data?.data);
+    }
+  }, [data]);
   return (
-    <div className="w-full">
+    <div className={
+      `w-full
+      
+      `
+    }>
       {!onlyMeals && !isHome && (
         <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] md:text-[3.5rem]">
           Browse & Select meals
@@ -73,16 +106,35 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      <div className={`
-        grid grid-cols-1 ${colCountClass? colCountClass:'md:grid-cols-4'} gap-4 mt-4
-        `}>
-        {[1, 2, 3, 4].map((_, index) => (
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <p>Loading...</p>
+        </div>
+      )}
+
+      <div
+        className={`
+        grid grid-cols-1 ${
+          colCountClass ? colCountClass : "md:grid-cols-4"
+        } gap-4 mt-4
+        `}
+      >
+        {meals.map((meal, index) => (
           <SingleCartItemSection
             country={activeCountry}
             isHome={isHome}
+            meal={meal}
             key={`cart_item_${index}`}
           />
         ))}
+      </div>
+
+      <div className="flex items-center justify-center mt-8">
+        <Button
+          title={isLoading ? "Loading..." : "Load more"}
+          onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
+          variant="primary"
+        />
       </div>
     </div>
   );
