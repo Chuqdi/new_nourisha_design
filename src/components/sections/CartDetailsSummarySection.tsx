@@ -11,7 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
 
-export default function () {
+function Main () {
   const user = useContext(UserContext);
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
@@ -148,3 +148,5 @@ export default function () {
     </div>
   );
 }
+
+export  default  Main;
