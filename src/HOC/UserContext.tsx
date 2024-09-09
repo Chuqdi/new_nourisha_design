@@ -46,7 +46,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
         title: "Authentication failed",
         description: "Authentication failed",
       });
-      if (!window.location.href.includes("auth")) {
+      if (!window.location.href.includes("auth") && window.location.href === "/") {
         window.location.href = "/auth";
       }
     }
