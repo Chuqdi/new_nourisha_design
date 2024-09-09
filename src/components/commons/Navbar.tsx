@@ -42,7 +42,7 @@ export default function Navbar() {
     },
   ];
   return (
-    <div className="fixed flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[80%] mx-auto right-0 left-0">
+    <div className="fixed flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
       <Logo className="h-6" />
       {!isMobile && (
         <div className="flex gap-10">
