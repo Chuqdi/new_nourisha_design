@@ -18,6 +18,7 @@ const config: Config = {
         "black-900": "#030517",
         background: "#E1F0D0",
         background2: "#DEF54C",
+        destructive:"#620c0cd6",
         "primary-Green-900": "#7DB83A",
       },
       fontFamily: {

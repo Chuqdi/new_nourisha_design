@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { ICartDetail, ICartItem, IMeal } from "../config/types";
 import { useAtom, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
@@ -7,6 +7,8 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
+import { UserContext } from "@/HOC/UserContext";
+import { toast } from "@/ui/use-toast";
 
 const CART_ITEMS = "cart_item";
 const useCart = () => {
@@ -16,7 +18,7 @@ const useCart = () => {
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
   const token = getToken();
-
+  const user = useContext(UserContext);
   const getCartSessionDetails = () => {
     return axiosClient.get("cart");
   };
@@ -65,6 +67,14 @@ const useCart = () => {
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
+    if (!user?.user?._id) {
+      toast({
+        title: "Login Required",
+        description: "Please login to add items to your cart",
+        variant: "destructive",
+      });
+      return;
+    }
     await axios.delete(`${process.env.API_URL}cart`, {
       data: {
         itemId,
@@ -79,6 +89,14 @@ const useCart = () => {
   };
 
   const addItemToCart = async (item: IMeal) => {
+    if (!user?.user?._id) {
+      toast({
+        title: "Login Required",
+        description: "Please login to add items to your cart",
+        variant: "destructive",
+      });
+      return;
+    }
     const data = {
       itemId: item._id,
       quantity: 1,
