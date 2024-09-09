@@ -9,9 +9,11 @@ import Modal from "@/components/ui/Modal";
 import SelectIndicator from "@/components/ui/SelectIndicator";
 import queryKeys from "@/config/queryKeys";
 import { IPlan } from "@/config/types";
+import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
+import { toast } from "@/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 const SinglePlan = ({
@@ -55,6 +57,7 @@ const MealPlanSelection = ({
 }) => {
   const [activeOptionIndex, setActiveOptionIndex] = useState(1);
   const { axiosClient } = useAuth();
+  const user = useContext(UserContext);
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
   const getPlans = () => {
@@ -68,6 +71,18 @@ const MealPlanSelection = ({
       setOptions(data?.data?.data?.data);
     }
   }, [data]);
+
+
+  useEffect(()=>{
+    if(!user?.user?._id){
+      toast({
+        title:"Authentication",
+        variant:"destructive",
+        description:"Please sign in to continue."
+      })
+      router.push("/auth");
+    }
+  }, [ ])
   return (
     <div className="mx-1.25 md:mx-6.25 my-6">
       <div className="grid grid-cols-2 md:flex gap-3">
