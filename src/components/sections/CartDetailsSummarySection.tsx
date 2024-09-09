@@ -10,6 +10,7 @@ import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
+import Link from "next/link";
 
 function Main () {
   const user = useContext(UserContext);
@@ -74,6 +75,9 @@ function Main () {
   }, [CartSessionData]);
 
   return (
+
+    user?.user?._id
+    ?
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
       <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
         Cart summary
@@ -145,6 +149,15 @@ function Main () {
         title="Proceed"
         variant="primary"
       />
+    </div>
+    :
+    <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3  flex-col gap-3 mb-8 text center ">
+        <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
+        Cart summary
+      </h4>
+     <p className="text-center">
+     <Link  href="/auth" className="text-base text-center font-inter mt-4 text-primary-orange-900 w-full">Login to view details...</Link>
+     </p>
     </div>
   );
 }
