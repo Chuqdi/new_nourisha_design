@@ -5,6 +5,7 @@ import Input from "../ui/Input";
 import DownloadApp from "../ui/DownloadApp";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function Footer() {
   const options = [
@@ -68,14 +69,34 @@ export default function Footer() {
       ],
     },
   ];
-  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT});
+
+  const socials = [
+    {
+      icon: "mingcute:facebook-fill",
+      link: "",
+      title: "Facebook",
+    },
+    {
+      icon: "ri:twitter-x-fill",
+      link: "",
+      title: "X",
+    },
+    {
+      icon: "hugeicons:instagram",
+      link: "",
+      title: "Instagram",
+    },
+
+    
+  ];
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return (
-    <div className="w-full flex flex-col md:flex-row gap-6 items-center relative overflow-y-hidden mb-4">
+    <div className="w-full flex flex-col md:flex-row gap-6 items-stretch h-auto relative overflow-y-hidden mb-4">
       <img
         src="/images/footer_red_bg.png"
         className="w-[39.5rem] h-[39.5rem] absolute right-[40%] -bottom-[5rem] z-0"
       />
-      <div className="w-full md:w-[40%] py-8 px-4 rounded-[1rem] bg-black-900 z-50">
+      <div className="w-full flex flex-col  justify-center md:w-[45%] py-8 px-4 rounded-[1rem] bg-black-900 z-50">
         <h4 className="text-white font-NewSpiritBold text-[2rem] md:text-[2.75rem] tracking-[-0.11rem] mb-5">
           Get the latest updates before they happen
         </h4>
@@ -88,15 +109,15 @@ export default function Footer() {
         </form>
         <Button fullWidth variant="primary" title="Submit" />
       </div>
-      <div className="w-full md:w-[60%] bg-background px-4 py-8 rounded-[1rem] flex flex-col gap-[2.75rem] z-50">
+      <div className="w-full md:w-[55%] bg-background px-4 py-8 rounded-[1rem] flex flex-col gap-[2.75rem] z-50">
         <Logo className="w-32 h-w-32 object-contain" />
-        <div className="grid grid-cols-2 md:flex gap-[3.75rem] ">
+        <div className="grid grid-cols-2 md:flex gap-[1.75rem] ">
           {options.map((option, index) => (
             <div
               className="flex-1 flex flex-col gap-8"
               key={`footer_option_${index}`}
             >
-              <h4 className="font-inter font-bold text-lg text-black-900 leading-[1.6875rem]">
+              <h4 className="font-inter font-bold text-base text-black-900 leading-[1.6875rem]">
                 {option.title}
               </h4>
               <div className="flex flex-col gap-4">
@@ -112,9 +133,26 @@ export default function Footer() {
               </div>
             </div>
           ))}
+          <div className="flex-1 flex flex-col gap-8">
+            <h4 className="font-inter font-bold text-base text-black-900 leading-[1.6875rem] uppercase">
+              Socials
+            </h4>
+            <div className="flex flex-col gap-4">
+              {socials.map((link, i) => (
+                <Link
+                  className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center" 
+                  key={`link_option_${i}`}
+                  href={link.link}
+                >
+                  <Icon className="w-6 h-6" icon={link.icon} color="" />
+                  {link.title}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between md:items-center">
+        <div className="flex flex-col md:flex-row justify-between md:items-center ">
           <DownloadApp />
           <p className="text-black-900 text-base tracking-[-0.015rem] leading-[1.5rem] ">
             Get in touch at{" "}

@@ -13,7 +13,7 @@ export default function CommonQuestionsSection() {
         </p>
       </div>
 
-      <div className="mx-auto w-full md:w-[80%] -mt-20 md:-mt-40 px-1.25 md:p-[2.75rem] ">
+      <div className="mx-auto w-full md:w-[80%] -mt-20 md:-mt-40 p-3 md:p-[2.75rem] bg-white rounded-[0.75rem] ">
         <FaqSection />
       </div>
     </div>

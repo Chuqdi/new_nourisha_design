@@ -26,8 +26,8 @@ export default function SingleMealPage() {
         </p>
       </div>
 
-      <div className="mt-8 mx-1.25 md:mx-6.25 flex items-start flex-col-reverse md:flex-row">
-        <div className="w-full md:w-[70%] ">
+      <div className="mt-8 mx-1.25 md:mx-6.25 flex items-start flex-col-reverse md:flex-row gap-4">
+        <div className="w-full ">
           <MealSelectionSection isHome colCountClass={"md:grid-cols-3 grid-cols-1"} isSingle />
         </div>
         <div className="mt-0 md:mt-[5.4rem] w-full md:w-[30%]">

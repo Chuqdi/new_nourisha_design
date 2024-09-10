@@ -45,6 +45,10 @@ label{
 
 
 
+.react-multi-carousel-item  {
+ margin: 2rem !important;
+
+}
 
 .marquee {
   overflow: hidden;

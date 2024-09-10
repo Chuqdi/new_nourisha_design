@@ -317,13 +317,13 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="md:mx-6.25 my-[5rem] flex flex-col gap-8">
+      <div className="md:mx-6.25 my-[5rem] mt-0 flex flex-col gap-8">
         <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
           So many meals delivered to thousands of satisfied customers
         </h4>
         <TestmoniesSection />
-        <p className="text-center text-lg p-2 md:p-0 font-inter">
-          Rated 4.5 / 5 based on 1,243 reviews. Showing our 5 star reviews.
+        <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
+          Rated <span className="font-bold">4.5</span> / 5 based on 1,243 reviews. Showing our 5 star reviews.
         </p>
       </div>
 
@@ -333,7 +333,7 @@ export default function Home() {
         <DownloadTheAppWidgetSection />
       </div>
 
-      <div className="my-[5rem] mx-1.25 md:mx-6.25">
+      <div className="my-[5rem] mx-1.25 md:mx-[3.3rem]">
         <Footer />
       </div>
     </div>

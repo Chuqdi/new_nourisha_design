@@ -103,23 +103,7 @@ const MealPlanSelection = ({
           );
         })}
       </div>
-      {!isLoading && (
-        <div className="flex justify-center items-center my-14 w-full md:w-[20%] mx-auto">
-          <Button
-            // onClick={() => setShowOrderTypeModal(true)}
-            onClick={() => {
-              router.push(`
-                /food_box?plan=${
-                  options.find((_, i) => i === activeOptionIndex)?.name
-                }
-                `);
-            }}
-            fullWidth
-            title="Continue"
-            variant="primary"
-          />
-        </div>
-      )}
+    
     </div>
   );
 };
@@ -154,7 +138,7 @@ export default function MealPlan() {
         <div className="mt-8 mx-1.25 md:mx-6.25">
           <DownloadTheAppWidgetSection />
         </div>
-        <div className="mt-[5rem] mx-1.25 md:mx-6.25">
+        <div className="mt-[5rem] mx-1.25 md:mx-[4rem]">
           <Footer />
         </div>
       </div>

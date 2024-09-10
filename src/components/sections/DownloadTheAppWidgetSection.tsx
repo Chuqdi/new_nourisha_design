@@ -1,6 +1,6 @@
 export default function DownloadTheAppWidgetSection() {
   return (
-    <div className="gap-12 md:gap-0 flex-col-reverse md:flex-row flex  w-full   md:w-[29]  items-center justify-center  mx-auto  ">
+    <div className="gap-12 md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full     items-center justify-center  ">
       <img
         src="/images/start_subscription.png"
         className=" h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto shadow-btn"
