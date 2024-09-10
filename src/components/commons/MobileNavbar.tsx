@@ -8,10 +8,17 @@ import Button from "../ui/Button";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
+import { useContext, useMemo } from "react";
+import { UserContext } from "@/HOC/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function MobileNavbar({ close }: { close: () => void }) {
   const navbarOptions = useNavbar();
   const setSideModal = useSetAtom(ATOMS.showSideModal);
+  const user = useContext(UserContext);
+  const router = useRouter();
+
+  const isLoggedIn = useMemo(()=>!!user?.user?._id, [user]);
 
   return (
     <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 ">
@@ -44,12 +51,17 @@ export default function MobileNavbar({ close }: { close: () => void }) {
           fullWidth
           onClick={() => {
             close();
+            isLoggedIn 
+            ?
             setSideModal({
               show: true,
               component: <MainAccount />,
-            });
-          }}
-          title="Login"
+            })
+            :
+            router.push("/auth")
+          }
+        }
+          title={isLoggedIn?"Dashboard":"Login"}
           variant="secondary"
         />
       </div>

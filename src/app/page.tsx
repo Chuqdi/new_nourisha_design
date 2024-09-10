@@ -12,6 +12,7 @@ import { BREAKPOINT } from "@/config";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue } from "jotai";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -69,6 +70,7 @@ export default function Home() {
       title: "Ready In minutes",
     },
   ];
+  const router = useRouter();
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
 
@@ -94,7 +96,7 @@ export default function Home() {
       text: "Meal Subscriptions",
       description:
         "Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.",
-      onClick: () => {},
+      onClick: () => router.push("/meal_plans"),
       btnText: "Start Your Subscription",
       image: "subscription.png",
     },
@@ -102,7 +104,7 @@ export default function Home() {
       text: "Single Meal Orders",
       description:
         "Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.",
-      onClick: () => {},
+      onClick: () => router.push("/meal_plans"),
       btnText: "Order now",
       image: "single.png",
     },
@@ -111,7 +113,7 @@ export default function Home() {
       text: "Bulk Meal Orders",
       description:
         "Hosting an event or just stocking up? Order in bulk and get large quantities of your favorite dishes. ",
-      onClick: () => {},
+      onClick: () => router.push("/meal_plans"),
       btnText: "Order now",
     },
   ];
