@@ -46,11 +46,13 @@ label{
 
 
 .react-multi-carousel-item  {
- margin: 2rem !important;
+ margin: 0rem !important;
+ height: auto !important;
+ width: 100% !important;
 
 }
 
-.react-multi-carousel-list {
+.react-multi-carousel-list, .react-multi-carousel-track {
   align-items: stretch !important;
 }
 

@@ -101,11 +101,13 @@ export default function TestmoniesSection() {
       ))}
     </div>
   ) : (
-    <Carousel responsive={responsive} autoPlay swipeable>
+    <Carousel
+    itemClass="!px-0"
+    responsive={responsive} autoPlay swipeable>
       {firstTestmonies.map((testmonies, index) => (
         <div
           key={`carousel_item_${index}`}
-          className="w-[25rem] mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
+          className="w-[25rem] h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
         >
           <div className="flex items-center gap-3">
             <Ratings />
@@ -124,7 +126,7 @@ export default function TestmoniesSection() {
       {secondTestmonies.map((testmonies, index) => (
         <div
           key={`item_${index}`}
-          className="w-[25rem]  mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
+          className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
         >
           <div className="flex items-center gap-3">
             <Ratings />
