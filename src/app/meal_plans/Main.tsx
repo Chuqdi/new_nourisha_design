@@ -37,14 +37,30 @@ const SinglePlan = ({
               `}
     >
       <div className="flex justify-between items-center">
-        <SelectIndicator selected={selected} />
+        <p className="text-[#04A76C] text-sm font-inter font-semibold">
+          {option?.name}
+        </p>
+        <p className="text-black-900 font-inter text-sm">
+          Save up to {option?.name?.includes("5") ? "20" : "30"}%
+        </p>
       </div>
-      <h3 className="font-NewSpiritBold text-2xl md:text-[1.5rem] text-[#323546]">
-        {option.name}
+      {/* <div className="flex justify-between items-center">
+        <SelectIndicator selected={selected} />
+      </div> */}
+      <h3 className="font-NewSpiritBold text-[3.5rem] md:text-[1.5rem] text-[#323546]">
+        {option?.name?.includes("5")
+          ? "10 Meals"
+          : option.name?.includes("MONTHLY")
+          ? "56 Meals"
+          : "14 Meals"}
       </h3>
       <div>
+        <p className="text-black-900 font-inter text-base">
+          £{option?.name?.includes("5") ? "8" : "7.14"} meal
+        </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
-          £{option.amount}
+          <span>Total: </span>
+          <span className="font-bold">£{option.amount}</span>
         </p>
       </div>
     </div>
@@ -68,21 +84,21 @@ const MealPlanSelection = ({
 
   useEffect(() => {
     if (data?.data?.data?.data) {
+      console.log(data?.data?.data?.data);
       setOptions(data?.data?.data?.data);
     }
   }, [data]);
 
-
-  useEffect(()=>{
-    if(!user?.user?._id){
+  useEffect(() => {
+    if (!user?.user?._id) {
       toast({
-        title:"Authentication",
-        variant:"destructive",
-        description:"Please sign in to continue."
-      })
+        title: "Authentication",
+        variant: "destructive",
+        description: "Please sign in to continue.",
+      });
       router.push("/auth");
     }
-  }, [ ])
+  }, []);
   return (
     <div className="mx-1.25 md:mx-6.25 my-6">
       <div className="grid grid-cols-2 md:flex gap-3">
@@ -103,7 +119,6 @@ const MealPlanSelection = ({
           );
         })}
       </div>
-    
     </div>
   );
 };
@@ -124,11 +139,10 @@ export default function MealPlan() {
           Meal Plans
         </h3>
         <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] mx-auto w-3/5 md:w-full md:text-[3.5rem]">
-          How many meals would you like?
+          Select your custom meal plan
         </h4>
         <p className="text-black-900 font-inter text-lg text-center w-full md:w-3/5 mx-auto">
-          We would like to know your preference regarding the number of meals
-          you would like to receive in your Nourisha FoodBox.{" "}
+          Prep your daily meals to maintain healthy eating habits.
         </p>
         <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
 

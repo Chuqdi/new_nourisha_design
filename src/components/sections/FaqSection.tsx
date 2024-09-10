@@ -52,24 +52,29 @@ export default function FaqSection() {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const questions = [
     {
-      question: "Question",
+      question: "How long does delivery take?",
       answer:
-        "To get started, simply create a personal or business account to start verifying invoices and payment requests.",
+        "Delivery takes between 24 hours to 48 hours depending on location.Your order needs to be placed before 12:00pm of the previous day to receive within 24 hours.",
     },
     {
-      question: "Question",
+      question: "Can I choose to subscribe for the weekly or monthly plan this week and decide not to pay for a subscription plan the following week?",
       answer:
-        "To get started, simply create a personal or business account to start verifying invoices and payment requests.",
+        "Most certainly. The subscription plan is not a compulsory Auto-renewal. However, if you choose to be on Auto-renewal, just click on the auto-renewal button displayed on the app",
     },
     {
-      question: "Question",
+      question: "Do you deliver across all UK cities?",
       answer:
-        "To get started, simply create a personal or business account to start verifying invoices and payment requests.",
+        "Yes, we deliver anywhere within the UK.",
     },
     {
-      question: "Question",
+      question: "How does the weekly subscription plan work. Do you deliver each meal daily?",
       answer:
-        "To get started, simply create a personal or business account to start verifying invoices and payment requests.",
+        "No, we do not.\n All 14 meals are delivered at once ",
+    },
+    {
+      question: "How long should my weekly plan last in my fridge after receiving? ",
+      answer:
+        "WIthin 7-10 days.",
     },
   ];
   return (

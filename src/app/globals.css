@@ -50,6 +50,10 @@ label{
 
 }
 
+.react-multi-carousel-list {
+  align-items: stretch !important;
+}
+
 .marquee {
   overflow: hidden;
   padding: 60px 0;
