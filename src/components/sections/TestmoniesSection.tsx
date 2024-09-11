@@ -103,7 +103,7 @@ export default function TestmoniesSection() {
   ) : (
     <Carousel
     itemClass="!px-0"
-    responsive={responsive} autoPlay swipeable>
+    responsive={responsive} autoPlay={false} swipeable>
       {firstTestmonies.map((testmonies, index) => (
         <div
           key={`carousel_item_${index}`}
