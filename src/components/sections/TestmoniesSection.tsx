@@ -24,6 +24,13 @@ const responsive = {
 
 const firstTestmonies = [
   {
+    name: "Temitope",
+    description:
+      "I use Nourisha to stock up on food when I’ll be unable to cook in a week. Their affordable meal plan option makes this a more practical choice than ordering in or eating out for 7 days. They have great portion sizes and the food is delicious.",
+    caption: "Delicious Nigerian food at great prices",
+    date: "02 July 2024",
+  },
+  {
     name: "Earl Joey",
     description: `They${"’"}re really nice above anything else. Every time I have had issues with my order they have resolved it speedily and considerately.",
     date:"25 Apr 2024`,
@@ -102,8 +109,11 @@ export default function TestmoniesSection() {
     </div>
   ) : (
     <Carousel
-    itemClass="!px-0"
-    responsive={responsive} autoPlay={false} swipeable>
+      itemClass="!px-0"
+      responsive={responsive}
+      autoPlay={false}
+      swipeable
+    >
       {firstTestmonies.map((testmonies, index) => (
         <div
           key={`carousel_item_${index}`}
