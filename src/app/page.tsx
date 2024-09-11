@@ -104,7 +104,7 @@ export default function Home() {
       text: "Single Meal Orders",
       description:
         "Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.",
-      onClick: () => router.push("/meal_plans"),
+      onClick: () => router.push("/single_meals"),
       btnText: "Order now",
       image: "single.png",
     },
@@ -113,7 +113,7 @@ export default function Home() {
       text: "Bulk Meal Orders",
       description:
         "Hosting an event or just stocking up? Order in bulk and get large quantities of your favorite dishes. ",
-      onClick: () => router.push("/meal_plans"),
+      onClick: () => router.push("/bulk_meals"),
       btnText: "Order now",
     },
   ];

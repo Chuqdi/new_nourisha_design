@@ -84,7 +84,6 @@ const MealPlanSelection = ({
 
   useEffect(() => {
     if (data?.data?.data?.data) {
-      console.log(data?.data?.data?.data);
       setOptions(data?.data?.data?.data);
     }
   }, [data]);
@@ -119,6 +118,23 @@ const MealPlanSelection = ({
           );
         })}
       </div>
+
+      {!isLoading && (
+        <div className="flex justify-center items-center mt-4 ">
+          <Button
+            variant="primary"
+            // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
+            onClick={() => {
+              router.push(
+                `/food_box?plan=${
+                  options.find((o, i) => i === activeOptionIndex)?.name
+                }`
+              );
+            }}
+            title="Continue"
+          />
+        </div>
+      )}
     </div>
   );
 };

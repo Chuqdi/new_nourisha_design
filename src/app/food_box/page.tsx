@@ -262,7 +262,7 @@ export default function FoodboxPage() {
             Select your favourites from our mouthwatering range of meals.
           </p>
           <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
-            <div className="grid grid-cols-2 md:grid-cols-4  gap-5 w-fit">
+            <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
               {COUNTRIES.map((country, index) => {
                 const selected = country === activeCountry;
                 return (
@@ -290,8 +290,8 @@ export default function FoodboxPage() {
                 className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 bor  #f2f4f7]"
               />
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-7  gap-5 w-fit">
+            {/*  md:grid-cols-7 */}
+            <div className="grid grid-cols-2 md:flex items-center  gap-5 w-fit">
               {weeks.map((week, index) => {
                 const selected = week === activeWeek;
                 return (

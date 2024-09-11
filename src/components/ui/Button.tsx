@@ -14,7 +14,8 @@ export default function Button({title,disabled,className,isRightIconed, variant,
   return (
     <button
       className={`
-        h-8 py-4 px-[1.25rem] text-sm font-inter  rounded-full flex items-center justify-center shadow-btn gap-2
+        h-8 py-4 px-[1.25rem] 
+        text-sm font-inter hover:opacity-80  rounded-full flex items-center justify-center shadow-btn gap-2
         ${variant === "primary" ? "bg-primary-orange-900 border-none text-white" : "bg-white border-[1px] border-primary-orange-900 text-primary-orange-900"}
         ${fullWidth && "w-full"}
         ${disabled&&"opacity-80 pointer-events-none"}
