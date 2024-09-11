@@ -54,12 +54,12 @@ export default function FaqSection() {
     {
       question: "How long does delivery take?",
       answer:
-        "Delivery takes between 24 hours to 48 hours depending on location.Your order needs to be placed before 12:00pm of the previous day to receive within 24 hours.",
+        "Delivery takes between 24 hours to 48 hours depending on location.Your order needs to be placed before 12:00 pm of the previous day to be received within 24 hours.",
     },
     {
       question: "Can I choose to subscribe for the weekly or monthly plan this week and decide not to pay for a subscription plan the following week?",
       answer:
-        "Most certainly. The subscription plan is not a compulsory Auto-renewal. However, if you choose to be on Auto-renewal, just click on the auto-renewal button displayed on the app",
+        "Most certainly. The subscription plan is not a compulsory Auto-renewal. However, if you choose to be on Auto-renewal, just click on the auto-renewal button displayed on the app.",
     },
     {
       question: "Do you deliver across all UK cities?",
