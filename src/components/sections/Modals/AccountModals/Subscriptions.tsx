@@ -11,81 +11,14 @@ import HTMLRenderer from "react-html-renderer";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import queryKeys from "@/config/queryKeys";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { IPlan } from "@/config/types";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "@/ui/use-toast";
 import Modal from "@/components/ui/Modal";
 import { Icon } from "@iconify/react/dist/iconify.js";
-
-const PaymentModal = ({ plan, close }: { plan: IPlan; close: () => void }) => {
-  const elements = useElements();
-  const stripe = useStripe();
-  const { axiosClient } = useAuth();
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
-  const [paymentLoading, setPaymentLoadng] = useState(false);
-
-  const handleSubmitPayment = async () => {
-    if (elements == null || stripe == null) {
-      return;
-    }
-
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setErrorMessage(submitError.message);
-      return;
-    }
-
-    setPaymentLoadng(true);
-    let data = {
-      plan_id: plan?._id,
-    };
-
-    await axiosClient
-      .post("billings/subscribe", data)
-      .then(async (response) => {
-        const return_url = "https://www.jobofa.com";
-        const clientSecret = response?.data?.data?.client_secret;
-
-        const { error } = await stripe.confirmPayment({
-          elements,
-          clientSecret,
-          confirmParams: {
-            return_url,
-          },
-        });
-        toast({
-          variant: "default",
-          title: "Payment Successful",
-          description: "You have successfully subscribed",
-        });
-      })
-      .catch((error) => {
-        toast({
-          variant: "destructive",
-          title: "Something went wrong",
-          description: "Request could not be completed",
-        });
-      });
-    setPaymentLoadng(false);
-  };
-  return (
-    <div className="bg-white p-4 rounded flex flex-col gap-3">
-      <button onClick={close} className="w-full flex justify-end">
-        <Icon color="#000" icon="fluent-mdl2:cancel" className="w-6 h-6" />
-      </button>
-      <PaymentElement />
-      <Button
-        variant="primary"
-        fullWidth
-        title="Subscribe"
-        disabled={!stripe || !elements || paymentLoading}
-        onClick={handleSubmitPayment}
-      />
-    </div>
-  );
-};
+import PaymentModal from "../PaymentModal";
 
 const Checkout = ({
   plan,
@@ -100,6 +33,7 @@ const Checkout = ({
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
   ];
   const textColors = ["#9572F9", "#9572F9", "#9572F9"];
+  const { axiosClient } = useAuth();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   return (
@@ -161,7 +95,29 @@ const Checkout = ({
       </div>
 
       <Modal show={showPaymentModal}>
-        <PaymentModal close={() => setShowPaymentModal(false)} plan={plan} />
+        <PaymentModal
+          //@ts-ignore
+          getClientSecret={async () => {
+            let return_url,
+              clientSecret = "";
+            let data = {
+              plan_id: plan?._id,
+            };
+            await axiosClient
+              .post("billings/subscribe", data)
+              .then(async (response) => {
+                return_url = "https://www.jobofa.com";
+                clientSecret = response?.data?.data?.client_secret;
+              });
+
+            return {
+              clientSecret,
+              redirectUrl: return_url,
+            };
+          }}
+          close={() => setShowPaymentModal(false)}
+          plan={plan}
+        />
       </Modal>
     </div>
   );
@@ -207,10 +163,8 @@ export default function Subscription() {
     return axiosClient.get("subscriptions/me");
   };
 
-  const {
-    data: SubscriptionDetails,
-    isLoading: LoadingSubscriptionDetails,
-  } = useQuery("GET_ACTIVE_SUBSCRIPTION_DETAILS", getActiveSubscriptionDetails);
+  const { data: SubscriptionDetails, isLoading: LoadingSubscriptionDetails } =
+    useQuery("GET_ACTIVE_SUBSCRIPTION_DETAILS", getActiveSubscriptionDetails);
 
   useEffect(() => {
     if (SubscriptionDetails?.data?.data) {

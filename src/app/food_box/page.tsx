@@ -365,7 +365,7 @@ export default function FoodboxPage() {
                       setSideModal({
                         component: (
                           <DeliveryModal
-                          setDeliveryDate={set_delivery_date}
+                            setDeliveryDate={set_delivery_date}
                             proceed={createLineUp}
                           />
                         ),

@@ -9,6 +9,7 @@ import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
+import useFingerPrint from "./useFingerPrint";
 
 const CART_ITEMS = "cart_item";
 const useCart = () => {
@@ -17,6 +18,7 @@ const useCart = () => {
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
+  const device_id = useFingerPrint();
   const token = getToken();
   const user = useContext(UserContext);
   const getCartSessionDetails = () => {
@@ -59,47 +61,38 @@ const useCart = () => {
   }, [cartItems]);
 
   const updateItemBE = async (itemId: string, quantity: number) => {
+    
     axiosClient.put("cart", {
       itemId,
       quantity,
-    });
+      device_id,
+    })
+    
+    ;
     RefreshCart();
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
-    if (!user?.user?._id) {
-      toast({
-        title: "Login Required",
-        description: "Please login to add items to your cart",
-        variant: "destructive",
-      });
-      return;
-    }
     await axios.delete(`${process.env.API_URL}cart`, {
       data: {
         itemId,
         quantity,
+        device_id,
       },
       headers: {
         "device-id": "29a1df4646cb3417c19994a59a3e022a",
         Authorization: `Bearer ${token}`,
+        device_id,
       },
     });
     RefreshCart();
   };
 
   const addItemToCart = async (item: IMeal) => {
-    if (!user?.user?._id) {
-      toast({
-        title: "Login Required",
-        description: "Please login to add items to your cart",
-        variant: "destructive",
-      });
-      return;
-    }
     const data = {
       itemId: item._id,
       quantity: 1,
+      device_id,
     };
 
     await axiosClient.put("cart", data);

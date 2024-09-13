@@ -1,6 +1,6 @@
 import queryKeys from "@/config/queryKeys";
 import SidebarHOC from "@/HOC/SidebarHOC";
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
 import moment from "moment";
@@ -82,7 +82,7 @@ export default function Order() {
         </div>
       </div>
 
-      {!isLoading && (data?.data?.data as [])?.map((order, key) => (
+      {!isLoading && (data?.data?.data?.data as [])?.map((order, key) => (
         <SingleListItem key={`order_${key}`} order={order} />
       ))}
       {isLoading &&
@@ -90,7 +90,7 @@ export default function Order() {
           <Skeleton key={`skeleton_${index}`} className="h-14" />
         ))}
 
-      {!isLoading && !(data?.data?.data as [])?.length && (
+      {!isLoading && !!(data?.data?.data as [])?.length && (
         <div className="flex justify-center items-center mt-30">
           <img src="/images/no_order.png" />
         </div>

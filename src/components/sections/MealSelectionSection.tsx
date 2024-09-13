@@ -7,8 +7,7 @@ import useFetch from "@/hooks/useFetch";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
 import Button from "../ui/Button";
-import { useAtomValue } from "jotai";
-import { ATOMS } from "@/store/atoms";
+
 
 export default function MealSelectionSection({
   isSingle,

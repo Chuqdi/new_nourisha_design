@@ -1,4 +1,6 @@
+import { ATOMS } from "@/store/atoms";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 
 export default function SideModal({
@@ -8,6 +10,8 @@ export default function SideModal({
   show: boolean;
   children: React.ReactNode;
 }) {
+  const cartLoading = useAtomValue(ATOMS.cartIsLoading);
+
   useEffect(() => {
     const app_wrapper = document.getElementById("app_wrapper");
 
@@ -32,7 +36,11 @@ export default function SideModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed top-0 left-0 w-full h-full bg-[#00000077] opacity-75 z-[99999999] flex justify-end items-end md:items-center "
+          className={
+            `
+            fixed top-0 left-0 w-full h-full bg-[#00000077] opacity-75  flex justify-end items-end md:items-center z-[${cartLoading ?"999999":"99999999"}]
+            `
+          }
         >
           <div className="w-full md:w-[40%] ">{children}</div>
         </motion.div>

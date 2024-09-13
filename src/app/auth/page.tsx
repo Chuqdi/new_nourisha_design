@@ -11,6 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useRouter } from "next/navigation";
 import { toast } from "@/ui/use-toast";
+import useFingerPrint from "@/hooks/useFingerPrint";
 
 
 export default function AuthPage() {
@@ -18,6 +19,7 @@ export default function AuthPage() {
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
   const router = useRouter();
+  const device_id = useFingerPrint();
 
 
   const options = [
@@ -35,7 +37,10 @@ export default function AuthPage() {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    const data = onLogin ? loginFormik?.values:signUpForm?.values;
+    const data = onLogin ? {
+      ...loginFormik?.values,
+      "device_id":device_id,
+    }:signUpForm?.values;
 
     const createdUser = await makeRequest(onLogin?"auth/login":"auth/register", data);
     if (createdUser) {

@@ -7,7 +7,7 @@ import Button from "../ui/Button";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import { useContext, useState } from "react";
@@ -15,18 +15,20 @@ import MobileNavbar from "./MobileNavbar";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { UserContext } from "@/HOC/UserContext";
+import CartModal from "../sections/Modals/CartModal";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const navbarOptions = useNavbar();
   const router = useRouter();
+  const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const user = useContext(UserContext);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const sideBarOptions = [
     {
       image: "cart.svg",
-      onClick:()=> router.push("/single_meals")
+      onClick: () => setSideModal({ show: true, component: <CartModal /> })
     },
     {
       image: "apple.svg",
@@ -42,6 +44,7 @@ export default function Navbar() {
     },
   ];
   return (
+    !cartLoading &&
     <div className="fixed flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
       <Logo className="h-6" />
       {!isMobile && (

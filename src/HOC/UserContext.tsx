@@ -40,16 +40,16 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   }, [data]);
 
   useEffect(() => {
-    if (isError) {
-      toast({
-        variant: "destructive",
-        title: "Authentication failed",
-        description: "Authentication failed",
-      });
-      if (!window.location.href.includes("auth") && window.location.href === "/") {
-        window.location.href = "/auth";
-      }
-    }
+    // if (isError) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Authentication failed",
+    //     description: "Authentication failed",
+    //   });
+    //   if (!window.location.href.includes("auth") && window.location.href === "/") {
+    //     // window.location.href = "/auth";
+    //   }
+    // }
   }, [isError]);
 
   return (

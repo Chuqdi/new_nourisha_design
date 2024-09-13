@@ -4,10 +4,47 @@ import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue } from "jotai";
-import { useEffect, useMemo, useState } from "react";
+import { useAtomValue } from "jotai";
+import {  useMemo, useState } from "react";
 
-export default function SingleCartItemSection({
+export const CartManipulator =({meal, item }:{ item:ICartItem, meal:IMeal })=>{
+  const { addItemToCart, removeItemFrommCart } = useCart();
+  const [_, setMealAddedToCart] = useState(false);
+
+
+  return (
+    <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
+    <button 
+      onClick={() => {
+        removeItemFrommCart(meal?._id!, 1,);
+        setMealAddedToCart(true);
+        setTimeout(() => {
+          setMealAddedToCart(false);
+        }, 1500);
+      }}
+    className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl">
+      -
+    </button>
+    <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
+      {item?.quantity ?? "0"}
+    </p>
+    <button
+      onClick={() => {
+        addItemToCart(meal);
+        setMealAddedToCart(true);
+        setTimeout(() => {
+          setMealAddedToCart(false);
+        }, 1500);
+      }}
+      className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
+    >
+      +
+    </button>
+  </div>
+  )
+}
+
+export default function  SingleCartItemSection({
   country,
   isHome,
   meal,
@@ -22,10 +59,8 @@ export default function SingleCartItemSection({
 }) {
   const { addFoodBox, removeFoodBox } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
-  const { addItemToCart, removeItemFrommCart } = useCart();
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
 
-  const [mealAddedToCart, setMealAddedToCart] = useState(false);
   const activeDayBox = useMemo(() => {
     if (boxStore) {
       //@ts-ignore
@@ -111,34 +146,7 @@ export default function SingleCartItemSection({
             </p>
           </button>
 
-          <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
-            <button 
-              onClick={() => {
-                removeItemFrommCart(meal?._id!, 1,);
-                setMealAddedToCart(true);
-                setTimeout(() => {
-                  setMealAddedToCart(false);
-                }, 1500);
-              }}
-            className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl">
-              -
-            </button>
-            <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
-              {cartItemMeal?.quantity ?? "0"}
-            </p>
-            <button
-              onClick={() => {
-                addItemToCart(meal);
-                setMealAddedToCart(true);
-                setTimeout(() => {
-                  setMealAddedToCart(false);
-                }, 1500);
-              }}
-              className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
-            >
-              +
-            </button>
-          </div>
+         <CartManipulator meal={meal} item={cartItemMeal!} />
         </div>
       )}
     </div>
