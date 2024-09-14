@@ -1,11 +1,11 @@
-import Link from "next/link";
-import Button from "../ui/Button";
-import Logo from "../ui/Logo";
-import Input from "../ui/Input";
-import DownloadApp from "../ui/DownloadApp";
-import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import Link from "next/link";
+import { useMediaQuery } from "react-responsive";
+import Button from "../ui/Button";
+import DownloadApp from "../ui/DownloadApp";
+import Input from "../ui/Input";
+import Logo from "../ui/Logo";
 
 export default function Footer() {
   const options = [
@@ -73,21 +73,19 @@ export default function Footer() {
   const socials = [
     {
       icon: "mingcute:facebook-fill",
-      link: "",
+      link: "https://web.facebook.com/people/Eatnourisha/100068259570536/?mibextid=LQQJ4d",
       title: "Facebook",
     },
     {
       icon: "ri:twitter-x-fill",
-      link: "",
+      link: "https://x.com/nourisha12/status/1652961343736086529?s=46&mx=2",
       title: "X",
     },
     {
       icon: "hugeicons:instagram",
-      link: "",
+      link: "https://www.instagram.com/eatnourisha/?igshid=MmJiY2I4NDBkZg%3D%3D",
       title: "Instagram",
     },
-
-    
   ];
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return (
@@ -140,7 +138,7 @@ export default function Footer() {
             <div className="flex flex-col gap-4">
               {socials.map((link, i) => (
                 <Link
-                  className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center" 
+                  className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center"
                   key={`link_option_${i}`}
                   href={link.link}
                 >

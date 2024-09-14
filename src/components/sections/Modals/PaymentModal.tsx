@@ -8,7 +8,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 
 const Payment = ({
   close,
@@ -37,7 +37,6 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
-       
         const { error } = await stripe.confirmPayment({
           elements,
           clientSecret,
@@ -46,7 +45,7 @@ const Payment = ({
           },
         });
 
-        console.log(error)
+        console.log(error);
         toast({
           variant: "default",
           title: "Payment Successful",
@@ -89,17 +88,15 @@ const PaymentModal = ({
   amount: number;
   getClientSecret: () => Promise<{ clientSecret: string; returnUrl: string }>;
 }) => {
-  const [options, setOptions] = useState({
+  const [options, _] = useState<StripeElementsOptions>({
     mode: "subscription",
     amount: Math.round(amount),
     currency: "gbp",
     appearance: {},
-    // setup_future_usage: "off_session",
-    setup_future_usage: "off_session",
+    setup_future_usage: "on_session",
   });
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return (
-    //@ts-ignore
     <Elements stripe={stripePromise} options={options}>
       <Payment close={close} getClientSecret={getClientSecret} />
     </Elements>

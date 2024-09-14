@@ -3,7 +3,7 @@ import SidebarHOC from "@/HOC/SidebarHOC";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -12,14 +12,17 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Checkout = () => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const user = useContext(UserContext);
-  const setSideModal = useSetAtom(ATOMS.showSideModal);
+  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const { axiosClient } = useAuth();
+  const router = useRouter();
 
   return (
     <Button
@@ -47,12 +50,10 @@ const Checkout = () => {
                         delivery_date,
                       });
 
-
                       return {
                         clientSecret: response?.data?.data?.client_secret,
                         returnUrl: "htttps://jobofa.com/text",
                       };
-                      
                     },
                   })
                 }
@@ -61,11 +62,16 @@ const Checkout = () => {
             show: true,
           });
         } else {
+          setSideModal({
+            ...sideModal,
+            show: false,
+          });
           toast({
             variant: "default",
             title: "Error",
             description: "Please login/register to continue",
           });
+          router.push("/auth");
         }
       }}
     />
@@ -116,13 +122,30 @@ function CartItem({ item }: { item: ICartItem }) {
 
 function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
+  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
 
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
 
   return (
     <SidebarHOC title="Cart">
       <div className="flex flex-col gap-3">
-        <p className="text-black-900 text-sm font-inter">Cart Summary</p>
+        {!cartItems.length && (
+          <p className="text-black-900 text-sm font-inter">Cart Summary</p>
+        )}
+        {!cartItems.length && (
+          <div className="text-center font-inter text-sm text-black-900">
+            No items in your cart,
+            <Link
+              onClick={() => {
+                setSideModal({ ...sideModal, show: false });
+              }}
+              className="text-primary-orange-900"
+              href="/single_meals"
+            >
+              add here...
+            </Link>
+          </div>
+        )}
 
         <div className="flex flex-col gap-3">
           {cartItems?.map((item, index) => (
@@ -130,36 +153,41 @@ function CartModal() {
           ))}
         </div>
 
-        <div>
-          <label>Coupon Code</label>
-          <Input placeholder="Enter coupon code here..." />
-        </div>
-
-        <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
-          <div className="flex items-center justify-between">
-            <p className="font-inter text-sm">Delivery fee</p>
-            <p className="font-bold font-inter text-sm">
-              £{cartDetails?.deliveryFee}
-            </p>
+        {!!cartItems.length && (
+          <div>
+            <label>Coupon Code</label>
+            <Input placeholder="Enter coupon code here..." />
           </div>
+        )}
 
-          <div className="flex items-center justify-between">
-            <p className="font-inter text-sm">Sub total</p>
-            <p className="font-bold font-inter text-sm">
-              £{cartDetails?.total}
-            </p>
-          </div>
+        {!!cartItems.length && (
+          <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
+            <div className="flex items-center justify-between">
+              <p className="font-inter text-sm">Delivery fee</p>
+              <p className="font-bold font-inter text-sm">
+                £{cartDetails?.deliveryFee}
+              </p>
+            </div>
 
-          <div className="flex items-center justify-between">
-            <p className="font-inter text-sm">Total</p>
-            <p className="font-bold font-inter text-sm">
-              £
-              {parseInt(cartDetails?.total) +
-                parseInt(cartDetails?.deliveryFee)}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="font-inter text-sm">Sub total</p>
+              <p className="font-bold font-inter text-sm">
+                £{cartDetails?.total}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <p className="font-inter text-sm">Total</p>
+              <p className="font-bold font-inter text-sm">
+                £
+                {parseInt(cartDetails?.total) +
+                  parseInt(cartDetails?.deliveryFee)}
+              </p>
+            </div>
           </div>
-        </div>
-        <Checkout />
+        )}
+
+        {!!cartItems.length && <Checkout />}
       </div>
     </SidebarHOC>
   );

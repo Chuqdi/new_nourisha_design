@@ -25,7 +25,7 @@ export default () => {
       options: [],
     },
     {
-      page: "/meal_plans",
+      page: "https://blog.eatnourisha.com/",
       isActive: false,
       name: "Blog",
     },

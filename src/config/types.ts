@@ -66,6 +66,20 @@ export interface IOrder {
   delivery_fee?: string;
 }
 
+export interface IReferal {
+  createdAt: string;
+  currency: string;
+  invitee: IUser;
+  inviter: string;
+  is_paid: boolean;
+  is_promotion: boolean;
+  is_subscribed: boolean;
+  ref_code: string;
+  reward: number;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
 export interface IPlan {
   _id: string;
   amount?: number;
@@ -112,15 +126,15 @@ export interface IFoodBoxItem {
   first_meal: string;
   last_meal: string;
 }
-export type IFoodBoxDayType = 
-| "Sunday"
-| "Monday"
-| "Tuesday"
-| "Wednesday"
-| "Thursday"
-| "Friday"
-| "Saturday";
+export type IFoodBoxDayType =
+  | "Sunday"
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday";
 export interface IFoodBox {
-  day:IFoodBoxDayType;
+  day: IFoodBoxDayType;
   meals: IFoodBoxItem;
 }

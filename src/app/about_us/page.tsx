@@ -2,10 +2,12 @@
 import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
+import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { useRouter } from "next/navigation";
 
 export default function AboutPage() {
+  const router = useRouter();
   const abouts = [
     {
       title: "Who we are",
@@ -21,12 +23,30 @@ export default function AboutPage() {
 
   const exploreOptions = [
     {
-        title:"Meal Subscriptions",
-        description:"Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.",
-        btnTitle:"Start Your Subscription",
-        image:""
-    }
-  ]
+      title: "Meal Subscriptions",
+      description:
+        "Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.",
+      btnTitle: "Start Your Subscription",
+      image: "subscriptions.png",
+      onClick: () => router.push("/meal_plans"),
+    },
+    {
+      title: "Single Meal Orders",
+      description:
+        "Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.",
+      btnTitle: "Order now",
+      image: "meal_orders.png",
+      onClick: () => router.push("/single_meals"),
+    },
+    {
+      title: "Bulk Meal Orders",
+      description:
+        "Hosting an event or just stocking up? Order in bulk and get large quantities of your favorite dishes. ",
+      btnTitle: "Order now",
+      image: "bulk_meal.png",
+      onClick: () => router.push("/bulk_meals"),
+    },
+  ];
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
@@ -63,28 +83,47 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <div className="px-1.25 md:px-6.25 flex flex-col gap-3 bg-[#F9FAFB] py-6.25">
+      <div className="px-1.25 md:px-6.25 flex flex-col gap-4 bg-[#F9FAFB] py-6.25">
         <div className="flex justify-between items-center">
           <button className="text-[#FE7E00] font-inter text-base leading-[1.5rem] tracking-[-0.015rem] rounded-full p-6 h-14  w-fit border-[1px] border-[#828893] flex justify-center items-center">
             OUR FEATURES
           </button>
-
-          {/* <div className="flex items-center gap-6">
-            <button className="w-14 h-14 flex justify-center items-center border-[1px] rounded-[3rem] border-primary-orange-900">
-              <Icon
-                color="#FE7E00"
-                className="text-xlg"
-                icon="ph:arrow-left-bold"
-              />
-            </button>
-            <button className="w-14 h-14 flex justify-center items-center border-[1px] rounded-[3rem] border-primary-orange-900">
-              <Icon color="#FE7E00" className="text-xlg" icon="ep:right" />
-            </button>
-          </div> */}
         </div>
         <h3 className="text-black-900 font-NewSpiritBold text-[1.4rem] md:text-[2rem]">
           Explore What Nourisha Offers
         </h3>
+        <div className="flex flex-col md:flex-row items-center gap-8 mt-4">
+          {exploreOptions.map((option, index) => (
+            <div
+              className="bg-[#E1F0D0] rounded-[2rem] "
+              key={`explore_${index}`}
+            >
+              <div className="px-4 pt-4">
+                <h3 className="font-inter text-black-900 text-[2rem]">
+                  {option?.title}
+                </h3>
+                <p className="text-sm text-black-900 font-inter ">
+                  {option?.description}
+                </p>
+                <div className="mt-3">
+                  <Button
+                    variant="primary"
+                    isRightIconed
+                    title={option?.title}
+                    onClick={option?.onClick}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-end justify-end w-full border">
+                <img
+                  className="h-[8.75rem] object-contain"
+                  src={`/images/about/explore_images/${option?.image}`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="py-1.25">
