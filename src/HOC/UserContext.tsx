@@ -17,8 +17,8 @@ export const UserContext = createContext<
 
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>({} as IUser);
-  const { toast } = useToast();
-  const { axiosClient } = useAuth();
+  // const { toast } = useToast();
+  // const { axiosClient } = useAuth();
 
   // const fetchUser = async () => {
   //   return axiosClient.get("customers/me");
