@@ -4,7 +4,6 @@ import PagesHOC from "@/HOC/PagesHOC";
 import UserContextProvider from "@/HOC/UserContext";
 import { Provider as JotaiProvider } from "jotai";
 import { Inter } from "next/font/google";
-import NextNProgress from "nextjs-progressbar";
 import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
@@ -33,7 +32,6 @@ export default function RootLayout({
           <QueryClientProvider client={queryClient}>
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
               <UserContextProvider>
-                <NextNProgress color="#FE7E00" />
                 <PagesHOC>
                   {children}
                   <Toaster />

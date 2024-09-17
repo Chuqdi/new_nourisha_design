@@ -3,7 +3,6 @@ import SideModal from "@/components/ui/SideModal";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue } from "jotai";
-//@ts-ignore
 
 export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const showSideModal = useAtomValue(ATOMS.showSideModal);
