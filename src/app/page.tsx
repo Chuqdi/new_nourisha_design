@@ -1,13 +1,13 @@
 "use client";
-import Footer from "@/components/commons/Footer";
-import Navbar from "@/components/commons/Navbar";
-import CommonQuestionsSection from "@/components/sections/CommonQuestionSection";
-import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
-import MealSelectionSection from "@/components/sections/MealSelectionSection";
-import TestmoniesSection from "@/components/sections/TestmoniesSection";
-import Button from "@/components/ui/Button";
-import DownloadApp from "@/components/ui/DownloadApp";
-import Ratings from "@/components/ui/Rating";
+// import Footer from "@/components/commons/Footer";
+// import Navbar from "@/components/commons/Navbar";
+// import CommonQuestionsSection from "@/components/sections/CommonQuestionSection";
+// import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
+// import MealSelectionSection from "@/components/sections/MealSelectionSection";
+// import TestmoniesSection from "@/components/sections/TestmoniesSection";
+// import Button from "@/components/ui/Button";
+// import DownloadApp from "@/components/ui/DownloadApp";
+// import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
@@ -109,7 +109,7 @@ export default function Main() {
         src="/images/index_screen_gray_bg.png"
         className=" absolute right-0 top-0 h-[40rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0"
       />
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
         <div className="flex-1 p-2 md:p-0 md:ml-6.25 flex flex-col gap-5">
           <div>
@@ -122,23 +122,21 @@ export default function Main() {
             </p>
           </div>
           <div>
-            <Button
+            {/* <Button
               fullWidth={isMobile}
               variant="primary"
               title="Get started"
-            />
+            /> */}
           </div>
           <div className="text-black-900 font-inter text-lg flex gap-4">
             Rated Excellent On Trustpilot
-            <Ratings />
+            {/* <Ratings /> */}
           </div>
           <div className="flex items-center gap-3">
             <p className="text-dark font-inter text-lg">4,021 reviews on</p>
             <img src="/images/trust_pilot.png" className="h-8" />
           </div>
-          <div className="mt-2">
-            <DownloadApp />
-          </div>
+          <div className="mt-2">{/* <DownloadApp /> */}</div>
         </div>
         {isMobile ? (
           <img src="/images/taste.png" className="w-full z-[999]" />
@@ -265,12 +263,12 @@ export default function Main() {
               </div>
 
               <div>
-                <Button
+                {/* <Button
                   title={offer.btnText}
                   onClick={offer.onClick}
                   variant="primary"
                   isRightIconed
-                />
+                /> */}
               </div>
             </div>
           ))}
@@ -288,7 +286,7 @@ export default function Main() {
             curated menu currently features:
           </p>
 
-          <MealSelectionSection isSingle isHome />
+          {/* <MealSelectionSection isSingle isHome /> */}
         </div>
       </div>
 
@@ -296,22 +294,20 @@ export default function Main() {
         <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
           So many meals delivered to thousands of satisfied customers
         </h4>
-        <TestmoniesSection />
+        {/* <TestmoniesSection /> */}
         <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
           Rated <span className="font-bold">4.5</span> / 5 based on 1,243
           reviews. Showing our 5 star reviews.
         </p>
       </div>
 
-      <CommonQuestionsSection />
+      {/* <CommonQuestionsSection /> */}
 
       <div className="mx-1.25 md:mx-6.25">
-        <DownloadTheAppWidgetSection />
+        {/* <DownloadTheAppWidgetSection /> */}
       </div>
 
-      <div className="my-[5rem] mx-1.25 md:mx-[3.3rem]">
-        <Footer />
-      </div>
+      <div className="my-[5rem] mx-1.25 md:mx-[3.3rem]">{/* <Footer /> */}</div>
     </div>
   );
 }
