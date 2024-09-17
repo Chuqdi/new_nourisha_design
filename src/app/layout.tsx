@@ -31,12 +31,13 @@ export default function RootLayout({
         <JotaiProvider>
           <QueryClientProvider client={queryClient}>
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
-              {/* <UserContextProvider>
-                <PagesHOC>
+              <UserContextProvider>
+                <div></div>
+                {/* <PagesHOC>
                   {children}
                   <Toaster />
-                </PagesHOC>
-              </UserContextProvider> */}
+                </PagesHOC> */}
+              </UserContextProvider> 
             </body>
           </QueryClientProvider>
         </JotaiProvider>
