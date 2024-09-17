@@ -7,6 +7,7 @@ import Logo from "@/components/ui/Logo";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 import dynamic from "next/dynamic";
+import axios from "axios";
 
 export const UserContext = createContext<
   | {
@@ -19,6 +20,9 @@ export const UserContext = createContext<
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>({} as IUser);
   const { toast } = useToast();
+  const axiosClient = axios.create({
+    baseURL: `${process.env.API_URL}/`,
+  });
   // const { axiosClient } = useAuth();
  
 
