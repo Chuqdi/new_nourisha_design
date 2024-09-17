@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import queryKeys from "../config/queryKeys";
 import { useToast } from "../ui/use-toast";
 import { IUser } from "../config/types";
-import Logo from "@/components/ui/Logo";
+// import Logo from "@/components/ui/Logo";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 
