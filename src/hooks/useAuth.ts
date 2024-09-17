@@ -1,3 +1,4 @@
+"use client"
 import { useToast } from "@/ui/use-toast";
 import axios from "axios";
 import { useState } from "react";
