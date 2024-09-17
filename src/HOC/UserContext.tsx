@@ -22,41 +22,41 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   const { axiosClient } = useAuth();
  
 
-  // const fetchUser = async () => {
-  //   return axiosClient.get("customers/me");
-  // };
+  const fetchUser = async () => {
+    return axiosClient.get("customers/me");
+  };
 
-  // const { data, isLoading, isError } = useQuery(
-  //   queryKeys.AUTH_USER_ME,
-  //   fetchUser,
-  //   {
-  //     cacheTime: 1000,
-  //     retry:false,
-  //   }
-  // );
+  const { data, isLoading, isError } = useQuery(
+    queryKeys.AUTH_USER_ME,
+    fetchUser,
+    {
+      cacheTime: 1000,
+      retry:false,
+    }
+  );
 
-  // useEffect(() => {
-  //   if (data?.data?.data) {
-  //     setUser(data?.data?.data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data?.data?.data) {
+      setUser(data?.data?.data);
+    }
+  }, [data]);
 
-  // useEffect(() => {
-  //   // if (isError) {
-  //   //   toast({
-  //   //     variant: "destructive",
-  //   //     title: "Authentication failed",
-  //   //     description: "Authentication failed",
-  //   //   });
-  //   //   if (!window.location.href.includes("auth") && window.location.href === "/") {
-  //   //     // window.location.href = "/auth";
-  //   //   }
-  //   // }
-  // }, [isError]);
+  useEffect(() => {
+    // if (isError) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Authentication failed",
+    //     description: "Authentication failed",
+    //   });
+    //   if (!window.location.href.includes("auth") && window.location.href === "/") {
+    //     // window.location.href = "/auth";
+    //   }
+    // }
+  }, [isError]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      {/* <div className="flex-1 w-full">
+      <div className="flex-1 w-full">
         {isLoading ? (
           <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center">
             <div className="animate-pulse">
@@ -66,7 +66,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
         ) : (
           children
         )}
-      </div> */}
+      </div>
       {children}
     </UserContext.Provider>
   );
