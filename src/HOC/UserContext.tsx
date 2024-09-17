@@ -6,6 +6,7 @@ import { IUser } from "../config/types";
 import Logo from "@/components/ui/Logo";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
+import dynamic from "next/dynamic";
 
 export const UserContext = createContext<
   | {
@@ -19,6 +20,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>({} as IUser);
   const { toast } = useToast();
   const { axiosClient } = useAuth();
+ 
 
   // const fetchUser = async () => {
   //   return axiosClient.get("customers/me");

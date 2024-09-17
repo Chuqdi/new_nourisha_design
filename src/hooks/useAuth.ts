@@ -5,12 +5,12 @@ import { useState } from "react";
 import useAuthToken from "./useAuthToken";
 import useFingerPrint from "./useFingerPrint";
 
-const useAuth = () => {
+const  useAuth = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const device_id = useFingerPrint();
   const axiosClient = axios.create({
-    baseURL: `${process.env.API_URL}/`,
+    baseURL: `/`,
   });
   const { getToken } = useAuthToken();
   const token = getToken();
