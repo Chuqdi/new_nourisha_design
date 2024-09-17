@@ -33,7 +33,7 @@ export default function RootLayout({
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
               <UserContextProvider>
                 <PagesHOC>
-                  {children}
+                  {/* {children} */}
                   <Toaster />
                 </PagesHOC>
               </UserContextProvider>
