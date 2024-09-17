@@ -27,20 +27,20 @@ export default function RootLayout({
   const queryClient = new QueryClient();
   return (
     <html lang="en">
-      <Suspense fallback={<p>Loading...</p>}>
-        <JotaiProvider>
-          <QueryClientProvider client={queryClient}>
-            <body id="app_wrapper" className={`${interFont.variable} relative`}>
+      <body id="app_wrapper" className={`${interFont.variable} relative`}>
+        <Suspense fallback={<p>Loading...</p>}>
+          <JotaiProvider>
+            <QueryClientProvider client={queryClient}>
               <UserContextProvider>
                 <PagesHOC>
                   {children}
                   <Toaster />
                 </PagesHOC>
-              </UserContextProvider> 
-            </body>
-          </QueryClientProvider>
-        </JotaiProvider>
-      </Suspense>
+              </UserContextProvider>
+            </QueryClientProvider>
+          </JotaiProvider>
+        </Suspense>
+      </body>
     </html>
   );
 }
