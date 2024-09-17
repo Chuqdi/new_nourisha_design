@@ -1,14 +1,13 @@
 "use client";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Provider as JotaiProvider } from "jotai";
+import { Toaster } from "@/components/ui/toaster";
 import PagesHOC from "@/HOC/PagesHOC";
+import UserContextProvider from "@/HOC/UserContext";
+import { Provider as JotaiProvider } from "jotai";
+import { Inter } from "next/font/google";
+import NextNProgress from "nextjs-progressbar";
 import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Toaster } from "@/components/ui/toaster";
-import UserContextProvider from "@/HOC/UserContext";
-import NextNProgress from "nextjs-progressbar";
+import "./globals.css";
 //@ts-ignore
 import { StripeProvider } from "react-stripe-elements";
 
@@ -32,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Suspense fallback={<p>Loading...</p>}>
-        {/* <StripeProvider apiKey={process.env.STRIPE_PK_TEST!}> */}
+        <StripeProvider apiKey={process.env.STRIPE_PK_TEST!}>
           <JotaiProvider>
             <QueryClientProvider client={queryClient}>
               <body
@@ -40,7 +39,7 @@ export default function RootLayout({
                 className={`${interFont.variable} relative`}
               >
                 <UserContextProvider>
-                <NextNProgress color="#FE7E00" />
+                  <NextNProgress color="#FE7E00" />
                   <PagesHOC>
                     {children}
                     <Toaster />
@@ -49,7 +48,7 @@ export default function RootLayout({
               </body>
             </QueryClientProvider>
           </JotaiProvider>
-        {/* </StripeProvider> */}
+        </StripeProvider>
       </Suspense>
     </html>
   );
