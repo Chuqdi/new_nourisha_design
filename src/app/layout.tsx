@@ -31,12 +31,10 @@ export default function RootLayout({
         <Suspense fallback={<p>Loading...</p>}>
           <JotaiProvider>
             <QueryClientProvider client={queryClient}>
-              <UserContextProvider>
                 <PagesHOC>
                   {children}
                   <Toaster />
                 </PagesHOC>
-              </UserContextProvider>
             </QueryClientProvider>
           </JotaiProvider>
         </Suspense>

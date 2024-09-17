@@ -58,7 +58,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
         {isLoading ? (
           <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center">
             <div className="animate-pulse">
-              <Logo />
+              <img  src="/images/logo.png" />
             </div>
           </div>
         ) : (
