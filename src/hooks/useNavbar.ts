@@ -19,8 +19,8 @@ export default () => {
       name: "Bulk meals",
     },
     {
-      page: "/meal_plans",
-      isActive: false,
+      page: "/about_us",
+      isActive: pathName === "/about_us",
       name: "Help",
       options: [],
     },
