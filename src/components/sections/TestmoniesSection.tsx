@@ -1,7 +1,8 @@
-import "react-multi-carousel/lib/styles.css";
-import Carousel from "react-multi-carousel";
-import { useMediaQuery } from "react-responsive";
+"use client";
 import { BREAKPOINT } from "@/config";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { useMediaQuery } from "react-responsive";
 import Ratings from "../ui/Rating";
 
 const responsive = {

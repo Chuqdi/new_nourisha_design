@@ -1,13 +1,14 @@
-import { COUNTRIES } from "@/config";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { useEffect, useState } from "react";
+"use client";
+
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
-import useUnAuthRequest from "@/hooks/useUnAuthRequest";
-import useFetch from "@/hooks/useFetch";
+import { COUNTRIES } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
+import useFetch from "@/hooks/useFetch";
+import useUnAuthRequest from "@/hooks/useUnAuthRequest";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useEffect, useState } from "react";
 import Button from "../ui/Button";
-
 
 export default function MealSelectionSection({
   isSingle,
@@ -44,11 +45,11 @@ export default function MealSelectionSection({
     }
   }, [data]);
   return (
-    <div className={
-      `w-full
+    <div
+      className={`w-full
       
-      `
-    }>
+      `}
+    >
       {!onlyMeals && !isHome && (
         <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] md:text-[3.5rem]">
           Browse & Select meals

@@ -1,3 +1,4 @@
+"use client";
 export default function DownloadTheAppWidgetSection() {
   return (
     <div className="gap-12 md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full     items-center justify-center  ">
