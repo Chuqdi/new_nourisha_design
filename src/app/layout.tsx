@@ -1,6 +1,11 @@
 "use client";
+import { Toaster } from "@/components/ui/toaster";
+import PagesHOC from "@/HOC/PagesHOC";
+import UserContextProvider from "@/HOC/UserContext";
+import { Provider as JotaiProvider } from "jotai";
 import { Inter } from "next/font/google";
-import { QueryClient } from "react-query";
+import { Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
 
 const interFont = Inter({
@@ -22,21 +27,20 @@ export default function RootLayout({
   const queryClient = new QueryClient();
   return (
     <html lang="en">
-      <body></body>
-      {/* <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<p>Loading...</p>}>
         <JotaiProvider>
           <QueryClientProvider client={queryClient}>
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
-              <UserContextProvider>
+              {/* <UserContextProvider>
                 <PagesHOC>
                   {children}
                   <Toaster />
                 </PagesHOC>
-              </UserContextProvider>
+              </UserContextProvider> */}
             </body>
           </QueryClientProvider>
         </JotaiProvider>
-      </Suspense> */}
+      </Suspense>
     </html>
   );
 }
