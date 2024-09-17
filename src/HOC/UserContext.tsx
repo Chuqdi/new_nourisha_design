@@ -18,6 +18,7 @@ export const UserContext = createContext<
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>({} as IUser);
   const { toast } = useToast();
+  const [ loading, setLoading ] =useState(true);
   const { axiosClient } = useAuth();
 
   const fetchUser = async () => {
@@ -52,10 +53,16 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     // }
   }, [isError]);
 
+  useEffect(()=>{
+    setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+  }, [])
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div className="flex-1 w-full">
-        {isLoading ? (
+        {loading || isLoading ? (
           <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center">
             <div className="animate-pulse">
               <img  src="/images/logo.png" />
