@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import queryKeys from "../config/queryKeys";
 import { useToast } from "../ui/use-toast";
 import { IUser } from "../config/types";
