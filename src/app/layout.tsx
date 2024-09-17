@@ -1,6 +1,4 @@
 "use client";
-import { Toaster } from "@/components/ui/toaster";
-import PagesHOC from "@/HOC/PagesHOC";
 import { Inter } from "next/font/google";
 import { QueryClient } from "react-query";
 import "./globals.css";
@@ -29,10 +27,10 @@ export default function RootLayout({
           <QueryClientProvider client={queryClient}>
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
               <UserContextProvider> */}
-      <PagesHOC>
-        {children}
-        <Toaster />
-      </PagesHOC>
+      {/* <PagesHOC> */}
+      {children}
+      {/* <Toaster />
+      </PagesHOC> */}
       {/* </UserContextProvider>
             </body>
           </QueryClientProvider>
