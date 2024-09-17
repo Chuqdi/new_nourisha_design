@@ -17,7 +17,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const SingleWeekendBreakDown = ({ week }: { week: string }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -240,149 +240,147 @@ export default function Main() {
   }, []);
 
   return (
-    <Suspense>
-      <div className="w-full h-full relative pt-6">
-        <Navbar />
+    <div className="w-full h-full relative pt-6">
+      <Navbar />
 
-        <div className="flex flex-col gap-6 mt-32 mx-1.25 md:mx-6.25">
-          <div
-            onClick={() => navigation.back()}
-            className="cursor-pointer flex items-center gap-3 text-black-900 font-inter tracking-[-0.01688rem] leading-[1.687rem]"
-          >
-            <Icon color="#030517" icon="ep:back" className="w-7 h-7" />
-            Back
-          </div>
+      <div className="flex flex-col gap-6 mt-32 mx-1.25 md:mx-6.25">
+        <div
+          onClick={() => navigation.back()}
+          className="cursor-pointer flex items-center gap-3 text-black-900 font-inter tracking-[-0.01688rem] leading-[1.687rem]"
+        >
+          <Icon color="#030517" icon="ep:back" className="w-7 h-7" />
+          Back
+        </div>
 
-          <div className="mt-8">
-            <h4 className="text-[#323546] font-NewSpiritBold text-[2rem] md:text-[3.5rem]">
-              Build your food box
-            </h4>
-            <p className="text-black-900 text-lg font-inter tracking-[-0.01688rem] leading-[1.688rem]">
-              Select your favourites from our mouthwatering range of meals.
-            </p>
-            <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
-              <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
-                {COUNTRIES.map((country, index) => {
-                  const selected = country === activeCountry;
-                  return (
-                    <SelectChip
-                      key={`countries__${index}`}
-                      onClick={() => setActiveCountry(country)}
-                      title={country.name + " Meals"}
-                      selected={selected}
-                    />
-                  );
-                })}
-              </div>
-
-              <div className="flex gap-4   items-center  ">
-                <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
-                  <Icon
-                    color="#030517"
-                    icon="hugeicons:filter-horizontal"
-                    className="text-lg"
+        <div className="mt-8">
+          <h4 className="text-[#323546] font-NewSpiritBold text-[2rem] md:text-[3.5rem]">
+            Build your food box
+          </h4>
+          <p className="text-black-900 text-lg font-inter tracking-[-0.01688rem] leading-[1.688rem]">
+            Select your favourites from our mouthwatering range of meals.
+          </p>
+          <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
+            <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
+              {COUNTRIES.map((country, index) => {
+                const selected = country === activeCountry;
+                return (
+                  <SelectChip
+                    key={`countries__${index}`}
+                    onClick={() => setActiveCountry(country)}
+                    title={country.name + " Meals"}
+                    selected={selected}
                   />
-                  <p className="text-lg text-black-900 font-inter">Filter</p>
-                </div>
-                <input
-                  placeholder="Search Meals"
-                  className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 bor  #f2f4f7]"
-                />
-              </div>
-              {/*  md:grid-cols-7 */}
-              <div className="grid grid-cols-2 md:flex items-center  gap-5 w-fit">
-                {weeks.map((week, index) => {
-                  const selected = week === activeWeek;
-                  return (
-                    <SelectChip
-                      onClick={() => setActiveWeek(week as IFoodBoxDayType)}
-                      title={week}
-                      selected={selected}
-                      key={`days_of_the_week_${index}`}
-                    />
-                  );
-                })}
-              </div>
+                );
+              })}
+            </div>
 
-              <div className="flex flex-col gap-3 mt-4">
-                <h4 className="text-[#323546] font-NewSpiritBold text-2xl tracking-[-0.0225rem]">
-                  Select monday meals
-                </h4>
-                <div className="flex flex-col md:flex-row gap-4 items-start ">
-                  <div className="w-full md:w-[70%]">
-                    {isLoading && (
-                      <p className="text-center my-8"> Loading meals...</p>
-                    )}
-                    <div
-                      className={`
+            <div className="flex gap-4   items-center  ">
+              <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
+                <Icon
+                  color="#030517"
+                  icon="hugeicons:filter-horizontal"
+                  className="text-lg"
+                />
+                <p className="text-lg text-black-900 font-inter">Filter</p>
+              </div>
+              <input
+                placeholder="Search Meals"
+                className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 bor  #f2f4f7]"
+              />
+            </div>
+            {/*  md:grid-cols-7 */}
+            <div className="grid grid-cols-2 md:flex items-center  gap-5 w-fit">
+              {weeks.map((week, index) => {
+                const selected = week === activeWeek;
+                return (
+                  <SelectChip
+                    onClick={() => setActiveWeek(week as IFoodBoxDayType)}
+                    title={week}
+                    selected={selected}
+                    key={`days_of_the_week_${index}`}
+                  />
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col gap-3 mt-4">
+              <h4 className="text-[#323546] font-NewSpiritBold text-2xl tracking-[-0.0225rem]">
+                Select monday meals
+              </h4>
+              <div className="flex flex-col md:flex-row gap-4 items-start ">
+                <div className="w-full md:w-[70%]">
+                  {isLoading && (
+                    <p className="text-center my-8"> Loading meals...</p>
+                  )}
+                  <div
+                    className={`
                     grid grid-cols-1 md:grid-cols-3 gap-4 mt-4
                     `}
-                    >
-                      {meals.map((meal, index) => (
-                        <SingleCartItemSection
-                          country={activeCountry}
-                          isFoodBox
-                          meal={meal}
-                          activeWeek={activeWeek}
-                          key={`cart_item_${index}`}
-                        />
-                      ))}
-                    </div>
+                  >
+                    {meals.map((meal, index) => (
+                      <SingleCartItemSection
+                        country={activeCountry}
+                        isFoodBox
+                        meal={meal}
+                        activeWeek={activeWeek}
+                        key={`cart_item_${index}`}
+                      />
+                    ))}
                   </div>
-                  <div className="w-full md:w-[30%] rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
-                    <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
-                      Plan summary
-                    </h4>
+                </div>
+                <div className="w-full md:w-[30%] rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
+                  <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
+                    Plan summary
+                  </h4>
 
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 h-[0.375rem] bg-[#D9D9D9]">
-                          <div
-                            className="h-full bg-[#04A76C]"
-                            style={{
-                              width: `${
-                                (numberOfMealsSelected / weeks.length) * 100
-                              }%`,
-                            }}
-                          />
-                        </div>
-                        <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem]">
-                          {numberOfMealsSelected}/{weeks.length}
-                        </p>
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-[0.375rem] bg-[#D9D9D9]">
+                        <div
+                          className="h-full bg-[#04A76C]"
+                          style={{
+                            width: `${
+                              (numberOfMealsSelected / weeks.length) * 100
+                            }%`,
+                          }}
+                        />
                       </div>
-                      <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                        Add {7 - numberOfMealsSelected} more days to complete
-                        your plan
+                      <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem]">
+                        {numberOfMealsSelected}/{weeks.length}
                       </p>
                     </div>
-
-                    <WeeksBreakDown weeks={weeks} />
-
-                    <Button
-                      // onClick={createLineUp}
-                      onClick={() =>
-                        setSideModal({
-                          component: (
-                            <DeliveryModal
-                              setDeliveryDate={set_delivery_date}
-                              proceed={createLineUp}
-                            />
-                          ),
-                          show: true,
-                        })
-                      }
-                      fullWidth
-                      disabled={loading}
-                      title="Proceed"
-                      variant="primary"
-                    />
+                    <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
+                      Add {7 - numberOfMealsSelected} more days to complete your
+                      plan
+                    </p>
                   </div>
+
+                  <WeeksBreakDown weeks={weeks} />
+
+                  <Button
+                    // onClick={createLineUp}
+                    onClick={() =>
+                      setSideModal({
+                        component: (
+                          <DeliveryModal
+                            setDeliveryDate={set_delivery_date}
+                            proceed={createLineUp}
+                          />
+                        ),
+                        show: true,
+                      })
+                    }
+                    fullWidth
+                    disabled={loading}
+                    title="Proceed"
+                    variant="primary"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Suspense>
+    </div>
   );
 }

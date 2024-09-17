@@ -8,8 +8,6 @@ import NextNProgress from "nextjs-progressbar";
 import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
-//@ts-ignore
-import { StripeProvider } from "react-stripe-elements";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -31,24 +29,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Suspense fallback={<p>Loading...</p>}>
-        <StripeProvider apiKey={process.env.STRIPE_PK_TEST!}>
-          <JotaiProvider>
-            <QueryClientProvider client={queryClient}>
-              <body
-                id="app_wrapper"
-                className={`${interFont.variable} relative`}
-              >
-                <UserContextProvider>
-                  <NextNProgress color="#FE7E00" />
-                  <PagesHOC>
-                    {children}
-                    <Toaster />
-                  </PagesHOC>
-                </UserContextProvider>
-              </body>
-            </QueryClientProvider>
-          </JotaiProvider>
-        </StripeProvider>
+        <JotaiProvider>
+          <QueryClientProvider client={queryClient}>
+            <body id="app_wrapper" className={`${interFont.variable} relative`}>
+              <UserContextProvider>
+                <NextNProgress color="#FE7E00" />
+                <PagesHOC>
+                  {children}
+                  <Toaster />
+                </PagesHOC>
+              </UserContextProvider>
+            </body>
+          </QueryClientProvider>
+        </JotaiProvider>
       </Suspense>
     </html>
   );
