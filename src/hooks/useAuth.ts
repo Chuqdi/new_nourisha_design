@@ -10,7 +10,7 @@ const  useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const device_id = useFingerPrint();
   const axiosClient = axios.create({
-    baseURL: `/`,
+    baseURL: `${process.env.API_URL}/`,
   });
   const { getToken } = useAuthToken();
   const token = getToken();
