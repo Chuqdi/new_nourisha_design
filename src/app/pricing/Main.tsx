@@ -26,7 +26,7 @@ export default function Main() {
       <div className="flex flex-col md:flex-row gap-8 p-4">
         {PRICINGS.map((pricing, index) => (
           <div
-            className="p-3 rounded-[0.75rem]"
+            className="p-3 rounded-[0.75rem] flex-1"
             style={{ background: pricing.gradientBg }}
             key={`pricing_${index}`}
           >
@@ -45,11 +45,11 @@ export default function Main() {
                   {pricing.days} days
                 </div>
               </div>
-              <div className="w-4/5">
+              <div className="w-4/5 h-[5rem]">
                 <HTMLRenderer html={pricing.description} />
               </div>
 
-              <div className="mt-2 gap-3 flex flex-col my-6">
+              <div className="mt-2 gap-3 flex flex-col my-6  max-h-[10rem]">
                 {pricing.options.map((p, i) => (
                   <div
                     className="flex items-center gap-3"
@@ -63,7 +63,7 @@ export default function Main() {
                 ))}
               </div>
 
-              <Button variant="primary" fullWidth title="Subscribe" />
+              <Button className="h-[3rem]" variant="primary" fullWidth title="Subscribe" />
               <p className="text-black-900 text-sm text-center font-inter my-4">
                 + £10 For deliveries during the week
               </p>

@@ -7,6 +7,8 @@ import Logo from "@/components/ui/Logo";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 import dynamic from "next/dynamic";
+import Modal from "@/components/ui/Modal";
+import LoginModal from "@/components/sections/Modals/LoginModal";
 
 export const UserContext = createContext<
   | {
@@ -19,8 +21,9 @@ export const UserContext = createContext<
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>({} as IUser);
   const { toast } = useToast();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   const { axiosClient } = useAuth();
- 
 
   const fetchUser = async () => {
     return axiosClient.get("customers/me");
@@ -31,7 +34,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     fetchUser,
     {
       cacheTime: 1000,
-      retry:false,
+      retry: false,
     }
   );
 
@@ -42,32 +45,29 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   }, [data]);
 
   useEffect(() => {
-    // if (isError) {
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Authentication failed",
-    //     description: "Authentication failed",
-    //   });
-    //   if (!window.location.href.includes("auth") && window.location.href === "/") {
-    //     // window.location.href = "/auth";
-    //   }
-    // }
+    if (isError) {
+      setShowLoginModal(true);
+    }
   }, [isError]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div className="flex-1 w-full">
         {isLoading ? (
-          <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center">
+          <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
             <div className="animate-pulse">
-              <Logo />
+              <img src="/images/logo2.png" />
             </div>
           </div>
         ) : (
-          children
+          <>
+            <Modal large  show={showLoginModal}>
+              <LoginModal setUser={setUser} close={()=> setShowLoginModal(false)} />
+            </Modal>
+            {children}
+          </>
         )}
       </div>
-      {children}
     </UserContext.Provider>
   );
 }

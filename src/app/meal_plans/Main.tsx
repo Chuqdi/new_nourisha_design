@@ -30,12 +30,12 @@ const SinglePlan = ({
   return (
     <div
       onClick={() => setActiveOptionIndex(index)}
-      className={`p-6 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer
+      className={`p-4 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer
                 ${!selected ? "bg-[#F2F4F7]" : "bg-[#E1F0D0]"}
               `}
     >
       <div className="flex justify-between items-center">
-        <p className="text-[#04A76C] text-sm font-inter font-semibold">
+        <p className="text-[#04A76C] text-sm font-inter font-bold">
           {option?.name}
         </p>
         <p className="text-black-900 font-inter text-sm">
@@ -45,7 +45,7 @@ const SinglePlan = ({
       {/* <div className="flex justify-between items-center">
         <SelectIndicator selected={selected} />
       </div> */}
-      <h3 className="font-NewSpiritBold text-[3.5rem] md:text-[1.5rem] text-[#323546]">
+      <h3 className="font-NewSpiritBold text-[1.5rem] md:text-[3.5rem] text-[#323546]">
         {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
@@ -54,7 +54,7 @@ const SinglePlan = ({
       </h3>
       <div>
         <p className="text-black-900 font-inter text-base">
-          £{option?.name?.includes("5") ? "8" : "7.14"} meal
+          £{option?.name?.includes("5") ? "8" : "7.14"}/meal
         </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           <span>Total: </span>
@@ -88,7 +88,7 @@ const MealPlanSelection = ({
 
   return (
     <div className="mx-1.25 md:mx-6.25 my-6">
-      <div className="grid grid-cols-2 md:flex gap-3">
+      <div className="grid grid-cols-2 md:flex gap-4">
         {isLoading && (
           <div className="flex justify-center items-center w-full">
             <p className="text-center font-inter text-sm">Loading...</p>
@@ -112,6 +112,7 @@ const MealPlanSelection = ({
           <Button
             variant="primary"
             // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
+            className="h-[2.5rem]"
             onClick={() => {
               router.push(
                 `/food_box?plan=${
@@ -145,10 +146,12 @@ export default function MealPlan() {
         <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] mx-auto w-3/5 md:w-full md:text-[3.5rem]">
           Select your custom meal plan
         </h4>
-        <p className="text-black-900 font-inter text-lg text-center w-full md:w-3/5 mx-auto">
+        <p className="text-black-900 font-inter text-lg text-center w-full md:w-3/5 mx-auto font-semibold">
           Prep your daily meals to maintain healthy eating habits.
         </p>
-        <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
+        <div className="w-full md:w-[90%] mx-auto">
+          <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
+        </div>
 
         <div className="w-full">
           <img src="/images/zigzag.png" className="w-full" />

@@ -126,14 +126,15 @@ export default function Main() {
               fullWidth={isMobile}
               variant="primary"
               title="Get started"
+              className="h-[2.75rem]"
             />
           </div>
-          <div className="text-black-900 font-inter text-lg flex gap-4">
+          <div className="text-black-900 font-semibold font-inter text-lg flex gap-4">
             Rated Excellent On Trustpilot
             <Ratings />
           </div>
-          <div className="flex items-center gap-3">
-            <p className="text-dark font-inter text-lg">4,021 reviews on</p>
+          <div className="flex items-center gap-2">
+            <p className="text-dark font-inter text-lg">5 star reviews on</p>
             <img src="/images/trust_pilot.png" className="h-8" />
           </div>
           <div className="mt-2">
@@ -292,14 +293,13 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="md:mx-[0rem] my-[5rem] mt-0 flex flex-col gap-8">
-        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
+      <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-8 px-2.5 md:px-[4rem] mt-4 md:mt-0">
+        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[2.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
           So many meals delivered to thousands of satisfied customers
         </h4>
         <TestmoniesSection />
         <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
-          Rated <span className="font-bold">4.5</span> / 5 based on 1,243
-          reviews. Showing our 5 star reviews.
+          Rated <span className="font-bold">4.5</span> / 5. Showing our 5 star reviews.
         </p>
       </div>
 

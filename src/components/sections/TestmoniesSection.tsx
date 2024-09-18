@@ -118,7 +118,7 @@ export default function TestmoniesSection() {
       {firstTestmonies.map((testmonies, index) => (
         <div
           key={`carousel_item_${index}`}
-          className="w-[25rem] h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
+          className="w-[25rem] h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
         >
           <div className="flex items-center gap-3">
             <Ratings />
@@ -137,7 +137,7 @@ export default function TestmoniesSection() {
       {secondTestmonies.map((testmonies, index) => (
         <div
           key={`item_${index}`}
-          className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
+          className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem]  py-1 px-2 gap-3 flex flex-col justify-center"
         >
           <div className="flex items-center gap-3">
             <Ratings />

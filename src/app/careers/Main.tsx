@@ -60,6 +60,7 @@ export default function Main() {
           ))}
         </div>
       </div>
+      <div className="mt-8 md:mt-16" />
       <DownloadTheAppWidgetSection />
       <div className="mt-6.25 mx-1.25 md:mx-6.25">
         <Footer />

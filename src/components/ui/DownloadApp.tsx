@@ -6,11 +6,11 @@ export default function DownloadApp() {
   const options = [
     {
       image: "play_store.png",
-      path: "",
+      path: "https://apps.apple.com/gb/app/nourisha-budget-meal-planner/id6451458690",
     },
     {
       image: "app_store.png",
-      path: "",
+      path: "https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US",
     },
   ];
   return (

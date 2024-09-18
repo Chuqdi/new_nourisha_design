@@ -7,8 +7,10 @@ import Button from "../ui/Button";
 import DownloadApp from "../ui/DownloadApp";
 import Input from "../ui/Input";
 import Logo from "../ui/Logo";
+import useSocials from "@/hooks/useSocials";
 
 export default function Footer() {
+  const socials = useSocials();
   const options = [
     {
       title: "COMPANY",
@@ -71,23 +73,6 @@ export default function Footer() {
     },
   ];
 
-  const socials = [
-    {
-      icon: "mingcute:facebook-fill",
-      link: "https://web.facebook.com/people/Eatnourisha/100068259570536/?mibextid=LQQJ4d",
-      title: "Facebook",
-    },
-    {
-      icon: "ri:twitter-x-fill",
-      link: "https://x.com/nourisha12/status/1652961343736086529?s=46&mx=2",
-      title: "X",
-    },
-    {
-      icon: "hugeicons:instagram",
-      link: "https://www.instagram.com/eatnourisha/?igshid=MmJiY2I4NDBkZg%3D%3D",
-      title: "Instagram",
-    },
-  ];
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return (
     <div className="w-full flex flex-col md:flex-row gap-6 items-stretch h-auto relative overflow-y-hidden mb-4">
@@ -95,7 +80,15 @@ export default function Footer() {
         src="/images/footer_red_bg.png"
         className="w-[39.5rem] h-[39.5rem] absolute right-[40%] -bottom-[5rem] z-0"
       />
-      <div className="w-full flex flex-col  justify-center md:w-[45%] py-8 px-4 rounded-[1rem] bg-black-900 z-50">
+      <div
+        style={{
+          backgroundImage: "url(/images/footer_dark_bg.png)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className="w-full flex flex-col  justify-center md:w-[35%] py-8 px-4 rounded-[1rem]  z-50"
+      >
         <h4 className="text-white font-NewSpiritBold text-[2rem] md:text-[2.75rem] tracking-[-0.11rem] mb-5">
           Get the latest updates before they happen
         </h4>
@@ -106,9 +99,14 @@ export default function Footer() {
           />
           <Input placeholder="Email address" />
         </form>
-        <Button fullWidth variant="primary" title="Submit" />
+        <Button
+          fullWidth
+          variant="primary"
+          title="Submit"
+          className="h-[3rem] mt-3"
+        />
       </div>
-      <div className="w-full md:w-[55%] bg-background px-4 py-8 rounded-[1rem] flex flex-col gap-[2.75rem] z-50">
+      <div className="w-full md:w-[65%] bg-background px-4 py-8 rounded-[1rem] flex flex-col gap-[2.75rem] z-50">
         <Logo className="w-32 h-w-32 object-contain" />
         <div className="grid grid-cols-2 md:flex gap-[1.75rem] ">
           {options.map((option, index) => (

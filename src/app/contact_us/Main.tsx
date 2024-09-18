@@ -4,8 +4,12 @@ import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
+import useSocials from "@/hooks/useSocials";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Link from "next/link";
 
 export default function Main() {
+  const socials = useSocials();
   return (
     <div className="w-full h-full relative pt-6 ">
       <Navbar />
@@ -30,22 +34,42 @@ export default function Main() {
               </div>
 
               <div className="">
-                <h6 className="text-black-900 font-inter text-base font-semibold">
+                <h6 className="text-black-900 font-inter text-sm font-semibold">
                   Email us at:
                 </h6>
-                <p className="text-xl text-black-900 font-inter">
+                <p className="text-base text-black-900 font-inter">
                   hello@eatnourisha.com
                 </p>
               </div>
 
               <div className="">
-                <h6 className="text-black-900 font-inter text-base font-semibold">
+                <h6 className="text-black-900 font-inter text-sm font-semibold">
                   Call us on
                 </h6>
-                <p className="text-xl text-black-900 font-inter">
-                  +234 4849 999 222
+                <p className="text-base text-black-900 font-inter">
+                  020 8058 3407
                 </p>
               </div>
+
+              <div className="flex-1 flex flex-col ">
+                <h6 className="text-black-900 font-inter text-sm font-semibold">
+                  Socials
+                </h6>
+                <div className="flex flex-row gap-4">
+                  {socials.map((link, i) => (
+                    <Link
+                      className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center"
+                      key={`link_option_${i}`}
+                      href={link.link}
+                    >
+                      <Icon className="w-6 h-6" icon={link.icon} color="" />
+                      {link.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div></div>
             </div>
           </div>
 
@@ -54,6 +78,7 @@ export default function Main() {
               <label>Full name</label>
               <input
                 type="text"
+                placeholder="Please enter full name"
                 className="bg-[#F2F4F7] rounded-[0.75rem] h-[3rem] p-3 block w-full"
               />
             </div>
@@ -62,18 +87,27 @@ export default function Main() {
               <label>Email address</label>
               <input
                 type="email"
+                placeholder="Please enter email address"
                 className="bg-[#F2F4F7] rounded-[0.75rem] h-[3rem] p-3 block w-full"
               />
             </div>
 
             <div>
               <label>Message</label>
-              <textarea className="bg-[#F2F4F7] h-[9.4375rem] w-full rounded-[0.75rem]"></textarea>
+              <textarea
+                placeholder="Please enter your message"
+                className="bg-[#F2F4F7] h-[9.4375rem] w-full rounded-[0.75rem] p-2"
+              ></textarea>
             </div>
 
             <div className="flex justify-end">
               <div className="w-full md:w-[30%]">
-                <Button fullWidth variant="primary" title="Send" />
+                <Button
+                  className="h-[3rem]"
+                  fullWidth
+                  variant="primary"
+                  title="Send"
+                />
               </div>
             </div>
           </form>

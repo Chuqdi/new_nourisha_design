@@ -72,11 +72,7 @@ export const COUNTRIES = [
     noun: "Ghanian",
     flag: "🇬🇭",
   },
-  {
-    name: "Kenya",
-    noun: "Kenyan",
-    flag: "🇰🇪",
-  },
+
   {
     name: "Zimbabwe",
     noun: "Zimbabwean",

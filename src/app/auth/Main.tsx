@@ -52,7 +52,7 @@ export default function Main() {
 
       toast({
         variant: "default",
-        title: onLogin ? "Registeration was successful" : "Login successful",
+        title: !onLogin ? "Registeration was successful" : "Login successful",
       });
       window.location.href = "/";
       // onLogin

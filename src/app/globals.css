@@ -49,9 +49,20 @@ label{
  margin: 0rem !important;
  height: auto !important;
  width: 100% !important;
+ margin-right: -0.7rem  !important;
+ margin-left: -0.7rem  !important;
 
 }
 
+
+.react-multiple-carousel__arrow--right{
+  margin-top: 6rem !important;
+  margin-right: -2rem !important;
+}
+.react-multiple-carousel__arrow--left  {
+  margin-top: 6rem !important;
+  margin-left: -2rem !important;
+}
 .react-multi-carousel-list, .react-multi-carousel-track {
   align-items: stretch !important;
 }
