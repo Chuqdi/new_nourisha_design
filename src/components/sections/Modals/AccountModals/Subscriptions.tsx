@@ -19,22 +19,26 @@ import { toast } from "@/ui/use-toast";
 import Modal from "@/components/ui/Modal";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PaymentModal from "../PaymentModal";
+import { ATOMS } from "@/store/atoms";
+import { useAtom, useSetAtom } from "jotai";
 
-const Checkout = ({
+const SingleSubscription = ({
   plan,
   activePlan,
 }: {
   activePlan?: IPlan;
   plan: IPlan;
 }) => {
+  const { axiosClient } = useAuth();
+  const setPaymentModal = useSetAtom(ATOMS.paymentModal);
+  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
+
   const gradientColors = [
     "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
     "linear-gradient(208deg, #FE7E00 16.32%, #FE0000 105.01%)",
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
   ];
   const textColors = ["#9572F9", "#9572F9", "#9572F9"];
-  const { axiosClient } = useAuth();
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   return (
     <div
@@ -65,26 +69,39 @@ const Checkout = ({
           <HTMLRenderer html={plan?.description} />
         </div>
 
-        {/* <div className="mt-2 gap-3 flex flex-col my-6">
-  {pricing.options.map((p, i) => (
-    <div
-      className="flex items-center gap-3"
-      key={`pricing_option_${i}`}
-    >
-      <div className="w-[1.13638rem] h-[1.13638rem] rounded-full border-[1px] border-[#04A76C] flex justify-center items-center">
-        <Icon color="#04A76C" icon="bi:check" />
-      </div>
-      <p>{p}</p>
-    </div>
-  ))}
-</div> */}
-
         <Button
           variant="primary"
           fullWidth
           title={activePlan?._id === plan?._id ? "Active" : "Subscribe"}
           disabled={activePlan?._id === plan?._id}
-          onClick={() => setShowPaymentModal(true)}
+          onClick={() => {
+            setSideModal({
+              ...sideModal,
+              show: false,
+            });
+            setPaymentModal({
+              show: true,
+              amount: plan?.amount!,
+              onContinue: async () => {
+                let return_url,
+                  clientSecret = "";
+                let data = {
+                  plan_id: plan?._id,
+                };
+                await axiosClient
+                  .post("billings/subscribe", data)
+                  .then(async (response) => {
+                    return_url = "https://www.jobofa.com";
+                    clientSecret = response?.data?.data?.client_secret;
+                  });
+
+                return {
+                  clientSecret,
+                  returnUrl: "htttps://jobofa.com/text",
+                };
+              },
+            });
+          }}
         />
         <p className="text-black-900 text-sm text-center font-inter my-4">
           + £10 For deliveries during the week
@@ -93,56 +110,7 @@ const Checkout = ({
           + £18 For weekend deliveries
         </p>
       </div>
-
-      <Modal show={showPaymentModal}>
-        <PaymentModal
-          //@ts-ignore
-          getClientSecret={async () => {
-            let return_url,
-              clientSecret = "";
-            let data = {
-              plan_id: plan?._id,
-            };
-            await axiosClient
-              .post("billings/subscribe", data)
-              .then(async (response) => {
-                return_url = "https://www.jobofa.com";
-                clientSecret = response?.data?.data?.client_secret;
-              });
-
-            return {
-              clientSecret,
-              redirectUrl: return_url,
-            };
-          }}
-          close={() => setShowPaymentModal(false)}
-          plan={plan}
-        />
-      </Modal>
     </div>
-  );
-};
-
-const SingleSubscription = ({
-  plan,
-  activePlan,
-}: {
-  activePlan?: IPlan;
-  plan: IPlan;
-}) => {
-  const [options, setOptions] = useState({
-    mode: "subscription",
-    amount: Math.round(plan.amount!),
-    currency: "gbp",
-    appearance: {},
-    setup_future_usage: "off_session",
-  });
-  const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
-  return (
-    //@ts-ignore
-    <Elements stripe={stripePromise} options={options}>
-      <Checkout activePlan={activePlan} plan={plan} />
-    </Elements>
   );
 };
 

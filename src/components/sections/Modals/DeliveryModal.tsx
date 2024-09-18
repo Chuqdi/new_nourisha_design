@@ -70,11 +70,6 @@ export default function DeliveryModal({
         },
       });
 
-      // toast({
-      //   variant: "default",
-      //   title: "Address updated successfully",
-      // });
-
       proceed();
       setSideModal({
         ...sideModal,

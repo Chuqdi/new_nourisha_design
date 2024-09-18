@@ -9,6 +9,8 @@ import {
 } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
+import { useAtomValue } from "jotai";
+import { ATOMS } from "@/store/atoms";
 
 const Payment = ({
   close,
@@ -21,6 +23,7 @@ const Payment = ({
   const stripe = useStripe();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
+  const { amount } = useAtomValue(ATOMS.paymentModal)
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -37,6 +40,8 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
+        alert(clientSecret);
+        alert(returnUrl)
         const { error } = await stripe.confirmPayment({
           elements,
           clientSecret,
@@ -71,7 +76,7 @@ const Payment = ({
       <Button
         variant="primary"
         fullWidth
-        title="Subscribe"
+        title={`Pay £${amount}`}
         disabled={!stripe || !elements || paymentLoading}
         onClick={handleSubmitPayment}
       />
@@ -81,13 +86,12 @@ const Payment = ({
 
 const PaymentModal = ({
   close,
-  amount,
   getClientSecret,
 }: {
   close: () => void;
-  amount: number;
   getClientSecret: () => Promise<{ clientSecret: string; returnUrl: string }>;
 }) => {
+  const { amount } = useAtomValue(ATOMS.paymentModal)
   const [options, _] = useState<StripeElementsOptions>({
     mode: "subscription",
     amount: Math.round(amount),

@@ -37,8 +37,10 @@ const Checkout = () => {
               <DeliveryModal
                 setDeliveryDate={set_delivery_date}
                 proceed={async () =>
+                {
                   setPaymentModal({
                     show: true,
+                    amount: parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee) ,
                     onContinue: async () => {
                       const response = await axiosClient.post("orders", {
                         cart_session_id: cartDetails?.session_id,
@@ -56,6 +58,7 @@ const Checkout = () => {
                       };
                     },
                   })
+                }
                 }
               />
             ),

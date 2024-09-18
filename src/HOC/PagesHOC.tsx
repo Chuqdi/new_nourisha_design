@@ -1,15 +1,26 @@
 "use client";
+import PaymentModal from "@/components/sections/Modals/PaymentModal";
+import Modal from "@/components/ui/Modal";
 import SideModal from "@/components/ui/SideModal";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
 export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const showSideModal = useAtomValue(ATOMS.showSideModal);
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
+  const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
 
   return (
     <div>
+      <Modal show={paymentModal.show}>
+
+        <PaymentModal
+          getClientSecret={paymentModal.onContinue}
+          close={() => setPaymentModal({ ...paymentModal, show: false })}
+          
+        />
+      </Modal>
       {cartLoading && (
         <div
           style={{

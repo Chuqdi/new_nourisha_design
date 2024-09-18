@@ -11,9 +11,11 @@ export const cartDetails = {} as ICartDetail;
 export const cartIsLoading = false;
 export const paymentModal: {
   show: boolean;
+  amount:number;
   onContinue: () => Promise<{ clientSecret: string; returnUrl: string }>;
 } = {
   show: false,
+  amount:0,
   onContinue: async () => {
     return {
       clientSecret: "",

@@ -3,15 +3,9 @@ import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
-import PaymentModal from "@/components/sections/Modals/PaymentModal";
-import Modal from "@/components/ui/Modal";
-import { ICartDetail } from "@/config/types";
-import { ATOMS } from "@/store/atoms";
-import { useAtom, useAtomValue } from "jotai";
 
 export default function Main() {
-  const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
-  const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
+
 
   return (
     <div
@@ -19,15 +13,6 @@ export default function Main() {
       w-full h-full relative pt-6
       `}
     >
-      <Modal show={paymentModal.show}>
-        <PaymentModal
-          getClientSecret={paymentModal.onContinue}
-          close={() => setPaymentModal({ ...paymentModal, show: false })}
-          amount={
-            parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee)
-          }
-        />
-      </Modal>
       <Navbar />
       <div className="flex flex-col gap-6 mt-32">
         <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
