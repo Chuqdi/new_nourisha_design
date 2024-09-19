@@ -108,9 +108,7 @@ export default function Main() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
   const searchParams = useSearchParams();
-  const [activeWeek, setActiveWeek] = useState<IFoodBoxDayType>(
-    DAYS_OF_THE_WEEK[0] as IFoodBoxDayType
-  );
+ 
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isWeekly = useMemo(
     () => searchParams.get("plan")?.includes("5".toUpperCase()),
@@ -125,6 +123,9 @@ export default function Main() {
 
     return DAYS_OF_THE_WEEK;
   }, [isWeekly]);
+  const [activeWeek, setActiveWeek] = useState<IFoodBoxDayType>(
+    weeks[0] as IFoodBoxDayType
+  );
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;

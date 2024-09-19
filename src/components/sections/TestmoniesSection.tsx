@@ -83,75 +83,119 @@ const secondTestmonies = [
     caption: `Food was amazing`,
     date: "5 June 2024",
   },
+  {
+    name: "Priscilla Darko",
+    description: `They are good in cooking and also good at their time`,
+    caption: `They are good in cooking and also good`,
+    date: "07 August 2024",
+  },
+  {
+    name: "Priscilla Darko",
+    description: `They are good in cooking and also good at their time`,
+    caption: `They are good in cooking and also good`,
+    date: "07 August 2024",
+  },
+  {
+    name: "Izek Precious",
+    description: `Nourisha is 100 percent splendid….. quick delivery on your choose date and the meal is a top notch… can’t wait to order again…❤️`,
+    caption: `Nourisha is 100 percent splendid`,
+    date: "19 April 2024",
+  },
+  {
+    name: "TatendaGwimbi",
+    description: `Delicious food and prompt delivery service and great portions, will definitely order again.`,
+    caption: `Delicious food and prompt delivery`,
+    date: "23 July 2024",
+  },
+  {
+    name: "V. E.",
+    description: `Great food,good portions,lovely taste and quick delivery.I highly recommend.Great customer service and very professional.`,
+    caption: `Great food,good portions,lovely taste`,
+    date: "18 May 2024",
+  },
+  {
+    name: "Rosie Wilson",
+    description: `Great food,good portions,lovely taste and quick delivery.I highly recommend.Great customer service and very professional.`,
+    caption: `Great food,good portions,lovely taste`,
+    date: "18 May 2024",
+  },
+  {
+    name: "Joan Aigboje",
+    description: `Food was amazing, great customer service and support, fast delivery. I totally rey`,
+    caption: `Food was greate`,
+    date: "05 June 2024",
+  },
+  {
+    name: "Akinsola Olawoagbo",
+    description: `Delivery was pretty early and all items were in very good condition, well packaged. The best asun I’ve had so far, banga & starch was great too. I just can’t describe everything.`,
+    caption: `Food`,
+    date: "12 July 2024",
+  },
+  {
+    name: "Christiana",
+    description: `Just received my order for the week from nourisha and I'm excited to try out the meals soon because they look delicious! 🤤 The packaging is great and portion is very okay. It's my first time ordering and I believe I'll be patronising frequently as it'll save me a lot of stress from cooking all the time! 😁
+I'll be coming back to leave another review once I have tried out the wonderful delicacies 😊`,
+    caption: `Food was nice`,
+    date: "12 Jul 2024",
+  },
 ];
 
 export default function TestmoniesSection() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-  return isMobile ? (
-    <div className="flex flex-col gap-3 p-2 md:p-0">
-      {firstTestmonies.concat(secondTestmonies).map((testmonies, index) => (
-        <div
-          key={`mobile_carousel_item_${index}`}
-          className="w-full bg-[#F2F4F7] rounded-[0.375rem] p-2 gap-3 flex flex-col"
-        >
-          <div className="flex items-center gap-3">
-            <Ratings />
+  return (
+    <div className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
+      <div
+        style={{
+          animation: "100s slide infinite linear",
+        }}
+        className="marquee-slide flex items-center gap-0"
+      >
+        {firstTestmonies.map((testmonies, index) => (
+          <div
+            key={`carousel_item_${index}`}
+            className="w-[35rem] text-wrap h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
+          >
+            <div className="flex items-center gap-3">
+              <Ratings />
+            </div>
+            <p className="text-sm font-inter font-bold">
+              {testmonies?.caption}
+            </p>
+            <p className="text-black-900 font-inter text-sm">
+              {testmonies?.description}
+            </p>
+            <div className="font-inter text-sm text-black-900 gap-2 flex ">
+              <span className="font-bold">{testmonies?.name}</span>
+              {testmonies?.date}
+            </div>
           </div>
-          <p className="text-sm font-inter font-bold">{testmonies?.caption}</p>
-          <p className="text-black-900 font-inter text-sm">
-            {testmonies?.description}
-          </p>
-          <div className="font-inter text-sm text-black-900 gap-2 flex ">
-            <span className="font-bold">{testmonies?.name}</span>
-            {testmonies?.date}
+        ))}
+      </div>
+      <div
+        style={{
+          animation: "100s slide infinite linear",
+        }}
+        className="marquee-slide flex items-center gap-2 "
+      >
+        {secondTestmonies.map((testmonies, index) => (
+          <div
+            key={`item_${index}`}
+            className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem]  py-1 px-2 gap-3 flex flex-col justify-center"
+          >
+            <div className="flex items-center gap-3">
+              <Ratings />
+            </div>
+            <p className="text-sm font-inter font-bold">{testmonies.caption}</p>
+            <p className="text-black-900 font-inter text-sm">
+              {testmonies.description}
+            </p>
+            <div className="font-inter text-sm text-black-900 gap-2 flex ">
+              <span className="font-bold">{testmonies.name}</span>
+              {testmonies.date}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  ) : (
-    <Carousel
-      itemClass="!px-0"
-      responsive={responsive}
-      autoPlay={false}
-      swipeable
-    >
-      {firstTestmonies.map((testmonies, index) => (
-        <div
-          key={`carousel_item_${index}`}
-          className="w-[25rem] h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
-        >
-          <div className="flex items-center gap-3">
-            <Ratings />
-          </div>
-          <p className="text-sm font-inter font-bold">{testmonies?.caption}</p>
-          <p className="text-black-900 font-inter text-sm">
-            {testmonies?.description}
-          </p>
-          <div className="font-inter text-sm text-black-900 gap-2 flex ">
-            <span className="font-bold">{testmonies?.name}</span>
-            {testmonies?.date}
-          </div>
-        </div>
-      ))}
-
-      {secondTestmonies.map((testmonies, index) => (
-        <div
-          key={`item_${index}`}
-          className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem]  py-1 px-2 gap-3 flex flex-col justify-center"
-        >
-          <div className="flex items-center gap-3">
-            <Ratings />
-          </div>
-          <p className="text-sm font-inter font-bold">{testmonies.caption}</p>
-          <p className="text-black-900 font-inter text-sm">
-            {testmonies.description}
-          </p>
-          <div className="font-inter text-sm text-black-900 gap-2 flex ">
-            <span className="font-bold">{testmonies.name}</span>
-            {testmonies.date}
-          </div>
-        </div>
-      ))}
-    </Carousel>
   );
 }

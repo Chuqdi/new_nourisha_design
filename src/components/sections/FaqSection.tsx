@@ -67,6 +67,12 @@ export default function FaqSection() {
       answer: "Yes, we deliver anywhere within the UK.",
     },
     {
+      answer: `Yes, you can select your choice of meal selections from the available menu.
+    The best part is you are not restricted to the available menu.`,
+      question:
+        "Do I get to select my preferred meals for the weekly subscription plan or there's already a selected meal that comes with the package?",
+    },
+    {
       question:
         "How does the weekly subscription plan work. Do you deliver each meal daily?",
       answer: "No, we do not.\n All 14 meals are delivered at once ",

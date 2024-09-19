@@ -5,7 +5,7 @@ type props = {
 export default function Input ({className, ...rest }:props){
     return (
         <input
-        placeholder={rest.placeholder??"Placeholder"}
+        placeholder={rest.placeholder}
         type="text"
         className={`w-full rounded-[2.75rem] p-3 h-10 ${className}`}
         {...rest}
