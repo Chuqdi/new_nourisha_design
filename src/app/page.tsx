@@ -293,7 +293,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-8 px-2.5 md:px-[4rem] mt-4 md:mt-0">
+      <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-8 px-2.5 md:px-0 mt-4 md:mt-0">
         <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[2.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
           So many meals delivered to thousands of satisfied customers
         </h4>
