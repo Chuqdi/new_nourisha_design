@@ -54,7 +54,7 @@ const Checkout = () => {
 
                       return {
                         clientSecret: response?.data?.data?.client_secret,
-                        returnUrl: "htttps://jobofa.com/text",
+                        returnUrl: "https://jobofa.com/text",
                       };
                     },
                   })

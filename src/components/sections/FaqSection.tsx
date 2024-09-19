@@ -57,24 +57,52 @@ export default function FaqSection() {
         "Delivery takes between 24 hours to 48 hours depending on location.Your order needs to be placed before 12:00 pm of the previous day to be received within 24 hours.",
     },
     {
-      question: "Can I choose to subscribe for the weekly or monthly plan this week and decide not to pay for a subscription plan the following week?",
+      question:
+        "Can I choose to subscribe for the weekly or monthly plan this week and decide not to pay for a subscription plan the following week?",
       answer:
         "Most certainly. The subscription plan is not a compulsory Auto-renewal. However, if you choose to be on Auto-renewal, just click on the auto-renewal button displayed on the app.",
     },
     {
       question: "Do you deliver across all UK cities?",
-      answer:
-        "Yes, we deliver anywhere within the UK.",
+      answer: "Yes, we deliver anywhere within the UK.",
     },
     {
-      question: "How does the weekly subscription plan work. Do you deliver each meal daily?",
-      answer:
-        "No, we do not.\n All 14 meals are delivered at once ",
+      question:
+        "How does the weekly subscription plan work. Do you deliver each meal daily?",
+      answer: "No, we do not.\n All 14 meals are delivered at once ",
     },
     {
-      question: "How long should my weekly plan last in my fridge after receiving? ",
+      question:
+        "How long should my weekly plan last in my fridge after receiving? ",
+      answer: "Ideally 7-10 days.",
+    },
+    {
+      question:
+        "Can I select Nigerian and Ghanaian menus in my weekly subscription? ",
+      answer: `No, you can’t make that selection with the weekly plan.\n
+      You can either select a Nigerian or Ghanaian menu but not both. `,
+    },
+    {
+      question:
+        "I do not want to include swallows in my meal, just Soups and Jollof Rice. What can I get?",
+      answer: "We have a Litres box available, 1.5LTR, 5LTR and 10LTR.",
+    },
+    {
+      question:
+        "Can I order just soups without the swallows and then replace the swallows with more soups?",
+      answer: `The swallow is a complete package with the soups, and an exemption can be requested, however it can not be replaced with another meal.
+      However, we also have bulk orders available where you can order for soup litres.`,
+    },
+
+    {
+      question: "What days can I receive my order and are weekends inclusive? ",
       answer:
-        "WIthin 7-10 days.",
+        "Deliveries are scheduled from Tuesdays - Fridays.Weekend delivery attracts an extra fee of £8.",
+    },
+
+    {
+      question: "Do you cater for events?",
+      answer: "Yes, we do.",
     },
   ];
   return (

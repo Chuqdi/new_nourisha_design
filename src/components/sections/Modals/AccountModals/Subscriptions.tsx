@@ -97,7 +97,7 @@ const SingleSubscription = ({
 
                 return {
                   clientSecret,
-                  returnUrl: "htttps://jobofa.com/text",
+                  returnUrl: "https://jobofa.com/text",
                 };
               },
             });

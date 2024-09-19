@@ -7,6 +7,7 @@ import SelectChip from "@/components/ui/SelectChip";
 import { COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
+import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import useFoodbox from "@/hooks/useFoodbox";
@@ -17,7 +18,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 const SingleWeekendBreakDown = ({ week }: { week: string }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -187,7 +188,8 @@ export default function Main() {
   };
 
   const createLineUp = async () => {
-    if (numberOfMealsSelected < 7) {
+  
+    if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
         title: "Error",
@@ -288,7 +290,6 @@ export default function Main() {
                 className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 bor  #f2f4f7]"
               />
             </div>
-            {/*  md:grid-cols-7 */}
             <div className="grid grid-cols-2 md:flex items-center  gap-5 w-fit">
               {weeks.map((week, index) => {
                 const selected = week === activeWeek;

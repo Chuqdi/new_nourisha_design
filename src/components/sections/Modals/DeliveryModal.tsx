@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
@@ -9,6 +9,7 @@ import { UserContext } from "@/HOC/UserContext";
 import PaymentMethodModal from "./PaymentMethodModal";
 import { toast } from "@/ui/use-toast";
 import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export const Checkbox = ({
   checked,
@@ -31,13 +32,12 @@ export const Checkbox = ({
 export default function DeliveryModal({
   proceed,
   setDeliveryDate,
- 
 }: {
   proceed: () => Promise<void>;
-  setDeliveryDate:(d:string)=> void,
+  setDeliveryDate: (d: string) => void;
 }) {
   const [delivery_date, set_delivery_date] = useState("");
-
+  const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
   const user = userCtx?.user;
@@ -56,6 +56,21 @@ export default function DeliveryModal({
         variant: "destructive",
         title: "Please select a delivery date",
       });
+      return;
+    }
+
+    if (!user?._id) {
+      toast({
+        variant: "default",
+        title: "Error",
+        description: "Please login to proceed",
+      });
+      setSideModal({
+        ...sideModal,
+        show: false,
+      });
+      router.push("/auth");
+
       return;
     }
     setLoading(true);
@@ -81,9 +96,9 @@ export default function DeliveryModal({
     setLoading(false);
   };
 
-  useEffect(()=>{
-    setDeliveryDate(delivery_date)
-  }, [delivery_date])
+  useEffect(() => {
+    setDeliveryDate(delivery_date);
+  }, [delivery_date]);
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
@@ -122,6 +137,7 @@ export default function DeliveryModal({
           <Input
             value={address?.country}
             name="country"
+            placeholder="Enter your country"
             onChange={(e) =>
               setAddress({
                 ...address,
@@ -136,6 +152,7 @@ export default function DeliveryModal({
           <Input
             value={address?.city}
             name="city"
+            placeholder="Enter your city"
             onChange={(e) =>
               setAddress({
                 ...address,
@@ -150,6 +167,7 @@ export default function DeliveryModal({
           <Input
             value={address?.address_}
             name="address_"
+            placeholder="Enter your address"
             onChange={(e) =>
               setAddress({
                 ...address,
@@ -164,6 +182,7 @@ export default function DeliveryModal({
           <Input
             value={address?.postcode}
             name="postcode"
+            placeholder="Enter your postcode"
             onChange={(e) =>
               setAddress({
                 ...address,
