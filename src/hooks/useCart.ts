@@ -50,8 +50,8 @@ const useCart = () => {
     let totalDeliveryPrice = 0;
     let totalSubPrice = 0;
     cartItems?.map((item) => {
-      totalDeliveryPrice += item.item.price.deliveryFee * item.quantity;
-      totalSubPrice += item.item.price.amount * item.quantity;
+      totalDeliveryPrice += item?.item?.price?.deliveryFee * item?.quantity;
+      totalSubPrice += item?.item?.price?.amount * item?.quantity;
     });
     return {
       totalDeliveryPrice,
