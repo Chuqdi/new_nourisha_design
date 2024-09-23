@@ -46,7 +46,9 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isError) {
-      setShowLoginModal(true);
+      setTimeout(() => {
+        setShowLoginModal(true);
+      }, 5000);
     }
   }, [isError]);
 
@@ -61,8 +63,11 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
           </div>
         ) : (
           <>
-            <Modal large  show={showLoginModal}>
-              <LoginModal setUser={setUser} close={()=> setShowLoginModal(false)} />
+            <Modal large show={showLoginModal}>
+              <LoginModal
+                setUser={setUser}
+                close={() => setShowLoginModal(false)}
+              />
             </Modal>
             {children}
           </>
