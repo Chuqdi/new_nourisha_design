@@ -246,7 +246,7 @@ export default function TestmoniesSection() {
         {firstTestmonies.concat(secondTestmonies).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-[35rem] text-wrap h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
+            className="w-[25rem] text-wrap h-full mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
           >
             <div className="flex items-center gap-3">
               <Ratings />
@@ -264,31 +264,7 @@ export default function TestmoniesSection() {
           </div>
         ))}
       </div>
-      {/* <div
-        style={{
-          animation: "100s slide infinite linear",
-        }}
-        className="marquee-slide flex items-center gap-2 "
-      >
-        {secondTestmonies.map((testmonies, index) => (
-          <div
-            key={`item_${index}`}
-            className="w-[25rem] h-full  mx-4 bg-[#F2F4F7] rounded-[0.375rem]  py-1 px-2 gap-3 flex flex-col justify-center"
-          >
-            <div className="flex items-center gap-3">
-              <Ratings />
-            </div>
-            <p className="text-sm font-inter font-bold">{testmonies.caption}</p>
-            <p className="text-black-900 font-inter text-sm">
-              {testmonies.description}
-            </p>
-            <div className="font-inter text-sm text-black-900 gap-2 flex ">
-              <span className="font-bold">{testmonies.name}</span>
-              {testmonies.date}
-            </div>
-          </div>
-        ))}
-      </div> */}
+     
     </div>
   );
 }

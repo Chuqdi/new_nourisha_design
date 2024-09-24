@@ -149,7 +149,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between md:items-center ">
+        <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between md:items-center ">
           <DownloadApp />
           <p className="text-black-900 text-base tracking-[-0.015rem] leading-[1.5rem] ">
             Get in touch at{" "}

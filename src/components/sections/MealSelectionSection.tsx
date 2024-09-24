@@ -1,7 +1,7 @@
 "use client";
 
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
-import { CONTINENTS, COUNTRIES } from "@/config";
+import { CONTINENTS,  } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
@@ -28,7 +28,7 @@ export default function MealSelectionSection({
   });
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
-  const [limit, setLimit] = useState("12");
+  const [limit, setLimit] = useState("9");
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
@@ -62,7 +62,7 @@ export default function MealSelectionSection({
 
       {!onlyMeals && (
         <div
-          className={` grid md:flex grid-cols-2  items-center gap-4 mt-[2rem]  ${
+          className={` flex flex-col md:flex-row grid-cols-2  items-center gap-4 mt-[2rem]  ${
             isSingle && "justify-center"
           }`}
         >
@@ -135,6 +135,7 @@ export default function MealSelectionSection({
           title={isLoading ? "Loading..." : "Load more"}
           onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
           variant="primary"
+          className="py-6"
         />
       </div>
     </div>
