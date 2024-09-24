@@ -25,10 +25,12 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const user = useContext(UserContext);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
+  const cartItems = useAtomValue(ATOMS.cartItems);
   const sideBarOptions = [
     {
       image: "cart.svg",
       onClick: () => setSideModal({ show: true, component: <CartModal /> }),
+      count:cartItems?.length,
     },
     {
       image: "apple.svg",
@@ -75,12 +77,18 @@ export default function Navbar() {
             (option, index) =>
               !(isMobile && option.isOnlyDesktop) && (
                 <div
-                  className="cursor-pointer h-8 w-10 rounded-[2rem] flex justify-center items-center bg-[#F2F4F7] gap-1 p-[0.5rem]"
+                  className="cursor-pointer h-8 w-10 rounded-[2rem] flex justify-center items-center bg-[#F2F4F7] gap-1 p-[0.5rem] relative"
                   key={`sidebar_${index}`}
                   onClick={() => {
                     option?.onClick && option?.onClick();
                   }}
                 >
+                  {
+                    !!option?.count &&
+                    <div className="absolute text-[0.7rem] top-[-0.5rem] right-[-0.3rem] bg-green-600 text-white flex justify-center items-center rounded-[6rem] min-h-[1.5rem] min-w-[1.5rem] overflow-hidden p-1">
+                      {option.count}
+                      </div>
+                  }
                   <img
                     className="h-[1.25rem]"
                     src={`/images/navbar/${option.image}`}
