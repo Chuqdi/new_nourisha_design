@@ -83,12 +83,12 @@ export default function Navbar() {
                     option?.onClick && option?.onClick();
                   }}
                 >
-                  {
+                  {/* {
                     !!option?.count &&
                     <div className="absolute text-[0.7rem] top-[-0.5rem] right-[-0.3rem] bg-green-600 text-white flex justify-center items-center rounded-[6rem] min-h-[1.5rem] min-w-[1.5rem] overflow-hidden p-1">
                       {option.count}
                       </div>
-                  }
+                  } */}
                   <img
                     className="h-[1.25rem]"
                     src={`/images/navbar/${option.image}`}
