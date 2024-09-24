@@ -1,4 +1,5 @@
 "use client";
+import FoodInfoModal from "@/components/sections/Modals/FoodInfoModal";
 import PaymentModal from "@/components/sections/Modals/PaymentModal";
 import Modal from "@/components/ui/Modal";
 import SideModal from "@/components/ui/SideModal";
@@ -10,16 +11,19 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const showSideModal = useAtomValue(ATOMS.showSideModal);
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
+  const foodInfoModal = useAtomValue(ATOMS.foodInfoModal);
 
   return (
     <div>
       <Modal show={paymentModal.show}>
-
         <PaymentModal
           getClientSecret={paymentModal.onContinue}
           close={() => setPaymentModal({ ...paymentModal, show: false })}
-          
         />
+      </Modal>
+
+      <Modal show={foodInfoModal.show}>
+        <FoodInfoModal />
       </Modal>
       {cartLoading && (
         <div

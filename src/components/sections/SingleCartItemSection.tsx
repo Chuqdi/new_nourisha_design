@@ -4,47 +4,53 @@ import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtomValue } from "jotai";
-import {  useMemo, useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useMemo, useState } from "react";
 
-export const CartManipulator =({meal, item }:{ item:ICartItem, meal:IMeal })=>{
+export const CartManipulator = ({
+  meal,
+  item,
+}: {
+  item: ICartItem;
+  meal: IMeal;
+}) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
   const [_, setMealAddedToCart] = useState(false);
 
-
   return (
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
-    <button 
-      onClick={() => {
-        removeItemFrommCart(meal?._id!, 1,);
-        setMealAddedToCart(true);
-        setTimeout(() => {
-          setMealAddedToCart(false);
-        }, 1500);
-      }}
-    className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl">
-      -
-    </button>
-    <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
-      {item?.quantity ?? "0"}
-    </p>
-    <button
-      onClick={() => {
-        addItemToCart(meal);
-        setMealAddedToCart(true);
-        setTimeout(() => {
-          setMealAddedToCart(false);
-        }, 1500);
-      }}
-      className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
-    >
-      +
-    </button>
-  </div>
-  )
-}
+      <button
+        onClick={() => {
+          removeItemFrommCart(meal?._id!, 1);
+          setMealAddedToCart(true);
+          setTimeout(() => {
+            setMealAddedToCart(false);
+          }, 1500);
+        }}
+        className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
+      >
+        -
+      </button>
+      <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
+        {item?.quantity ?? "0"}
+      </p>
+      <button
+        onClick={() => {
+          addItemToCart(meal);
+          setMealAddedToCart(true);
+          setTimeout(() => {
+            setMealAddedToCart(false);
+          }, 1500);
+        }}
+        className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
+      >
+        +
+      </button>
+    </div>
+  );
+};
 
-export default function  SingleCartItemSection({
+export default function SingleCartItemSection({
   country,
   isHome,
   meal,
@@ -60,6 +66,7 @@ export default function  SingleCartItemSection({
   const { addFoodBox, removeFoodBox } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
+  const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
 
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -87,7 +94,6 @@ export default function  SingleCartItemSection({
     [cartItems]
   );
 
-
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
       {isHome && (
@@ -95,6 +101,21 @@ export default function  SingleCartItemSection({
           <p className="text-[4rem]">{country.flag}</p>
         </div>
       )}
+      <div className="absolute top-0 left-0 right-6 w-full   flex justify-between items-center px-4 py-1">
+        <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
+          {meal?.calories}KCal
+        </p>
+
+        <div className="text-[2rem]">
+          {
+            COUNTRIES.find((country) =>
+              country?.name
+                ?.toLowerCase()
+                ?.includes((meal?.country ?? "").toLowerCase())
+            )?.flag
+          }
+        </div>
+      </div>
       <img
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
@@ -140,13 +161,21 @@ export default function  SingleCartItemSection({
         </div>
       ) : (
         <div className="flex justify-between items-center mt-3">
-          <button className="w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-3 flex  items-center rounded-full justify-center">
+          <button
+            onClick={() =>
+              setFoodInfoModal({
+                show: true,
+                meal,
+              })
+            }
+            className="w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-3 flex  items-center rounded-full justify-center"
+          >
             <p className="text-primary-orange-900 text-sm font-inter ">
-            £{((cartItemMeal?.quantity ?? 0) * (cartItemMeal?.item?.price?.amount ?? 0)) ?? "0"}
+              Food Info
             </p>
           </button>
 
-         <CartManipulator meal={meal} item={cartItemMeal!} />
+          <CartManipulator meal={meal} item={cartItemMeal!} />
         </div>
       )}
     </div>

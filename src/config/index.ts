@@ -1,5 +1,4 @@
-
- export const  BACKEND_URL =  "https://api.eatnourisha.com/v1/";
+export const BACKEND_URL = "https://api.eatnourisha.com/v1/";
 
 export const PRICINGS = [
   {
@@ -60,6 +59,19 @@ export const DAYS_OF_THE_WEEK = [
   "Thursday",
   "Friday",
   "Saturday",
+];
+
+export const CONTINENTS = [
+  {
+    name: "Africa",
+    noun: "African",
+    flag: "🇳🇬",
+  },
+  {
+    name: "Asia",
+    noun: "Asian",
+    flag: "🇬🇭",
+  },
 ];
 export const COUNTRIES = [
   {

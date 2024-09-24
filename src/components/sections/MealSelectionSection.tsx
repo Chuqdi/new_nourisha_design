@@ -1,7 +1,7 @@
 "use client";
 
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
-import { COUNTRIES } from "@/config";
+import { CONTINENTS, COUNTRIES } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
@@ -21,7 +21,11 @@ export default function MealSelectionSection({
   onlyMeals?: boolean;
   colCountClass?: string;
 }) {
-  const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
+  const [activeCountry, setActiveCountry] = useState({
+    name: "Nigeria",
+    noun: "Nigeria",
+    flag: "",
+  });
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
   const [limit, setLimit] = useState("10");
@@ -67,7 +71,7 @@ export default function MealSelectionSection({
               Choose a country:
             </p>
           )}
-          {COUNTRIES.map((country, index) => {
+          {CONTINENTS.map((country, index) => {
             const selected = activeCountry === country;
             return (
               <button
@@ -77,9 +81,6 @@ export default function MealSelectionSection({
                 }`}
                 key={`active_countries_${index}`}
               >
-                <div className="w-8 h-8 flex justify-center items-center overflow-hidden text-[2.5rem] rounded-full border">
-                  {country.flag}
-                </div>
                 <p className="text-black-900 font-inter text-lg leading-[1.6875rem] tracking-[-0.01688rem]">
                   {country.noun} Meals
                 </p>

@@ -36,6 +36,7 @@ export interface IMeal {
   orderType?: string;
   is_available: boolean;
   meals?: string[];
+  calories?:string;
   name?: string;
   slug?: string;
   createdAt?: string;
