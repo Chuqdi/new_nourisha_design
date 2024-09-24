@@ -65,6 +65,13 @@ const secondTestmonies = [
     caption: `Great customer service`,
     date: "20 June 2024",
   },
+
+  {
+    name: "Izek Precious",
+    description: `Nourisha is 100 percent splendid….. quick delivery on your choose date and the meal is a top notch… can${"'"}t wait to order again…❤️`,
+    date: "9 Apr 2024",
+    caption: `Excellent`,
+  },
   {
     name: "Richmond",
     description: `Their food was well packaged, affordable and super delicious! As a Ghanaian, it wasn't easy coming by Ghanaian meals where I lived but thanks to Nourisha, I can eat my favourite Ghanaian delicacies everyday at unbeatable prices.`,
@@ -138,7 +145,93 @@ I'll be coming back to leave another review once I have tried out the wonderful 
     caption: `Food was nice`,
     date: "12 Jul 2024",
   },
+  {
+    name: "Priscilla Darko",
+    description: `They are good in cooking and also good at their time`,
+    caption: `They are good in cooking and also good`,
+    date: " 07 August 2024",
+  },
+  {
+    name: "Izek Precious",
+    description: `They are good in cooking and also good at their time`,
+    caption: `Nourisha is 100 percent splendid….. quick delivery on your choose date and the meal is a top notch… can’t wait to order again…❤️`,
+    date: "19 April 2024",
+  },
+  {
+    name: "Izek Precious",
+    description: `TDelicious food and prompt delivery`,
+    caption: `Delicious food and prompt delivery service and great portions, will definitely order again.`,
+    date: "23 July 2024",
+  },
+  {
+    name: "V.E",
+    description: `Great food,good portions,lovely taste`,
+    caption: `Great food,good portions,lovely taste and quick delivery.I highly recommend.Great customer service and very professional.`,
+    date: "18 May 2024",
+  },
+  {
+    name: "Iphie",
+    description: `Great food,good portions,lovely taste`,
+    caption: `Swift deliver, well packaged meals and very loverly customer service. The food itself, was delicious. Will definitely order again`,
+    date: "04 June 2024",
+  },
+  {
+    name: "Good authentic flavours",
+    description: `Great food,good portions,lovely taste`,
+    caption: `Good authentic flavours/dishes, quick delivery and great customer service. For easy and tasty African meals, definitely recommend!`,
+    date: "04 June 2024",
+  },
+  {
+    name: "Joan Aigboje",
+    description: `Food was amazing`,
+    caption: `Food was amazing, great customer service and support, fast delivery. I totally rey`,
+    date: "04 June 2024",
+  },
+  {
+    name: "Samson Mgbaja",
+    description: `Good and Quality meals`,
+    caption: `Good and Quality meals, I highly recommend them. Top notch packaging and delivery`,
+    date: " 04 May 2024",
+  },
+  {
+    name: "Mic",
+    description: `I highly recommend`,
+    caption: `I highly recommend, a good and trustworthy company!`,
+    date: "02 May 2024",
+  },
+  {
+    name: "Mia",
+    description: `Great customer service`,
+    caption: `Great customer service, quick delivery and delicious food. Absolutely fantastic!`,
+    date: " 05 June 2024",
+  },
+  {
+    name: "Emmanuel Adedeji Adeyemi",
+    description: `Great customer service`,
+    caption: `It was a wonderful experience.`,
+    date: "22 July 2024",
+  },
+  {
+    name: "Benjamin Okoli",
+    description: `Quick delivery, great customer service, delicious food`,
+    caption: `No complaints`,
+    date: "12 June 2024",
+  },
+  {
+    name: "Hammed Adegbenro",
+    description: `Good Good Good.`,
+    caption: `Good Good Good.`,
+    date: "12 June 2024",
+  },
+  {
+    name: "Hammed Adegbenro",
+    description: `Good Good Good.`,
+    caption: `Good Good Good.`,
+    date: "12 June 2024",
+  },
+ 
 ];
+
 
 export default function TestmoniesSection() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
@@ -146,11 +239,11 @@ export default function TestmoniesSection() {
     <div className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
       <div
         style={{
-          animation: "100s slide infinite linear",
+          animation: "250s slide infinite linear",
         }}
         className="marquee-slide flex items-center gap-0"
       >
-        {firstTestmonies.map((testmonies, index) => (
+        {firstTestmonies.concat(secondTestmonies).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
             className="w-[35rem] text-wrap h-full mx-4 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
@@ -171,7 +264,7 @@ export default function TestmoniesSection() {
           </div>
         ))}
       </div>
-      <div
+      {/* <div
         style={{
           animation: "100s slide infinite linear",
         }}
@@ -195,7 +288,7 @@ export default function TestmoniesSection() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
