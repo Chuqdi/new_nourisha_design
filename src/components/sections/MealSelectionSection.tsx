@@ -28,7 +28,7 @@ export default function MealSelectionSection({
   });
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
-  const [limit, setLimit] = useState("10");
+  const [limit, setLimit] = useState("12");
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
@@ -116,7 +116,7 @@ export default function MealSelectionSection({
       <div
         className={`
         grid grid-cols-1 ${
-          colCountClass ? colCountClass : "md:grid-cols-4"
+          colCountClass ? colCountClass : "md:grid-cols-3"
         } gap-4 mt-4
         `}
       >

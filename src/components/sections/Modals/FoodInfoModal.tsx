@@ -31,9 +31,9 @@ const FoodInfoModal = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="h-[16.3125rem] w-full rounded-[0.5rem]"
+        className="h-[16.3125rem] w-full rounded-[0.5rem] mt-4"
       />
-      <h3 className="text-black-900 text-[1.5rem] tracking-[-0.045rem] leading-[1.95rem] font-NewSpiritBold">
+      <h3 className="text-black-900 text-[1.5rem] tracking-[-0.045rem] leading-[1.95rem] font-NewSpiritBold mt-4">
         {meal?.name}
       </h3>
 

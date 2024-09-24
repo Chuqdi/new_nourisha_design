@@ -7,20 +7,16 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
-import { UserContext } from "@/HOC/UserContext";
-import { toast } from "@/ui/use-toast";
 import useFingerPrint from "./useFingerPrint";
 
-const CART_ITEMS = "cart_item";
 const useCart = () => {
   const [cartItems, setCartItems] = useAtom<ICartItem[]>(ATOMS.cartItems);
   const setCartDetails = useSetAtom(ATOMS.cartDetails);
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
-  const device_id = useFingerPrint();
+  const device_id = navigator?.userAgent?.replace(/\s+/g, "_");
   const token = getToken();
-  const user = useContext(UserContext);
   const getCartSessionDetails = () => {
     return axiosClient.get("cart");
   };
@@ -60,19 +56,20 @@ const useCart = () => {
     };
   }, [cartItems]);
 
-  const updateItemBE = async (itemId: string, quantity: number) => {
+  // const updateItemBE = async (itemId: string, quantity: number) => {
     
-    axiosClient.put("cart", {
-      itemId,
-      quantity,
-      device_id,
-    })
+  //   axiosClient.put("cart", {
+  //     itemId,
+  //     quantity,
+  //     device_id,
+  //   })
     
-    ;
-    RefreshCart();
-  };
+  //   ;
+  //   RefreshCart();
+  // };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
+    
     await axios.delete(`${process.env.API_URL}cart`, {
       data: {
         itemId,
@@ -105,7 +102,7 @@ const useCart = () => {
       getCartItemTotal,
       getCartSessionDetails,
       RefreshCart,
-      updateItemBE,
+      // updateItemBE,
       removeItemFrommCart,
       emptyCart,
     };

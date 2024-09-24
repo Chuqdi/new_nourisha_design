@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import Modal from "@/components/ui/Modal";
 import LoginModal from "@/components/sections/Modals/LoginModal";
 
+const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";
 export const UserContext = createContext<
   | {
       user: IUser;
@@ -33,7 +34,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     queryKeys.AUTH_USER_ME,
     fetchUser,
     {
-      cacheTime: 1000,
+      // cacheTime: 1000,
       retry: false,
     }
   );
@@ -47,7 +48,13 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isError) {
       setTimeout(() => {
-        setShowLoginModal(true);
+        if (
+          !localStorage.getItem(VIEWED_LOGOUT_MODAL) ||
+          localStorage.getItem(VIEWED_LOGOUT_MODAL) !== "1"
+        ) {
+          setShowLoginModal(true);
+          localStorage.setItem(VIEWED_LOGOUT_MODAL, "1");
+        }
       }, 5000);
     }
   }, [isError]);

@@ -168,7 +168,7 @@ export default function SingleCartItemSection({
                 meal,
               })
             }
-            className="w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-3 flex  items-center rounded-full justify-center"
+            className="w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-3 flex  items-center rounded-[0.5rem] justify-center"
           >
             <p className="text-primary-orange-900 text-sm font-inter ">
               Food Info
