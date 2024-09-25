@@ -131,7 +131,7 @@ export default function Main() {
               fullWidth={isMobile}
               variant="primary"
               title="Get started"
-              className="h-[2.75rem] rounded-[3rem]  py-8 md:py-6  font-[500]"
+              className="h-[2.75rem] rounded-[3rem]  py-8 md:py-6  font-bold font-inter"
             />
           </div>
           <div className="text-black-900 font-semibold font-inter text-sm md:text-lg flex gap-4 items-center">
