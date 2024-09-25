@@ -24,6 +24,7 @@ const responsive = {
 };
 
 const firstTestmonies = [
+
   {
     name: "Temitope",
     description:
@@ -48,6 +49,12 @@ const firstTestmonies = [
     description: `Swift deliver, well packaged meals and very loverly customer service. The food itself, was delicious. Will definitely order again`,
     caption: `Excellent`,
     date: "5 Jun 2024",
+  },
+  {
+    name: "TatendaGwimbi",
+    description: `Delicious food and prompt delivery service and great portions, will definitely order again.`,
+    caption: `Delicious food and prompt delivery`,
+    date: "23 July 2024",
   },
   {
     name: "Tiana",
@@ -108,12 +115,7 @@ const secondTestmonies = [
     caption: `Nourisha is 100 percent splendid`,
     date: "19 April 2024",
   },
-  {
-    name: "TatendaGwimbi",
-    description: `Delicious food and prompt delivery service and great portions, will definitely order again.`,
-    caption: `Delicious food and prompt delivery`,
-    date: "23 July 2024",
-  },
+
   {
     name: "V. E.",
     description: `Great food,good portions,lovely taste and quick delivery.I highly recommend.Great customer service and very professional.`,
@@ -246,7 +248,7 @@ export default function TestmoniesSection() {
         {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 40).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-[25rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center overflow-x-hidden"
+            className="w-[25rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 pr-4 gap-3 flex flex-col justify-center overflow-x-hidden"
           >
             <div className="flex items-center gap-3">
               <Ratings />
