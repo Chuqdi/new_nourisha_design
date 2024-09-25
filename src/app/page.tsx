@@ -196,7 +196,7 @@ export default function Main() {
         </div>
       </div>
 
-      {loadingMenuImage && (
+      {/* {loadingMenuImage && (
         <div className="w-full flex justify-center items-center">
           <Icon
             icon="line-md:loading-loop"
@@ -204,7 +204,7 @@ export default function Main() {
             color="#FE7E00"
           />
         </div>
-      )}
+      )} */}
       <div className="mt-20" />
       {isMobile ? (
         <img src="/images/absolute_menu.png" />
