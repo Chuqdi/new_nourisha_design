@@ -243,10 +243,10 @@ export default function TestmoniesSection() {
         }}
         className="marquee-slide flex items-center gap-0"
       >
-        {firstTestmonies.concat(secondTestmonies).map((testmonies, index) => (
+        {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 40).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-[25rem] text-wrap h-full mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
+            className="w-[25rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
           >
             <div className="flex items-center gap-3">
               <Ratings />

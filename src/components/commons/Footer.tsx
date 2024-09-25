@@ -23,10 +23,7 @@ export default function Footer() {
           title: "Pricing",
           link: "/pricing",
         },
-        {
-          title: "Careers",
-          link: "/careers",
-        },
+      
         {
           title: "Terms of Service",
           link: "/terms_and_conditions",
@@ -89,7 +86,7 @@ export default function Footer() {
         }}
         className="w-full flex flex-col  justify-center md:w-[35%] py-8 px-4 rounded-[1rem]  z-50"
       >
-        <h4 className="text-white font-NewSpiritBold text-[2rem] md:text-[2.75rem] tracking-[-0.11rem] mb-5">
+        <h4 className="text-white font-NewSpiritBold text-[2rem] md:text-[2.75rem] tracking-[-0.11rem] mb-5 w-3/5 md:w-full">
           Get the latest updates before they happen
         </h4>
         <form className="flex flex-col gap-4 mb-8">
@@ -103,7 +100,7 @@ export default function Footer() {
           fullWidth
           variant="primary"
           title="Submit"
-          className="h-[3rem] mt-3"
+          className="h-[3rem] mt-3 font-bold font-inter"
         />
       </div>
       <div className="w-full md:w-[65%] bg-background px-4 py-8 rounded-[1rem] flex flex-col gap-[2.75rem] z-50">

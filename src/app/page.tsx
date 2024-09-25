@@ -297,8 +297,8 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-8 px-2.5 md:px-0 mt-4 md:mt-0">
-        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[2.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
+      <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-0 md:gap-8 px-2.5 md:px-0 mt-8 md:mt-0">
+        <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
           So many meals delivered to thousands of satisfied customers
         </h4>
         <TestmoniesSection />
@@ -310,7 +310,7 @@ export default function Main() {
 
       <CommonQuestionsSection />
 
-      <div className="mx-1.25 md:mx-6.25">
+      <div className=" mt-20 md:mt-0 mx-1.25 md:mx-6.25">
         <DownloadTheAppWidgetSection />
       </div>
 

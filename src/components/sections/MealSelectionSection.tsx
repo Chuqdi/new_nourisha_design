@@ -1,7 +1,7 @@
 "use client";
 
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
-import { CONTINENTS,  } from "@/config";
+import { BREAKPOINT, CONTINENTS,  } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
@@ -9,6 +9,7 @@ import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
 import Button from "../ui/Button";
+import { useMediaQuery } from "react-responsive";
 
 export default function MealSelectionSection({
   isSingle,
@@ -28,7 +29,8 @@ export default function MealSelectionSection({
   });
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
-  const [limit, setLimit] = useState("9");
+  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT});
+  const [limit, setLimit] = useState(isMobile?"6":"9");
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
@@ -115,7 +117,7 @@ export default function MealSelectionSection({
 
       <div
         className={`
-        grid grid-cols-1 ${
+        grid grid-cols-2 ${
           colCountClass ? colCountClass : "md:grid-cols-3"
         } gap-4 mt-4
         `}

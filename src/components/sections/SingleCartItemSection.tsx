@@ -101,12 +101,12 @@ export default function SingleCartItemSection({
           <p className="text-[4rem]">{country.flag}</p>
         </div>
       )}
-      <div className="absolute top-0 left-0 right-6 w-full   flex justify-between items-center px-4 py-1">
+      <div className="absolute top-0 left-0 right-6 w-full   flex justify-between items-center px-4 py-3 md:py-1">
         <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
           {meal?.calories}KCal
         </p>
 
-        <div className="text-[2rem]">
+        <div className="text-xl md:text-[2rem]">
           {
             COUNTRIES.find((country) =>
               country?.name
@@ -168,9 +168,10 @@ export default function SingleCartItemSection({
                 meal,
               })
             }
-            className="w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-3 flex  items-center rounded-[0.5rem] justify-center"
+            
+            className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
           >
-            <p className="text-primary-orange-900 text-sm font-inter ">
+            <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
               Food Info
             </p>
           </button>
