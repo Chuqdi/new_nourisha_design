@@ -246,15 +246,15 @@ export default function TestmoniesSection() {
         {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 40).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-[25rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center"
+            className="w-[25rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2 gap-3 flex flex-col justify-center overflow-x-hidden"
           >
             <div className="flex items-center gap-3">
               <Ratings />
             </div>
-            <p className="text-sm font-inter font-bold">
+            <p className="text-sm font-inter font-bold text-wrap">
               {testmonies?.caption}
             </p>
-            <p className="text-black-900 font-inter text-sm">
+            <p className="text-black-900 font-inter text-sm text-wrap">
               {testmonies?.description}
             </p>
             <div className="font-inter text-sm text-black-900 gap-2 flex ">
