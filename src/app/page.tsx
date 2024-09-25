@@ -121,7 +121,7 @@ export default function Main() {
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
               Savor the Flavors with Nourisha
             </h2>
-            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter text-lg mt-3 md:mt-0">
+            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0">
               Allow yourself to explore your culinary desires and fully immerse
               in the excitement of authentic flavors.
             </p>
@@ -131,7 +131,7 @@ export default function Main() {
               fullWidth={isMobile}
               variant="primary"
               title="Get started"
-              className="h-[2.75rem]"
+              className="h-[2.75rem] rounded-[3rem]  py-6  font-[500]"
             />
           </div>
           <div className="text-black-900 font-semibold font-inter text-sm md:text-lg flex gap-4 items-center">
