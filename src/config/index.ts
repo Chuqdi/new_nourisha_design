@@ -69,7 +69,7 @@ export const CONTINENTS = [
   },
   {
     name: "Asia",
-    noun: "Asian and European",
+    noun: "Asian & European",
     flag: "🇬🇭",
   },
 ];
