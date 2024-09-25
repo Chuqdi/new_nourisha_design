@@ -253,10 +253,10 @@ export default function TestmoniesSection() {
             <div className="flex items-center gap-3">
               <Ratings />
             </div>
-            <p className="text-sm font-inter font-bold w-3/5">
+            <p className="text-sm font-inter font-bold w-4/5">
               {testmonies?.caption}
             </p>
-            <p className="text-black-900 font-inter text-sm ">
+            <p className="text-black-900 font-inter text-sm w-4/5">
               {testmonies?.description}
             </p>
             <div className="font-inter text-sm text-black-900 gap-2 flex ">
