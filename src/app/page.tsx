@@ -10,6 +10,7 @@ import DownloadApp from "@/components/ui/DownloadApp";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -105,9 +106,13 @@ export default function Main() {
       
       `}
     >
-      <img
-        src="/images/index_screen_gray_bg.png"
-        className=" absolute right-0 top-0 h-[27rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0"
+      <div
+        style={{
+          background: "rgba(222, 245, 76, 0.30)",
+          borderRadius: "94.0625rem",
+          filter: "blur(78.7061996459961px)"
+        }}
+        className=" absolute right-0 top-0 h-[35rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
@@ -299,7 +304,8 @@ export default function Main() {
         </h4>
         <TestmoniesSection />
         <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
-          Rated <span className="font-bold">4.5</span> / 5. Showing our 5 star reviews.
+          Rated <span className="font-bold">4.5</span> / 5. Showing our 5 star
+          reviews.
         </p>
       </div>
 
