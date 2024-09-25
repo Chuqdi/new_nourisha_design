@@ -109,8 +109,8 @@ export default function Main() {
       <div
         style={{
           background: "rgba(222, 245, 76, 0.30)",
-          borderRadius: isMobile?"52rem":"94.0625rem",
-          filter: "blur(78.7061996459961px)"
+          borderRadius: isMobile ? "52rem" : "90.0625rem",
+          filter: "blur(78.7061996459961px)",
         }}
         className=" absolute right-0 top-0 h-[32.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
@@ -131,7 +131,7 @@ export default function Main() {
               fullWidth={isMobile}
               variant="primary"
               title="Get started"
-              className="h-[2.75rem] rounded-[3rem]  py-6  font-[500]"
+              className="h-[2.75rem] rounded-[3rem]  py-8 md:py-6  font-[500]"
             />
           </div>
           <div className="text-black-900 font-semibold font-inter text-sm md:text-lg flex gap-4 items-center">
