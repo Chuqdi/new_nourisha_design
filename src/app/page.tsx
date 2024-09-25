@@ -142,7 +142,7 @@ export default function Main() {
             <p className="text-dark font-inter text-lg">5 star reviews on</p>
             <img src="/images/trust_pilot.png" className="h-8" />
           </div>
-          <div className="mt-2">
+          <div className="flex md:block justify-center md:justify-end  mt-2">
             <DownloadApp />
           </div>
         </div>
