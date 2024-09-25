@@ -109,10 +109,10 @@ export default function Main() {
       <div
         style={{
           background: "rgba(222, 245, 76, 0.30)",
-          borderRadius: "94.0625rem",
+          borderRadius: isMobile?"52rem":"94.0625rem",
           filter: "blur(78.7061996459961px)"
         }}
-        className=" absolute right-0 top-0 h-[35rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
+        className=" absolute right-0 top-0 h-[28.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
