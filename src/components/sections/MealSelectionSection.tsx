@@ -135,7 +135,7 @@ export default function MealSelectionSection({
           title={isLoading ? "Loading..." : "Load more"}
           onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
           variant="primary"
-          className="py-6 font-bold font-inter"
+          className="py-6 font-bold font-inter h-[2.5rem]"
         />
       </div>
     </div>
