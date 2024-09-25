@@ -81,7 +81,7 @@ export default function MealSelectionSection({
                 }`}
                 key={`active_countries_${index}`}
               >
-                <p className="text-black-900 font-inter text-lg leading-[1.6875rem] tracking-[-0.01688rem]">
+                <p className="text-black-900 font-inter text-lg leading-[1.6875rem] tracking-[-0.01688rem] font-[500]">
                   {country.noun} Meals
                 </p>
               </button>
@@ -135,7 +135,7 @@ export default function MealSelectionSection({
           title={isLoading ? "Loading..." : "Load more"}
           onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
           variant="primary"
-          className="py-6"
+          className="py-6 font-bold font-inter"
         />
       </div>
     </div>

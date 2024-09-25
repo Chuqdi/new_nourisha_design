@@ -289,8 +289,7 @@ export default function Main() {
             Discover Our Diverse Culinary Offerings
           </h3>
           <p className="text-black-900 font-inter text-lg leading-[1.6875rem] tracking-[-0.01688rem] w-[85%]">
-            At Nourisha, we bring you the authentic flavors from various African
-            countries, each with its unique culinary traditions. Our carefully
+            At Nourisha, we bring you the authentic flavors from African, Asia and Europe with its unique culinary traditions. Our carefully
             curated menu currently features:
           </p>
 
