@@ -7,7 +7,7 @@ export default function DownloadTheAppWidgetSection() {
     <div className="gap-20  md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full  items-center justify-center  ">
       <img
         src="/images/start_subscription.png"
-        className=" h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto shadow-btn"
+        className="mt-5 md:mt-0 h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto shadow-btn"
       />
       <div className=" flex flex-col gap-4">
         <h4 className="font-NewSpiritBold text-[2rem] text-center md:text-left md:text-[3.5rem] text-primary-Green-900  tracking-[-0.14rem]">

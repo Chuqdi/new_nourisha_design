@@ -112,7 +112,7 @@ export default function Main() {
           borderRadius: isMobile?"52rem":"94.0625rem",
           filter: "blur(78.7061996459961px)"
         }}
-        className=" absolute right-0 top-0 h-[40.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
+        className=" absolute right-0 top-0 h-[36.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
@@ -121,7 +121,7 @@ export default function Main() {
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
               Savor the Flavors with Nourisha
             </h2>
-            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter text-lg">
+            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter text-lg mt-3 md:mt-0">
               Allow yourself to explore your culinary desires and fully immerse
               in the excitement of authentic flavors.
             </p>
