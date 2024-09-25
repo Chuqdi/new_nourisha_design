@@ -256,7 +256,7 @@ export default function TestmoniesSection() {
             <p className="text-sm font-inter font-bold text-wrap">
               {testmonies?.caption}
             </p>
-            <p className="text-black-900 font-inter text-sm text-wrap">
+            <p className="text-black-900 font-inter text-sm w-4/5 text-wrap">
               {testmonies?.description}
             </p>
             <div className="font-inter text-sm text-black-900 gap-2 flex ">
