@@ -107,7 +107,7 @@ export default function Main() {
     >
       <img
         src="/images/index_screen_gray_bg.png"
-        className=" absolute right-0 top-0 h-[35rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0"
+        className=" absolute right-0 top-0 h-[27rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0"
       />
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
