@@ -85,7 +85,7 @@ export default function Navbar() {
                 >
                   {
                     !!option?.count &&
-                    <div className="absolute text-[0.7rem] top-[-0.5rem] right-[-0.3rem] bg-green-600 text-white flex justify-center items-center rounded-[6rem] min-h-[1.5rem] min-w-[1.5rem] overflow-hidden p-1">
+                    <div className="absolute text-[0.7rem] top-[-0.5rem] right-[-0.3rem] bg-[#FF4159] text-white flex justify-center items-center rounded-[6rem] min-h-[1.5rem] min-w-[1.5rem] overflow-hidden p-1">
                       {option.count}
                       </div>
                   }

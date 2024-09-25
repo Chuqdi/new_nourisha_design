@@ -1,7 +1,7 @@
 "use client";
 
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
-import { BREAKPOINT, CONTINENTS,  } from "@/config";
+import { BREAKPOINT, CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IMeal } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
@@ -29,8 +29,8 @@ export default function MealSelectionSection({
   });
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
-  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT});
-  const [limit, setLimit] = useState(isMobile?"6":"9");
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+  const [limit, setLimit] = useState(isMobile ? "6" : "9");
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
@@ -64,11 +64,13 @@ export default function MealSelectionSection({
 
       {!onlyMeals && (
         <div
-          className={` flex flex-col md:flex-row grid-cols-2  items-center gap-4 mt-[2rem]  ${
-            isSingle && "justify-center"
+          className={` flex ${
+            isHome && "flex-col md:flex-row"
+          } grid-cols-2  items-center gap-4 mt-[2rem]  ${
+            (isSingle || isHome) && "justify-center"
           }`}
         >
-          {!isHome && (
+          {!isHome && !isMobile && (
             <p className="text-black-900 text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
               Choose a country:
             </p>
@@ -92,16 +94,18 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      {!onlyMeals && !isSingle && (
+      {isSingle && (
         <div className="flex gap-4 mt-4  items-center">
-          <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
-            <Icon
-              color="#030517"
-              icon="hugeicons:filter-horizontal"
-              className="text-lg"
-            />
-            <p className="text-lg text-black-900 font-inter">Filter</p>
-          </div>
+          {isMobile && (
+            <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
+              <Icon
+                color="#030517"
+                icon="hugeicons:filter-horizontal"
+                className="text-lg"
+              />
+              <p className="text-lg text-black-900 font-inter">Filter</p>
+            </div>
+          )}
           <input
             placeholder="Search Meals"
             className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 border-[#f2f4f7]"

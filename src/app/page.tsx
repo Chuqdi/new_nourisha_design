@@ -293,7 +293,7 @@ export default function Main() {
             curated menu currently features:
           </p>
 
-          <MealSelectionSection isSingle isHome />
+          <MealSelectionSection  isHome />
         </div>
       </div>
 

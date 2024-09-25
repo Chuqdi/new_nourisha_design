@@ -27,6 +27,7 @@ const config: Config = {
         NewSpiritBold: ["NewSpiritBold", ...fontFamily.sans],
         NewSpiritHeavy: ["NewSpiritHeavy", ...fontFamily.sans],
         inter: ["var(--inter)", ...fontFamily.sans],
+        food_wookolos:["food_wookolos", ...fontFamily.sans],
       },
       boxShadow: {
         navbar: "0px 5px 24px 0px rgba(0, 0, 0, 0.03)",

@@ -55,7 +55,7 @@ export default function Main() {
                 <h6 className="text-black-900 font-inter text-sm font-semibold">
                   Socials
                 </h6>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-row gap-4 flex-wrap">
                   {socials.map((link, i) => (
                     <Link
                       className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center"

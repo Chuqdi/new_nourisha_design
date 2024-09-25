@@ -19,7 +19,7 @@ export default function Main() {
           Single Meal Orders
         </h3>
 
-        <p className="text-black-900 font-inter text-lg text-center w-full md:w-2/5 mx-auto">
+        <p className="text-black-900 font-inter text-lg text-center w-4/5 md:w-2/5 mx-auto">
           Craving something specific? Order single meals and satisfy your hunger
           right away.
         </p>

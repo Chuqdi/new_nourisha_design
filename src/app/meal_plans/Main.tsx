@@ -45,7 +45,7 @@ const SinglePlan = ({
       {/* <div className="flex justify-between items-center">
         <SelectIndicator selected={selected} />
       </div> */}
-      <h3 className="font-NewSpiritBold text-[1.5rem] md:text-[3.5rem] text-[#323546]">
+      <h3 className="font-NewSpiritBold  text-[3.5rem] text-[#323546]">
         {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
@@ -88,7 +88,7 @@ const MealPlanSelection = ({
 
   return (
     <div className="mx-1.25 md:mx-6.25 my-6">
-      <div className="grid grid-cols-2 md:flex gap-4">
+      <div className="grid grid-cols-1 md:flex gap-4">
         {isLoading && (
           <div className="flex justify-center items-center w-full">
             <p className="text-center font-inter text-sm">Loading...</p>
@@ -112,7 +112,7 @@ const MealPlanSelection = ({
           <Button
             variant="primary"
             // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
-            className="h-[2.5rem]"
+            className="h-[2.5rem] w-full md:w-auto"
             onClick={() => {
               router.push(
                 `/food_box?plan=${
@@ -143,7 +143,7 @@ export default function MealPlan() {
         <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Meal Plans
         </h3>
-        <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] mx-auto w-3/5 md:w-full md:text-[3.5rem]">
+        <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] mx-auto w-4/5 md:w-full md:text-[3.5rem]">
           Select your custom meal plan
         </h4>
         <p className="text-black-900 font-inter text-lg text-center w-full md:w-3/5 mx-auto font-semibold">

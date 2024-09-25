@@ -19,13 +19,16 @@ export default function Main() {
           Bulk Meal Orders
         </h3>
 
-        <p className="text-black-900 font-inter text-lg text-center  w-full md:w-2/5 mx-auto">
+        <p className="text-black-900 font-inter text-lg text-center  w-4/5 md:w-2/5 mx-auto">
           Hosting an event or just stocking up? Order in bulk and get large
           quantities of your favorite dishes.
         </p>
       </div>
       <div className="mt-8 mx-1.25 md:mx-6.25">
-        <MealSelectionSection />
+        <MealSelectionSection 
+          colCountClass={"md:grid-cols-3 grid-cols-1"}
+          isSingle
+        />
       </div>
       <div className="w-full mt-6.25">
         <img src="/images/zigzag.png" className="w-full" />

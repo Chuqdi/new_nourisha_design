@@ -236,7 +236,6 @@ I'll be coming back to leave another review once I have tried out the wonderful 
 
 
 export default function TestmoniesSection() {
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return (
     <div className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
       <div
