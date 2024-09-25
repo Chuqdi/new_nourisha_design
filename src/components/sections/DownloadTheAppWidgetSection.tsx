@@ -1,4 +1,7 @@
 "use client";
+
+import Link from "next/link";
+
 export default function DownloadTheAppWidgetSection() {
   return (
     <div className="gap-20  md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full  items-center justify-center  ">
@@ -19,11 +22,15 @@ export default function DownloadTheAppWidgetSection() {
         </p>
         <div className="flex justify-center md:justify-start items-center gap-[1.35rem]">
           <div className="flex justify-center items-center w-10 h-10 border-[1.25px] border-[#323546] rounded-full">
-            <img src="/images/navbar/apple.svg" className="w-6 h-6" />
+            <Link href="https://apps.apple.com/gb/app/nourisha-budget-meal-planner/id6451458690">
+              <img src="/images/navbar/apple.svg" className="w-6 h-6" />
+            </Link>
           </div>
 
           <div className="flex justify-center items-center w-10 h-10 border-[1.25px] border-[#323546] rounded-full">
-            <img src="/images/navbar/play_store.svg" className="w-6 h-6" />
+            <Link href="https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US">
+              <img src="/images/navbar/play_store.svg" className="w-6 h-6" />
+            </Link>
           </div>
         </div>
       </div>
