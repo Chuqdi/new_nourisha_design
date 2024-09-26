@@ -269,7 +269,7 @@ export default function Main() {
                     marginTop: index === 3 ? "-3rem" : undefined,
                   }}
                 >
-                  <h4 className="text-[3.5rem] text-center font-NewSpiritBold">
+                  <h4 className="text-[2rem] md:text-[3.5rem] text-center font-NewSpiritBold">
                     {option?.title}
                   </h4>
                   <p className="text-[#030517] text-base font-inter">
