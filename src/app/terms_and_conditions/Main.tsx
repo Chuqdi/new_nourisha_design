@@ -18,7 +18,7 @@ export default function Main() {
 
       <div className="mx-1.25 md:mx-6.25 my-20 flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h4 className={headerText}>Privacy Policy</h4>
+          <h4 className={headerText}>Terms & Conditions</h4>
           <p className={normalText}>
             Welcome to Nourisha!
             <br />

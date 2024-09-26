@@ -211,6 +211,7 @@ export default function Main() {
       ) : (
         <img src="/images/absolute_menu_desktop.png" />
       )}
+      
 
       <div className="my-[5rem] mx-0 md:mx-6.25">
         <h3 className="font-NewSpiritBold text-4xl text-center">
