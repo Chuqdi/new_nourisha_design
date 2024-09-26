@@ -144,8 +144,8 @@ export default function Main() {
             health benefits of healthy, prepared meals coming right to their
             door.
           </p>
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <p>Rated Excellent On Trustpilot</p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
+            <p className="font-[500] text-black-900 font-inter ">Rated Excellent On Trustpilot</p>
             <Ratings />
           </div>
 
