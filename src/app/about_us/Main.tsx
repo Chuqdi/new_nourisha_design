@@ -149,14 +149,15 @@ export default function Main() {
             <Ratings />
           </div>
 
+        
           <div className="flex justify-center items-center mt-3">
             <p className="text-black-900 text-center font-inter text-base ">
               4,021 reviews on
             </p>
             <img
               alt="ratings"
-              src="/images/rating_star.png"
-              className="w-6 h-w-6"
+              src="/images/rating_star_green.png"
+              className="w-[2.09519rem] ml-2"
             />
             <div>
               <p className="text-black-900 font-bold text-base">Trustpilot</p>
