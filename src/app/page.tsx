@@ -155,7 +155,7 @@ export default function Main() {
               background: "url(/images/taste.png)",
               backgroundSize: "cover",
             }}
-            className="flex-1 h-[23.125rem] relative pr-10 z-50 "
+            className="flex-1 h-[27.125rem] relative pr-10 z-50 "
           />
         )}
       </div>
