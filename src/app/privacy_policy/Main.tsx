@@ -19,7 +19,7 @@ export default function Main() {
       <div className="mx-1.25 md:mx-6.25 my-20 ">
         <div className="flex flex-col gap-8">
           <div className="who">
-            <h1>Who we are</h1>
+            <h1 className={headerText}>Who we are</h1>
             <p className={normalText}>
               Nourisha is a business trading under House of Nourisha Limited, a
               company registered in England and Wales with whose registered
