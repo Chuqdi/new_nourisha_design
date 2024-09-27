@@ -149,15 +149,8 @@ export default function Main() {
         {isMobile ? (
           <img src="/images/taste.png" className="w-full z-[999]" />
         ) : (
-          <div
-            style={{
-              backgroundRepeat: "no-repeat",
-              background: "url(/images/taste.png)",
-              backgroundSize: "cover",
-            }}
-            className="flex-1 w-full h-[25rem] relative z-20 pr-28"
-          />
-    
+         
+          <img src="/images/taste.png" className="flex-1  w-[47.1875rem] h-[26.35225rem] z-[999]" />
         )}
       </div>
 
