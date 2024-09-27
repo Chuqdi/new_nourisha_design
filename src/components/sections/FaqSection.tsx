@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import Button from "../ui/Button";
 
 const SingleQuestion = ({
   question,
@@ -50,6 +51,7 @@ const SingleQuestion = ({
 
 export default function FaqSection() {
   const [activeQuestion, setActiveQuestion] = useState(0);
+  const [moreLoaded, setMoreLoaded] = useState(false);
   const questions = [
     {
       question: "How long does delivery take?",
@@ -111,9 +113,13 @@ export default function FaqSection() {
       answer: "Yes, we do.",
     },
   ];
+  const mainQuestions = useMemo(() => {
+    if (moreLoaded) return questions;
+    return questions.slice(0, 4);
+  }, [moreLoaded]);
   return (
     <div className="flex gap-6 flex-col w-full bg-white mx-auto  rounded-[2rem] ">
-      {questions.map((question, index) => (
+      {mainQuestions.map((question, index) => (
         <SingleQuestion
           index={index}
           activeQuestion={activeQuestion}
@@ -122,6 +128,16 @@ export default function FaqSection() {
           question={question}
         />
       ))}
+      {!moreLoaded && (
+        <div className="flex justify-center">
+          <Button
+            title={"Load more"}
+            onClick={() => setMoreLoaded(true)}
+            variant="primary"
+            className="py-6 font-bold font-inter h-[2.5rem]"
+          />
+        </div>
+      )}
     </div>
   );
 }
