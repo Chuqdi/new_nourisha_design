@@ -101,7 +101,7 @@ export default function SingleCartItemSection({
           <p className="text-[4rem]">{country.flag}</p>
         </div>
       )}
-      <div className="absolute top-0 left-0 right-6 w-full   flex justify-between items-center px-4 py-3 md:py-1">
+      <div className="absolute top-2 left-0 right-6 w-full    flex justify-between items-center px-4 py-3 md:py-1">
         <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
           {meal?.calories}KCal
         </p>

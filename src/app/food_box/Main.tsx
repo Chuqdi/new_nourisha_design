@@ -20,8 +20,15 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 
-const SingleWeekendBreakDown = ({ week }: { week: string }) => {
+const SingleWeekendBreakDown = ({
+  week,
+  activeWeek,
+}: {
+  week: string;
+  activeWeek?: IFoodBoxDayType;
+}) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const { removeFoodBox } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -46,7 +53,7 @@ const SingleWeekendBreakDown = ({ week }: { week: string }) => {
         <h4 className="font-inter text-[#323546] text-base font-bold tracking-[-0.015rem] leading-[1.5rem]">
           {week}
         </h4>
-        {showBreakdown ? (
+        {/* {showBreakdown ? (
           <Icon
             color="#030517"
             className="w-6 h-6"
@@ -58,31 +65,61 @@ const SingleWeekendBreakDown = ({ week }: { week: string }) => {
             className="w-6 h-6"
             icon="icon-park-outline:down"
           />
-        )}
+        )} */}
       </div>
 
       <AnimatePresence>
-        {showBreakdown && (
+        {true && (
           <motion.div
             initial={{ y: -5 }}
             exit={{ y: -5 }}
             animate={{ y: 0 }}
-            className="mt-2"
+            className="mt-2 gap-3"
           >
             {activeDayMeal?.first_meal?._id || activeDayMeal?.last_meal?._id ? (
-              <>
-                <div className="flex flex-col gap-1">
-                  <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                    {activeDayMeal?.first_meal?.name}
-                  </h5>
-                </div>
+              <div className="flex flex-col gap-3">
+                {activeDayMeal?.first_meal?.name && (
+                  <div className="flex flex-row justify-between">
+                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                      {activeDayMeal?.first_meal?.name}
+                    </h5>
+                    {week === activeWeek && (
+                      <button
+                        onClick={() => {
+                          removeFoodBox(
+                            activeWeek!,
+                            activeDayMeal?.first_meal?._id!
+                          );
+                        }}
+                        type="button"
+                      >
+                        <Icon icon="fa6-solid:minus" />
+                      </button>
+                    )}
+                  </div>
+                )}
 
-                <div className="flex flex-col gap-1">
-                  <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                    {activeDayMeal?.last_meal?.name}
-                  </h5>
-                </div>
-              </>
+                {activeDayMeal?.last_meal?.name && (
+                  <div className="flex flex-row items-center justify-between">
+                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                      {activeDayMeal?.last_meal?.name}
+                    </h5>
+                    {week === activeWeek && (
+                      <button
+                        onClick={() =>
+                          removeFoodBox(
+                            activeWeek!,
+                            activeDayMeal?.last_meal?._id!
+                          )
+                        }
+                        type="button"
+                      >
+                        <Icon icon="fa6-solid:minus" />
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             ) : (
               <p className="text-sm text-center font-inter font-semibold">
                 ---No Meal selected---
@@ -94,11 +131,21 @@ const SingleWeekendBreakDown = ({ week }: { week: string }) => {
     </div>
   );
 };
-const WeeksBreakDown = ({ weeks }: { weeks: typeof DAYS_OF_THE_WEEK }) => {
+const WeeksBreakDown = ({
+  weeks,
+  activeWeek,
+}: {
+  weeks: typeof DAYS_OF_THE_WEEK;
+  activeWeek?: IFoodBoxDayType;
+}) => {
   return (
     <div className="flex flex-col gap-4">
       {weeks.map((week, index) => (
-        <SingleWeekendBreakDown week={week} key={`weeek_break_down_${index}`} />
+        <SingleWeekendBreakDown
+          activeWeek={activeWeek}
+          week={week}
+          key={`weeek_break_down_${index}`}
+        />
       ))}
     </div>
   );
@@ -108,7 +155,7 @@ export default function Main() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
   const searchParams = useSearchParams();
- 
+
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isWeekly = useMemo(
     () => searchParams.get("plan")?.includes("5".toUpperCase()),
@@ -189,7 +236,6 @@ export default function Main() {
   };
 
   const createLineUp = async () => {
-  
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -352,12 +398,12 @@ export default function Main() {
                       </p>
                     </div>
                     <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                      Add {7 - numberOfMealsSelected} more days to complete your
+                      Add {weeks.length} more days to complete your
                       plan
                     </p>
                   </div>
 
-                  <WeeksBreakDown weeks={weeks} />
+                  <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
 
                   <Button
                     // onClick={createLineUp}

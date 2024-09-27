@@ -155,7 +155,7 @@ export default function Main() {
               background: "url(/images/taste.png)",
               backgroundSize: "cover",
             }}
-            className="flex-1 h-[23.125rem] relative z-50 "
+            className="flex-1 h-[23.125rem] relative pr-10 z-50 "
           />
         )}
       </div>
@@ -196,15 +196,7 @@ export default function Main() {
         </div>
       </div>
 
-      {/* {loadingMenuImage && (
-        <div className="w-full flex justify-center items-center">
-          <Icon
-            icon="line-md:loading-loop"
-            className="w-20 h-20"
-            color="#FE7E00"
-          />
-        </div>
-      )} */}
+    
       <div className="mt-20" />
       {isMobile ? (
         <img src="/images/absolute_menu.png" />
