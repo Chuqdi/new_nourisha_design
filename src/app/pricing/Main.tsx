@@ -4,18 +4,70 @@ import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
-import { PRICINGS } from "@/config";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useMemo, useState } from "react";
 //@ts-ignore
 import HTMLRenderer from "react-html-renderer";
 
 export default function Main() {
+  const [onAfrican, setOnAfrican] = useState(true);
+  const pricings = useMemo(
+    () => [
+      {
+        gradientBg: "#F2F4F7",
+        price: onAfrican ? "80" : "71",
+        duration: "Weekly plan",
+        textColor: "#323443",
+        description: `<p class='font-inter text-base text-black-900'>2 chef-cooked meals daily  for <span class='font-bold'>5 days</span> </p>`,
+        days: "5",
+        options: [
+          "Dinner and Lunch daily for 5 days",
+          "Customise your meal plan from our wide range of menu",
+          "Meal delivered once a week",
+        ],
+      },
+      {
+        gradientBg: "#F2F4F7",
+        price: onAfrican ? "100" : "95.09",
+        duration: "Weekly plan",
+        textColor: "#323443",
+        description: `<p class='font-inter text-base text-black-900'>
+     2 chef-cooked meals daily <span class='font-bold'>7 days</span>
+    </p>`,
+        days: "7",
+
+        options: [
+          "Dinner and Lunch daily for 1 week(7 days)",
+          "Customise your meal plan from our wide range of menu",
+          "Meal delivered once a week",
+        ],
+      },
+      {
+        gradientBg: "#F2F4F7",
+        price: onAfrican ? "400" : "383.06",
+        duration: "Monthly plan",
+        textColor: "#323443",
+        description: `<p class='font-inter text-base text-black-900'>
+       2 chef-cooked meals daily <span class='font-bold'>7 days</span>
+      </p>`,
+        days: "30",
+
+        options: [
+          "Dinner and Lunch daily for 1 week(7 days)",
+          "Customise your meal plan from our wide range of menu",
+          "Meal delivered once a week",
+        ],
+      },
+    ],
+    [onAfrican]
+  );
+
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
       <div className="flex flex-col gap-6 mt-32">
         <MessageBtn title="PRICING" />
-        <h3 className="text-center text-[2rem] md:text-[4.5rem] text-primary-Green-900 tracking-[-0.18rem] font-NewSpiritBold w-[65%] mx-auto">
+        <h3 className="text-center text-[2rem] md:text-[4.5rem] text-primary-Green-900 tracking-[-0.18rem] font-NewSpiritBold w-[80%] mx-auto">
           Great food, delivered to you on a budget.
         </h3>
         <p className="text-black-900 font-inter text-lg w-ful md:w-[65%] text-center mx-auto p-4">
@@ -23,8 +75,39 @@ export default function Main() {
         </p>
       </div>
 
+      <div className="flex justify-center my-4">
+        <div className="bg-[#F2F4F7] flex w-[90%] md:w-[21.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
+          <p
+            onClick={() => setOnAfrican(true)}
+            className={`
+            text-center flex-1 flex justify-center items-center
+              ${
+                onAfrican
+                  ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "
+                  : ""
+              }
+              `}
+          >
+            African meal plans
+          </p>
+          <p
+            onClick={() => setOnAfrican(false)}
+            className={`
+                text-center flex-1 flex justify-center items-center
+                  ${
+                    !onAfrican
+                      ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "
+                      : ""
+                  }
+                  `}
+          >
+            Asian meal plans
+          </p>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-8 p-4">
-        {PRICINGS.map((pricing, index) => (
+        {pricings.map((pricing, index) => (
           <div
             className="p-3 rounded-[0.75rem] flex-1"
             style={{ background: pricing.gradientBg }}
@@ -45,7 +128,7 @@ export default function Main() {
                   {pricing.days} days
                 </div>
               </div>
-              <div className="w-4/5 h-[5rem]">
+              <div className="w-4/5 h-[2.5rem]">
                 <HTMLRenderer html={pricing.description} />
               </div>
 
@@ -63,12 +146,15 @@ export default function Main() {
                 ))}
               </div>
 
-              <Button className="h-[3rem]" variant="primary" fullWidth title="Subscribe" />
+              <Button
+                className="h-[3rem]"
+                variant="primary"
+                fullWidth
+                title="Subscribe"
+              />
+
               <p className="text-black-900 text-sm text-center font-inter my-4">
-                + £10 For deliveries during the week
-              </p>
-              <p className="text-black-900 text-sm text-center font-inter my-4">
-                + £18 For weekend deliveries
+                + £10 For weekend deliveries
               </p>
             </div>
           </div>

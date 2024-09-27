@@ -11,7 +11,7 @@ import { IPlan } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 const SinglePlan = ({
@@ -19,14 +19,31 @@ const SinglePlan = ({
   index,
   setActiveOptionIndex,
   option,
+  onAfrican,
 }: {
   activeOptionIndex: number;
   index: number;
   setActiveOptionIndex: (value: number) => void;
   option: IPlan;
+  onAfrican?: boolean;
 }) => {
   const selected = activeOptionIndex === index;
-
+  const perMealPrice = useMemo(() => {
+    if (option?.name?.includes("5")) {
+      return onAfrican?"8":"7.10";
+    } else if (option.name?.includes("MONTHLY")) {
+      return onAfrican?"7.1.4":"6.85"
+    }
+    return onAfrican?"7.14":"6.85";
+  }, [onAfrican]);
+  const totalPrice = useMemo(() => {
+    if (option?.name?.includes("5")) {
+      return onAfrican?option?.amount:"71";
+    } else if (option.name?.includes("MONTHLY")) {
+      return onAfrican?option?.amount:"383.06"
+    }
+    return onAfrican?option?.amount:"95.09";
+  }, [onAfrican]);
   return (
     <div
       onClick={() => setActiveOptionIndex(index)}
@@ -52,21 +69,19 @@ const SinglePlan = ({
       </h3>
       <div>
         <p className="text-black-900 font-inter text-base">
-          £{option?.name?.includes("5") ? "8" : "7.14"}/meal
+          £{perMealPrice}/meal
+          
+          
         </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           <span>Total: </span>
-          <span className="font-bold">£{option.amount}</span>
+          <span className="font-bold">£{totalPrice}</span>
         </p>
       </div>
     </div>
   );
 };
-const MealPlanSelection = ({
-  setShowOrderTypeModal,
-}: {
-  setShowOrderTypeModal: (value: boolean) => void;
-}) => {
+const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const [activeOptionIndex, setActiveOptionIndex] = useState(1);
   const { axiosClient } = useAuth();
   const user = useContext(UserContext);
@@ -96,6 +111,7 @@ const MealPlanSelection = ({
           return (
             <SinglePlan
               option={option}
+              onAfrican={onAfrican}
               index={index}
               activeOptionIndex={activeOptionIndex}
               setActiveOptionIndex={setActiveOptionIndex}
@@ -110,7 +126,7 @@ const MealPlanSelection = ({
           <Button
             variant="primary"
             // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
-            className="h-[2.5rem] w-full md:w-auto"
+            className="h-[2.7rem] py-6  w-full md:w-auto"
             onClick={() => {
               router.push(
                 `/food_box?plan=${
@@ -155,7 +171,11 @@ export default function MealPlan() {
               onClick={() => setOnAfrican(true)}
               className={`
             text-center flex-1 flex justify-center items-center
-              ${onAfrican ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] " : ""}
+              ${
+                onAfrican
+                  ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "
+                  : ""
+              }
               `}
             >
               African meal plans
@@ -164,7 +184,11 @@ export default function MealPlan() {
               onClick={() => setOnAfrican(false)}
               className={`
                 text-center flex-1 flex justify-center items-center
-                  ${!onAfrican ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] " : ""}
+                  ${
+                    !onAfrican
+                      ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "
+                      : ""
+                  }
                   `}
             >
               Asian meal plans
@@ -172,7 +196,7 @@ export default function MealPlan() {
           </div>
         </div>
         <div className="w-full md:w-[90%] mx-auto">
-          <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
+          <MealPlanSelection onAfrican={onAfrican} />
         </div>
 
         <div className="w-full">
