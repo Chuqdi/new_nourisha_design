@@ -406,7 +406,6 @@ export default function Main() {
                   <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
 
                   <Button
-                    // onClick={createLineUp}
                     onClick={() =>
                       setSideModal({
                         component: (
@@ -422,6 +421,7 @@ export default function Main() {
                     disabled={loading}
                     title="Proceed"
                     variant="primary"
+                    className="py-6 h-[2.7rem]"
                   />
                 </div>
               </div>
