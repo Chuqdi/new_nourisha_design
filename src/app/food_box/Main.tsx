@@ -4,7 +4,7 @@ import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import Button from "@/components/ui/Button";
 import SelectChip from "@/components/ui/SelectChip";
-import { COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
+import { CONTINENTS, COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
@@ -310,7 +310,7 @@ export default function Main() {
           </p>
           <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
             <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
-              {COUNTRIES.map((country, index) => {
+              {CONTINENTS.map((country, index) => {
                 const selected = country === activeCountry;
                 return (
                   <SelectChip
@@ -362,7 +362,7 @@ export default function Main() {
                   )}
                   <div
                     className={`
-                    grid grid-cols-1 md:grid-cols-3 gap-4 mt-4
+                    grid grid-cols-2 md:grid-cols-3 gap-4 mt-4
                     `}
                   >
                     {meals.map((meal, index) => (

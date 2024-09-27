@@ -18,7 +18,7 @@ export default function MobileNavbar({ close }: { close: () => void }) {
   const user = useContext(UserContext);
   const router = useRouter();
 
-  const isLoggedIn = useMemo(()=>!!user?.user?._id, [user]);
+  const isLoggedIn = useMemo(() => !!user?.user?._id, [user]);
 
   return (
     <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 ">
@@ -26,7 +26,7 @@ export default function MobileNavbar({ close }: { close: () => void }) {
         <Logo className="w-40 h-40 object-contain" />
         <Icon
           color="#030517"
-          className="w-10 h-10 cursor-pointer"
+          className="w-6 h-6 cursor-pointer"
           icon="fluent-mdl2:cancel"
           onClick={close}
         />
@@ -46,22 +46,30 @@ export default function MobileNavbar({ close }: { close: () => void }) {
         ))}
       </div>
 
-      <div className="w-full mt-10 p-4">
+      <div className="w-full mt-10 p-4 flex flex-col gap-4">
         <Button
+          className="h-[2.7rem] py-6"
+          fullWidth
+          onClick={() => {
+            router.push("/single_meals");
+            close();
+          }}
+          title="Start order"
+          variant="primary"
+        />
+        <Button
+          className="h-[2.7rem] py-6 mb-3"
           fullWidth
           onClick={() => {
             close();
-            isLoggedIn 
-            ?
-            setSideModal({
-              show: true,
-              component: <MainAccount />,
-            })
-            :
-            router.push("/auth")
-          }
-        }
-          title={isLoggedIn?"Dashboard":"Login"}
+            isLoggedIn
+              ? setSideModal({
+                  show: true,
+                  component: <MainAccount />,
+                })
+              : router.push("/auth");
+          }}
+          title={isLoggedIn ? "Dashboard" : "Login"}
           variant="secondary"
         />
       </div>
