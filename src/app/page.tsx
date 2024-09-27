@@ -155,7 +155,7 @@ export default function Main() {
               background: "url(/images/taste.png)",
               backgroundSize: "cover",
             }}
-            className="flex-1 w-full h-[24.7rem] relative z-20 pr-28"
+            className="flex-1 w-full h-[25rem] relative z-20 pr-28"
           />
     
         )}
