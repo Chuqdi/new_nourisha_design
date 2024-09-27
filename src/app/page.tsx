@@ -115,8 +115,8 @@ export default function Main() {
         className=" absolute right-0 top-0 h-[32.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
       <Navbar />
-      <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32">
-        <div className="flex-1 p-2 md:p-0 md:ml-6.25 flex flex-col gap-5">
+      <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32 items-center">
+        <div className="flex-1 p-2 md:p-0 md:ml-[2rem] flex flex-col gap-5">
           <div>
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
               Savor the Flavors with Nourisha
@@ -150,7 +150,7 @@ export default function Main() {
           <img src="/images/taste.png" className="w-full z-[999]" />
         ) : (
          
-          <img src="/images/taste.png" className="flex-1  w-[47.1875rem] h-[26.35225rem] z-[999]" />
+          <img src="/images/taste.png" className="flex-1  w-[40.1875rem] h-[23.35225rem] z-[999]" />
         )}
       </div>
 
