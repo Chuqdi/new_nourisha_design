@@ -145,22 +145,16 @@ export default function Main() {
             door.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-            <p className="font-[500] text-black-900 font-inter ">Rated Excellent On Trustpilot</p>
+            <p className="font-[500] text-black-900 font-inter ">
+              Rated Excellent On Trustpilot
+            </p>
             <Ratings />
           </div>
 
-        
-          <div className="flex justify-center items-center mt-3">
-            <p className="text-black-900 text-center font-inter text-base ">
-              4,021 reviews on
-            </p>
-            <img
-              alt="ratings"
-              src="/images/rating_star_green.png"
-              className="w-[2.09519rem] ml-2"
-            />
-            <div>
-              <p className="text-black-900 font-bold text-base">Trustpilot</p>
+          <div className="flex justify-center font-inter font-[500] items-center mt-3">
+            <div className="flex items-center gap-1">
+             
+               Over 10,000 meals sold
             </div>
           </div>
         </div>
@@ -195,7 +189,7 @@ export default function Main() {
       </div>
 
       <div className="mx-2.5 md:mx-6.25 bg-[#FFF8E7] rounded-[2rem] flex flex-col md:flex-row  items-center justify-center p-4 md:p-10 gap-8">
-        <div className="p-0 md:p-8">
+        <div className="flex flex-col gap-3 p-0 md:p-8">
           <h3 className="font-NewSpiritBold text-base md:text-7xl text-black">
             We’re promise keepers.
           </h3>
@@ -230,25 +224,21 @@ export default function Main() {
                   }`}
                   style={{
                     background: option?.bg,
-                    marginTop: index === 3 ? isMobile?undefined:"-3rem" : undefined,
+                    marginTop:
+                      index === 3
+                        ? isMobile
+                          ? undefined
+                          : "-3rem"
+                        : undefined,
                   }}
                 >
                   <h4 className="text-[2rem] md:text-[3.5rem] font-NewSpiritBold">
-                    {option?.title} 
+                    {option?.title}
                   </h4>
                   <p className="text-[#030517] text-base font-inter">
                     {option.description}
                   </p>
-                  {btned && (
-                    <div className="mt-[0.75rem]">
-                      <Button
-                        title={option.btnTitle!}
-                        onClick={option.onClick}
-                        variant="primary"
-                        className="h-[2.75rem] py-4"
-                      />
-                    </div>
-                  )}
+             
                 </div>
               );
             })}

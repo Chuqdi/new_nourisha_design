@@ -2,10 +2,10 @@ export const BACKEND_URL = "https://api.eatnourisha.com/v1/";
 
 export const PRICINGS = [
   {
-    gradientBg: "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
+    gradientBg: "#F2F4F7",
     price: "80",
     duration: "Weekly plan",
-    textColor: "#9572F9",
+    textColor: "#323443",
     description: `<p className='font-inter text-base text-black-900'>2 chef-cooked meals daily  for <span className='font-bold'>5 days</span>
 (Lunch and Dinner for any 5 days of your choosing) </p>`,
     days: "5",
@@ -16,10 +16,10 @@ export const PRICINGS = [
     ],
   },
   {
-    gradientBg: "linear-gradient(208deg, #FE7E00 16.32%, #FE0000 105.01%)",
+    gradientBg: "#F2F4F7",
     price: "100",
     duration: "Weekly plan",
-    textColor: "#9572F9",
+    textColor: "#323443",
     description: `<p className='font-inter text-base text-black-900'>
  2 chef-cooked meals daily <span className='font-bold'>7 days</span>
 (Lunch and Dinner from Mon. to Sun.) 
@@ -33,10 +33,10 @@ export const PRICINGS = [
     ],
   },
   {
-    gradientBg: "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
+    gradientBg: "#F2F4F7",
     price: "400",
     duration: "Monthly plan",
-    textColor: "#9572F9",
+    textColor: "#323443",
     description: `<p className='font-inter text-base text-black-900'>
    2 chef-cooked meals daily <span className='font-bold'>7 days</span>
   (Lunch and Dinner from Mon. to Sun.) 

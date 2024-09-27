@@ -121,7 +121,7 @@ export default function Main() {
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
               Savor the Flavors with Nourisha
             </h2>
-            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0">
+            <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
               Allow yourself to explore your culinary desires and fully immerse
               in the excitement of authentic flavors.
             </p>
@@ -155,8 +155,9 @@ export default function Main() {
               background: "url(/images/taste.png)",
               backgroundSize: "cover",
             }}
-            className="flex-1 h-[27.125rem] relative pr-24 z-50 "
+            className="flex-1 w-full h-[27.7rem] relative z-20 pr-28"
           />
+    
         )}
       </div>
 
@@ -254,7 +255,7 @@ export default function Main() {
                 src={`/images/whatOffer/${offer.image}`}
                 className="w-20 h-20"
               />
-              <div>
+              <div className="flex flex-col gap-4">
                 <h4 className="text-2xl text-black-900 font-NewSpiritBold">
                   {offer.text}
                 </h4>

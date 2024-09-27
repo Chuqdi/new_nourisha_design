@@ -42,9 +42,7 @@ const SinglePlan = ({
           Save up to {option?.name?.includes("5") ? "20" : "30"}%
         </p>
       </div>
-      {/* <div className="flex justify-between items-center">
-        <SelectIndicator selected={selected} />
-      </div> */}
+
       <h3 className="font-NewSpiritBold  text-[3.5rem] text-[#323546]">
         {option?.name?.includes("5")
           ? "10 Meals"
@@ -129,6 +127,7 @@ const MealPlanSelection = ({
 };
 export default function MealPlan() {
   const [orderTypeModal, setShowOrderTypeModal] = useState(false);
+  const [onAfrican, setOnAfrican] = useState(true);
 
   return (
     <div className="w-full h-full relative pt-6">
@@ -149,6 +148,29 @@ export default function MealPlan() {
         <p className="text-black-900 font-inter text-lg text-center w-full md:w-3/5 mx-auto font-semibold">
           Prep your daily meals to maintain healthy eating habits.
         </p>
+
+        <div className="flex justify-center ">
+          <div className="bg-[#F2F4F7] flex w-[90%] md:w-[21.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
+            <p
+              onClick={() => setOnAfrican(true)}
+              className={`
+            text-center flex-1 flex justify-center items-center
+              ${onAfrican ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] " : ""}
+              `}
+            >
+              African meal plans
+            </p>
+            <p
+              onClick={() => setOnAfrican(false)}
+              className={`
+                text-center flex-1 flex justify-center items-center
+                  ${!onAfrican ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] " : ""}
+                  `}
+            >
+              Asian meal plans
+            </p>
+          </div>
+        </div>
         <div className="w-full md:w-[90%] mx-auto">
           <MealPlanSelection setShowOrderTypeModal={setShowOrderTypeModal} />
         </div>
