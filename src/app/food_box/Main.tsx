@@ -18,7 +18,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {  useEffect, useMemo, useState } from "react";
 
 const SingleWeekendBreakDown = ({
   week,

@@ -1,5 +1,6 @@
 import { IFoodBoxDayType, IMeal } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
+import { toast } from "@/ui/use-toast";
 import { useAtom } from "jotai";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
@@ -42,6 +43,14 @@ export default function () {
       foodBox[day].meals["first_meal"] = meal;
     } else if (!isAllMealsSelected && !isSecondMealAlreadySelected) {
       foodBox[day].meals["last_meal"] = meal;
+    }
+    
+    if(isAllMealsSelected){
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Food selected ",
+      });
     }
 
     localStorage.setItem(FOOD_BOX_STORE, JSON.stringify(foodBox));

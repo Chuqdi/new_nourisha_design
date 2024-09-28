@@ -1,6 +1,7 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { toast } from "@/components/ui/use-toast";
+import { BREAKPOINT } from "@/config";
 import { IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
@@ -9,10 +10,18 @@ import useFingerPrint from "@/hooks/useFingerPrint";
 import { loginUserScheme } from "@/lib/scheme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useFormik } from "formik";
+import { useMediaQuery } from "react-responsive";
 
-export default function LoginModal({ close, setUser }: { close: () => void, setUser: (user:IUser) => void}) {
+export default function LoginModal({
+  close,
+  setUser,
+}: {
+  close: () => void;
+  setUser: (user: IUser) => void;
+}) {
   const { setToken } = useAuthToken();
   const device_id = useFingerPrint();
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const { makeRequest, isLoading } = useAuth();
 
   const onSubmit = async (data: { email: string; password: string }) => {
@@ -32,7 +41,7 @@ export default function LoginModal({ close, setUser }: { close: () => void, setU
       });
       setUser(createdUser?.payload);
 
-      window.location.href ="/";
+      window.location.href = "/";
 
       resetForm();
     }
@@ -47,22 +56,29 @@ export default function LoginModal({ close, setUser }: { close: () => void, setU
     onSubmit,
   });
   return (
-    <div className="flex flex-col md:flex-row  bg-white  rounded-[1rem] overflow-hidden w-full relative">
+    <div
+      id="login_modal"
+      className="flex flex-col md:flex-row h-[90vh] overflow-y-scroll  bg-white  rounded-[1rem] overflow-hidden w-full relative"
+    >
       <button
         onClick={close}
         className="right-2 top-2  absolute bg-[#EDEDF3] flex justify-center items-center rounded-[2rem] w-[1.8rem] h-[1.8rem]"
       >
         <Icon color="#000" className="text-[1.3rem]" icon="iconoir:cancel" />
       </button>
-      <div
-        style={{
-          backgroundImage: "url(/images/login_modal_side.png)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="flex-1 w-full"
-      />
+      {isMobile ? (
+        <img src="/images/login_modal_side.png" className="object-cover w-full h-[20rem]" />
+      ) : (
+        <div
+          style={{
+            backgroundImage: `url(/images/login_modal_side.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="h-[30rem] w-full md:h-full md:flex-1 "
+        />
+      )}
 
       <form
         onSubmit={handleSubmit}

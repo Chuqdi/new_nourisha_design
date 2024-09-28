@@ -70,7 +70,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
           </div>
         ) : (
           <>
-            <Modal large show={showLoginModal}>
+            <Modal center large show={showLoginModal}>
               <LoginModal
                 setUser={setUser}
                 close={() => setShowLoginModal(false)}
