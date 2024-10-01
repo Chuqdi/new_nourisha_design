@@ -45,6 +45,16 @@ export interface IMeal {
   images?: string[];
   _id?: string;
   price: { amount: number; deliveryFee: number; previousAmount: number };
+  mealInfo?:{
+    ingredient?:string;
+    heating?:string;
+    allergy?:string,
+    nutrition?:{
+      protein?:string;
+      fat?:string;
+      carbs?:string;
+    }
+  },
 }
 
 export interface ICartItem {
@@ -54,6 +64,12 @@ export interface ICartItem {
   _id: string;
 }
 
+
+
+export interface IExtraItem {
+  _id?: string;
+  name?:string;
+}
 export interface IOrder {
   _id: string;
   items: { item: IMeal }[];
@@ -138,4 +154,11 @@ export type IFoodBoxDayType =
 export interface IFoodBox {
   day: IFoodBoxDayType;
   meals: IFoodBoxItem;
+  extra?:IExtraItem
 }
+
+export interface IStoredExtraType {
+  meal:IMeal,
+  extra:IExtraItem,
+  day:IFoodBoxDayType,
+};

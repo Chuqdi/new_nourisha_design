@@ -1,11 +1,11 @@
 import { IMeal } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 
 const FoodInfoModal = () => {
   const [foodInfoModal, setFoodInfoModal] = useAtom(ATOMS.foodInfoModal);
-  const { meal, show } = foodInfoModal;
+  const { meal } = foodInfoModal;
   return (
     <div className="bg-white p-4 rounded-[1rem]  max-h-[90vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
@@ -47,18 +47,23 @@ const FoodInfoModal = () => {
 
         <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
           <h4 className="text-black-900 text-base font-NewSpiritBold">
-            485 kcal
+            {meal?.mealInfo?.nutrition?.fat}g
           </h4>
-          <p className="text-[#323546] font-inter font-base">CALORIES</p>
+          <p className="text-[#323546] font-inter font-base">FAT</p>
         </div>
-
-
 
         <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
           <h4 className="text-black-900 text-base font-NewSpiritBold">
-            485 kcal
+            {meal?.mealInfo?.nutrition?.carbs}g
           </h4>
-          <p className="text-[#323546] font-inter font-base">CALORIES</p>
+          <p className="text-[#323546] font-inter font-base">CARBS</p>
+        </div>
+
+        <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
+          <h4 className="text-black-900 text-base font-NewSpiritBold">
+            {meal?.mealInfo?.nutrition?.protein}g
+          </h4>
+          <p className="text-[#323546] font-inter font-base">PROTEIN</p>
         </div>
       </div>
 
@@ -68,9 +73,7 @@ const FoodInfoModal = () => {
             Ingredients
           </h4>
           <p className="text-[#323546] font-inter text-[1.25rem]">
-            Lorem ipsum sit amet dolor relictum expurgartionis isssisisiisis
-            isiinferalis, Lorem ipsum sit amet dolor relictum expurgartionis
-            inferalis Lorem ipsum sit amet
+            {meal?.mealInfo?.ingredient}
           </p>
         </div>
 
@@ -79,18 +82,16 @@ const FoodInfoModal = () => {
             Allergens
           </h4>
           <p className="text-[#323546] font-inter text-[1.25rem]">
-            GLUTEN, SESAME, SOYA
+            {meal?.mealInfo?.allergy}
           </p>
         </div>
 
         <div>
           <h4 className="text-black-900 text-[1.5rem] font-NewSpiritBold">
-            Cooking instreuctions
+            Heating instructions
           </h4>
           <p className="text-[#323546] font-inter text-[1.25rem]">
-            Lorem ipsum sit amet dolor relictum expurgartionis isssisisiisis
-            isiinferalis, Lorem ipsum sit amet dolor relictum expurgartionis
-            inferalis Lorem ipsum sit amet
+            {meal?.mealInfo?.heating}
           </p>
         </div>
       </div>

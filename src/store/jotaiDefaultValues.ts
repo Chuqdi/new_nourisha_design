@@ -1,4 +1,10 @@
-import { ICartDetail, ICartItem, IFoodBox, IMeal } from "@/config/types";
+import {
+  ICartDetail,
+  ICartItem,
+  IFoodBox,
+  IFoodBoxDayType,
+  IMeal,
+} from "@/config/types";
 
 export const SHOW_SIDE_MODAL: { show: boolean; component: React.ReactNode } = {
   show: false,
@@ -9,17 +15,31 @@ export const FOOD_BOX: IFoodBox | null = null;
 export const cartItems = [] as ICartItem[];
 export const cartDetails = {} as ICartDetail;
 export const cartIsLoading = false;
-export const foodInfoModal:{show:boolean, meal:IMeal} = {
-  show:false,
-  meal:{} as IMeal
-}
+export const foodInfoModal: { show: boolean; meal: IMeal } = {
+  show: false,
+  meal: {} as IMeal,
+};
+export const showInfoModal: { show: boolean; meal: IMeal; day?: string } = {
+  show: false,
+  meal: {} as IMeal,
+};
+
+export const showMealExtraSelection: {
+  show: boolean;
+  meal?: IMeal;
+  day: IFoodBoxDayType | undefined;
+} = {
+  show: false,
+  meal: {} as IMeal,
+  day: undefined,
+};
 export const paymentModal: {
   show: boolean;
-  amount:number;
+  amount: number;
   onContinue: () => Promise<{ clientSecret: string; returnUrl: string }>;
 } = {
   show: false,
-  amount:0,
+  amount: 0,
   onContinue: async () => {
     return {
       clientSecret: "",

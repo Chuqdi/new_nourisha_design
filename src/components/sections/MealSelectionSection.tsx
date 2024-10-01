@@ -22,24 +22,20 @@ export default function MealSelectionSection({
   onlyMeals?: boolean;
   colCountClass?: string;
 }) {
-  const [activeCountry, setActiveCountry] = useState({
-    name: "Nigeria",
-    noun: "Nigeria",
-    flag: "",
-  });
+  const [activeContinent, setActiveContinent] = useState(CONTINENTS[0]);
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const [limit, setLimit] = useState(isMobile ? "6" : "9");
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
+      `meals/pack?page=1&limit=${limit}&country=Nigeria`
     );
   };
 
   const { data, isLoading } = useFetch(
     getMeals,
-    [queryKeys.GET_AVAILABLE_MEAL, activeCountry?.name, limit],
+    [queryKeys.GET_AVAILABLE_MEAL, activeContinent?.name, limit],
     true
   );
 
@@ -76,10 +72,10 @@ export default function MealSelectionSection({
             </p>
           )}
           {CONTINENTS.map((country, index) => {
-            const selected = activeCountry === country;
+            const selected = activeContinent === country;
             return (
               <button
-                onClick={() => setActiveCountry(country)}
+                onClick={() => setActiveContinent(country)}
                 className={`flex gap-3 p-3 h-12 justify-center rounded-full items-center flex-nowrap whitespace-nowrap  ${
                   selected ? "bg-[#E1F0D0]" : "bg-[#F2F4F7]"
                 }`}
@@ -128,7 +124,7 @@ export default function MealSelectionSection({
       >
         {meals.map((meal, index) => (
           <SingleCartItemSection
-            country={activeCountry}
+            country={activeContinent}
             isHome={isHome}
             meal={meal}
             key={`cart_item_${index}`}

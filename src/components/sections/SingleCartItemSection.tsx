@@ -17,6 +17,14 @@ export const CartManipulator = ({
   const { addItemToCart, removeItemFrommCart } = useCart();
   const [_, setMealAddedToCart] = useState(false);
 
+  const onAddItemToCart = () => {
+    addItemToCart(meal);
+    setMealAddedToCart(true);
+    setTimeout(() => {
+      setMealAddedToCart(false);
+    }, 1500);
+  };
+
   return (
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
       <button
@@ -35,13 +43,7 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={() => {
-          addItemToCart(meal);
-          setMealAddedToCart(true);
-          setTimeout(() => {
-            setMealAddedToCart(false);
-          }, 1500);
-        }}
+        onClick={onAddItemToCart}
         className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
         +
@@ -63,10 +65,12 @@ export default function SingleCartItemSection({
   activeWeek?: IFoodBoxDayType;
   country: (typeof COUNTRIES)[0];
 }) {
-  const { addFoodBox, removeFoodBox } = useFoodbox();
+  const { addFoodBox, removeFoodBox, } =
+    useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
+  const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
 
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -93,6 +97,8 @@ export default function SingleCartItemSection({
 
     [cartItems]
   );
+
+
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
@@ -128,6 +134,7 @@ export default function SingleCartItemSection({
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem]">
         {meal?.name}
       </p>
+
       {isFoodBox ? (
         <div className=" flex w-full justify-end">
           {isMealSelected ? (
@@ -148,6 +155,21 @@ export default function SingleCartItemSection({
             <button
               onClick={() => {
                 addFoodBox(activeWeek!, meal!);
+                setMealExtraModal({
+                  show: true,
+                  meal,
+                  day: activeWeek,
+                });
+                if (
+                  meal?.name?.toUpperCase()?.includes("RICE") ||
+                  meal?.name?.toUpperCase()?.includes("SOUP")
+                ) {
+                  setMealExtraModal({
+                    show: true,
+                    meal,
+                    day: undefined,
+                  });
+                }
               }}
               className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
             >
@@ -168,11 +190,10 @@ export default function SingleCartItemSection({
                 meal,
               })
             }
-            
             className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
           >
             <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
-              Food Info
+              Meal Info
             </p>
           </button>
 

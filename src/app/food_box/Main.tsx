@@ -18,7 +18,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import {  useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -28,7 +28,7 @@ const SingleWeekendBreakDown = ({
   activeWeek?: IFoodBoxDayType;
 }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const { removeFoodBox } = useFoodbox();
+  const { removeFoodBox, getMealExtraFromMealAndDay } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -44,6 +44,14 @@ const SingleWeekendBreakDown = ({
     last_meal: IMeal;
   };
 
+  const getSelectedFirstExtra = useMemo(() => {
+    return getMealExtraFromMealAndDay(activeDayMeal?.first_meal, activeWeek!);
+  }, [activeDayMeal, activeWeek]);
+
+  const getSelectedSecondExtra = useMemo(() => {
+    return getMealExtraFromMealAndDay(activeDayMeal?.first_meal, activeWeek!);
+  }, [activeDayMeal, activeWeek]);
+
   return (
     <div
       onClick={() => setShowBreakdown((value) => !value)}
@@ -53,19 +61,6 @@ const SingleWeekendBreakDown = ({
         <h4 className="font-inter text-[#323546] text-base font-bold tracking-[-0.015rem] leading-[1.5rem]">
           {week}
         </h4>
-        {/* {showBreakdown ? (
-          <Icon
-            color="#030517"
-            className="w-6 h-6"
-            icon="icon-park-outline:up"
-          />
-        ) : (
-          <Icon
-            color="#030517"
-            className="w-6 h-6"
-            icon="icon-park-outline:down"
-          />
-        )} */}
       </div>
 
       <AnimatePresence>
@@ -79,10 +74,18 @@ const SingleWeekendBreakDown = ({
             {activeDayMeal?.first_meal?._id || activeDayMeal?.last_meal?._id ? (
               <div className="flex flex-col gap-3">
                 {activeDayMeal?.first_meal?.name && (
-                  <div className="flex flex-row justify-between">
-                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                      {activeDayMeal?.first_meal?.name}
-                    </h5>
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="flex flex-col">
+                      <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                        {activeDayMeal?.first_meal?.name}
+                      </h5>
+                      {getSelectedFirstExtra && (
+                        <p className="font-inter text-sm">
+                          <span className="font-bold">Extra:</span>
+                          {getSelectedFirstExtra?.meal?.name}
+                        </p>
+                      )}
+                    </div>
                     {week === activeWeek && (
                       <button
                         onClick={() => {
@@ -104,6 +107,9 @@ const SingleWeekendBreakDown = ({
                     <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
                       {activeDayMeal?.last_meal?.name}
                     </h5>
+                    {getSelectedSecondExtra && (
+                      <p>{getSelectedSecondExtra?.meal?.name}</p>
+                    )}
                     {week === activeWeek && (
                       <button
                         onClick={() =>
@@ -398,8 +404,7 @@ export default function Main() {
                       </p>
                     </div>
                     <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                      Add {weeks.length} more days to complete your
-                      plan
+                      Add {weeks.length} more days to complete your plan
                     </p>
                   </div>
 

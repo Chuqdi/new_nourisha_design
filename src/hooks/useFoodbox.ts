@@ -1,12 +1,16 @@
-import { IFoodBoxDayType, IMeal } from "@/config/types";
+import { IExtraItem, IFoodBoxDayType, IMeal, IStoredExtraType } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
+const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
+
+
 export default function () {
   const box = localStorage.getItem(FOOD_BOX_STORE);
   const [boxStore, setBoxStore] = useAtom(ATOMS.foodBox);
+  const showMealExtraSelection = useAtomValue(ATOMS.showMealExtraSelection);
   const initializeFoodBox = () => {
     const fdBox = localStorage.getItem(FOOD_BOX_STORE);
     setBoxStore(fdBox ? JSON.parse(fdBox) : {});
@@ -44,8 +48,8 @@ export default function () {
     } else if (!isAllMealsSelected && !isSecondMealAlreadySelected) {
       foodBox[day].meals["last_meal"] = meal;
     }
-    
-    if(isAllMealsSelected){
+
+    if (isAllMealsSelected) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -72,6 +76,36 @@ export default function () {
     setBoxStore(foodBox);
   };
 
+  const addExtraItem = (extra?: IExtraItem) => {
+    const { meal, day } = showMealExtraSelection;
+    const mealExtra = {
+      meal,
+      extra,
+      day,
+    };
+    const extraStore = localStorage.getItem(MEAL_EXTRA_STORE);
+    if (extraStore) {
+      const storedExtra = JSON.parse(extraStore??[]) ;
+      storedExtra.concat(mealExtra)
+      localStorage.setItem(MEAL_EXTRA_STORE, JSON.stringify(storedExtra));
+    } else {
+      localStorage.setItem(MEAL_EXTRA_STORE, JSON.stringify([mealExtra]));
+    }
+  };
+
+  const getMealExtraFromMealAndDay =(meal:IMeal, day:IFoodBoxDayType)=>{
+    const extraStore = localStorage.getItem(MEAL_EXTRA_STORE);
+    if (extraStore) {
+      const storedExtra = (JSON.parse(extraStore) ?? [] )as IStoredExtraType[];
+  
+
+      const selectedExtra = storedExtra.find(item=> {
+        return ((item?.meal?._id === meal?._id) && (day === item?.day))
+      });
+      return selectedExtra;
+    } 
+  }
+
   const emptyBox = () => {
     setBoxStore(null);
     localStorage.removeItem(FOOD_BOX_STORE);
@@ -82,5 +116,7 @@ export default function () {
     addFoodBox,
     removeFoodBox,
     emptyBox,
+    addExtraItem,
+    getMealExtraFromMealAndDay,
   };
 }
