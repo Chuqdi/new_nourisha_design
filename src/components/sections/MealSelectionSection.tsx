@@ -29,7 +29,7 @@ export default function MealSelectionSection({
   const [limit, setLimit] = useState(isMobile ? "6" : "9");
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&country=Nigeria`
+      `meals/pack?page=1&limit=${limit}&continent=${activeContinent}`
     );
   };
 
