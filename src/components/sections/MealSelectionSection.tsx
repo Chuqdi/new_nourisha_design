@@ -10,6 +10,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import { useMediaQuery } from "react-responsive";
+import { useDebounce } from "use-debounce";
 
 export default function MealSelectionSection({
   isSingle,
@@ -24,18 +25,20 @@ export default function MealSelectionSection({
 }) {
   const [activeContinent, setActiveContinent] = useState(CONTINENTS[0]);
   const { getData } = useUnAuthRequest();
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [phrase] = useDebounce(searchPhrase, 1000);
   const [meals, setMeals] = useState<IMeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const [limit, setLimit] = useState(isMobile ? "6" : "9");
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeContinent}`
+      `meals/pack?page=1&limit=${limit}&country=${"Nigeria"}&searchPhrase=${searchPhrase}`
     );
   };
 
   const { data, isLoading } = useFetch(
     getMeals,
-    [queryKeys.GET_AVAILABLE_MEAL, activeContinent?.name, limit],
+    [queryKeys.GET_AVAILABLE_MEAL, activeContinent?.name, limit, phrase],
     true
   );
 
@@ -105,6 +108,7 @@ export default function MealSelectionSection({
           <input
             placeholder="Search Meals"
             className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 border-[#f2f4f7]"
+            onChange={(e) => setSearchPhrase(e.target.value)}
           />
         </div>
       )}
