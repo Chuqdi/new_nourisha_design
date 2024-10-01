@@ -15,14 +15,9 @@ export const CartManipulator = ({
   meal: IMeal;
 }) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
-  const [_, setMealAddedToCart] = useState(false);
 
   const onAddItemToCart = () => {
     addItemToCart(meal);
-    setMealAddedToCart(true);
-    setTimeout(() => {
-      setMealAddedToCart(false);
-    }, 1500);
   };
 
   return (
@@ -30,10 +25,6 @@ export const CartManipulator = ({
       <button
         onClick={() => {
           removeItemFrommCart(meal?._id!, 1);
-          setMealAddedToCart(true);
-          setTimeout(() => {
-            setMealAddedToCart(false);
-          }, 1500);
         }}
         className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
@@ -155,11 +146,7 @@ export default function SingleCartItemSection({
             <button
               onClick={() => {
                 addFoodBox(activeWeek!, meal!);
-                setMealExtraModal({
-                  show: true,
-                  meal,
-                  day: activeWeek,
-                });
+                
                 if (
                   meal?.name?.toUpperCase()?.includes("RICE") ||
                   meal?.name?.toUpperCase()?.includes("SOUP")

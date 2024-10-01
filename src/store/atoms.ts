@@ -1,5 +1,15 @@
 import { atom } from "jotai";
-import { cartDetails, cartIsLoading, cartItems, FOOD_BOX, foodInfoModal, paymentModal, SHOW_SIDE_MODAL, showMealExtraSelection } from "./jotaiDefaultValues";
+import {
+  cartDetails,
+  cartIsLoading,
+  cartItems,
+  FOOD_BOX,
+  foodInfoModal,
+  mealExtraSelection,
+  paymentModal,
+  SHOW_SIDE_MODAL,
+  showMealExtraSelection,
+} from "./jotaiDefaultValues";
 
 export const ATOMS = {
   showSideModal: atom(SHOW_SIDE_MODAL),
@@ -7,7 +17,8 @@ export const ATOMS = {
   cartItems: atom(cartItems),
   cartDetails: atom(cartDetails),
   cartIsLoading: atom(cartIsLoading),
-  foodInfoModal:atom(foodInfoModal),
-  paymentModal:atom(paymentModal),
-  showMealExtraSelection:atom(showMealExtraSelection)
+  foodInfoModal: atom(foodInfoModal),
+  paymentModal: atom(paymentModal),
+  mealExtraSelection: atom(mealExtraSelection),
+  showMealExtraSelection: atom(showMealExtraSelection),
 };

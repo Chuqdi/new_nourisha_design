@@ -7,7 +7,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
@@ -23,7 +23,7 @@ const Payment = ({
   const stripe = useStripe();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
-  const { amount } = useAtomValue(ATOMS.paymentModal)
+  const { amount } = useAtomValue(ATOMS.paymentModal);
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -48,7 +48,6 @@ const Payment = ({
           },
         });
 
-        console.log(error);
         toast({
           variant: "default",
           title: "Payment Successful",
@@ -89,17 +88,34 @@ const PaymentModal = ({
   close: () => void;
   getClientSecret: () => Promise<{ clientSecret: string; returnUrl: string }>;
 }) => {
-  const { amount } = useAtomValue(ATOMS.paymentModal)
-  const [options, _] = useState<StripeElementsOptions>({
-    mode: "subscription",
-    amount: Math.round(amount),
-    currency: "gbp",
-    appearance: {},
-    setup_future_usage: "on_session",
+  const [loading, setLoading] = useState(true);
+  const [clientSecret, setClientSecret] = useState("");
+  const [options, setOptions] = useState<StripeElementsOptions>({
+    // mode: "subscription",
+    // amount: Math.round(amount),
+    // currency: "gbp",
+    // appearance: {},
+    // setup_future_usage: null,
+    // clientSecret,
   });
+  useEffect(() => {
+    getClientSecret()
+      .then(({ clientSecret, returnUrl }) => {
+        setOptions({
+          clientSecret,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+  const { amount } = useAtomValue(ATOMS.paymentModal);
+
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
-  return (
-    <Elements stripe={stripePromise} options={options}>
+  return loading ? (
+    <p>Loading</p>
+  ) : (
+    <Elements options={options} stripe={stripePromise}>
       <Payment close={close} getClientSecret={getClientSecret} />
     </Elements>
   );

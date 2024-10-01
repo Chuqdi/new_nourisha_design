@@ -66,14 +66,13 @@ export const CONTINENTS = [
     name: "Africa",
     noun: "African",
     flag: "🇳🇬",
-    search:"Africa"
+    search: "Africa",
   },
   {
     name: "Asia",
     noun: "Asian & European",
     flag: "🇬🇭",
-    search:"Asian & European"
-
+    search: "Asian & European",
   },
 ];
 export const COUNTRIES = [

@@ -82,7 +82,7 @@ const Checkout = () => {
 };
 
 function CartItem({ item }: { item: ICartItem }) {
-  const { removeItemFrommCart } = useCart();
+  const { removeItemFrommCart, updateItemBE } = useCart();
 
   const onRemoveItem = () => {
     removeItemFrommCart(item?.item?._id!, item?.quantity);

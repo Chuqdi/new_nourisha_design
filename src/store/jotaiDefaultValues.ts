@@ -4,6 +4,7 @@ import {
   IFoodBox,
   IFoodBoxDayType,
   IMeal,
+  IStoredExtraType,
 } from "@/config/types";
 
 export const SHOW_SIDE_MODAL: { show: boolean; component: React.ReactNode } = {
@@ -24,6 +25,8 @@ export const showInfoModal: { show: boolean; meal: IMeal; day?: string } = {
   meal: {} as IMeal,
 };
 
+
+export const mealExtraSelection:IStoredExtraType[] =[];
 export const showMealExtraSelection: {
   show: boolean;
   meal?: IMeal;

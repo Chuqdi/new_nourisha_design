@@ -158,7 +158,7 @@ export interface IFoodBox {
 }
 
 export interface IStoredExtraType {
-  meal:IMeal,
-  extra:IExtraItem,
-  day:IFoodBoxDayType,
+  meal?:IMeal,
+  extra?:IExtraItem,
+  day?:IFoodBoxDayType,
 };

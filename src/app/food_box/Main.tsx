@@ -28,6 +28,7 @@ const SingleWeekendBreakDown = ({
   activeWeek?: IFoodBoxDayType;
 }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const mealExtraSelection = useAtomValue(ATOMS.mealExtraSelection);
   const { removeFoodBox, getMealExtraFromMealAndDay } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const activeDayBox = useMemo(() => {
@@ -46,11 +47,11 @@ const SingleWeekendBreakDown = ({
 
   const getSelectedFirstExtra = useMemo(() => {
     return getMealExtraFromMealAndDay(activeDayMeal?.first_meal, activeWeek!);
-  }, [activeDayMeal, activeWeek]);
+  }, [activeDayMeal, activeWeek, mealExtraSelection]);
 
   const getSelectedSecondExtra = useMemo(() => {
     return getMealExtraFromMealAndDay(activeDayMeal?.first_meal, activeWeek!);
-  }, [activeDayMeal, activeWeek]);
+  }, [activeDayMeal, activeWeek, mealExtraSelection]);
 
   return (
     <div
@@ -82,7 +83,7 @@ const SingleWeekendBreakDown = ({
                       {getSelectedFirstExtra && (
                         <p className="font-inter text-sm">
                           <span className="font-bold">Extra:</span>
-                          {getSelectedFirstExtra?.meal?.name}
+                          {getSelectedFirstExtra?.extra?.name}
                         </p>
                       )}
                     </div>
@@ -104,12 +105,17 @@ const SingleWeekendBreakDown = ({
 
                 {activeDayMeal?.last_meal?.name && (
                   <div className="flex flex-row items-center justify-between">
-                    <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
-                      {activeDayMeal?.last_meal?.name}
-                    </h5>
-                    {getSelectedSecondExtra && (
-                      <p>{getSelectedSecondExtra?.meal?.name}</p>
-                    )}
+                    <div className="flex flex-col ">
+                      <h5 className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] font-semibold">
+                        {activeDayMeal?.last_meal?.name}
+                      </h5>
+                      {getSelectedSecondExtra && (
+                        <p className="font-inter text-sm">
+                          <span className="font-bold">Extra:</span>
+                          {getSelectedSecondExtra?.extra?.name}
+                        </p>
+                      )}
+                    </div>
                     {week === activeWeek && (
                       <button
                         onClick={() =>
@@ -182,7 +188,7 @@ export default function Main() {
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
-  const { initializeFoodBox, emptyBox } = useFoodbox();
+  const { initializeFoodBox, emptyBox, initializeFoodMealExtra, getMealExtraFromMealAndDay } = useFoodbox();
   const { axiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState("10");
@@ -224,14 +230,19 @@ export default function Main() {
           first_meal: IMeal;
           last_meal: IMeal;
         };
+        const firstSelectedExtra = getMealExtraFromMealAndDay(meals?.first_meal,week as IFoodBoxDayType);
+
+        const secondSelectedExtra = getMealExtraFromMealAndDay(meals?.last_meal,week as IFoodBoxDayType);
 
         return {
           [week?.toLowerCase()]: {
             lunch: {
               mealId: meals?.first_meal?._id,
+              extraId:firstSelectedExtra?.extra?._id
             },
             dinner: {
               mealId: meals?.last_meal?._id,
+              extraId:secondSelectedExtra?.extra?._id
             },
           },
         };
@@ -254,7 +265,7 @@ export default function Main() {
     setLoading(true);
     const data = prepareMealForBE();
     axiosClient
-      .post(`lineups`, { ...data, delivery_date })
+      .post(`lineups`, { ...data, delivery_date,card_token:"off_session" })
       .then((data) => {
         toast({
           variant: "default",
@@ -292,6 +303,7 @@ export default function Main() {
 
   useEffect(() => {
     initializeFoodBox();
+    initializeFoodMealExtra();
   }, []);
 
   return (

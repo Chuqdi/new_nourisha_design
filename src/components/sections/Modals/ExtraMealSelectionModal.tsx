@@ -100,7 +100,7 @@ function ExtraMealSelectionModal() {
           <>
             {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
               <div>
-                {!extras?.swallow?.totalCount && (
+                {!!extras?.swallow?.totalCount && (
                   <>
                     <p className="text-black-900 font-inter text-sm mt-3">
                       Select swallow
@@ -125,9 +125,9 @@ function ExtraMealSelectionModal() {
               </div>
             )}
 
-            {!extraModal?.meal?.name?.toUpperCase()?.includes("RICE") && (
+            {extraModal?.meal?.name?.toUpperCase()?.includes("RICE") && (
               <div className="mt-4">
-                {!extras?.protein?.totalCount && (
+                {!!extras?.protein?.totalCount && (
                   <>
                     <p className="text-black-900 font-inter text-sm mt-3">
                       Select protein

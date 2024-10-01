@@ -2,15 +2,20 @@
 import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
+import Subscription from "@/components/sections/Modals/AccountModals/Subscriptions";
 import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
+import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useAtom } from "jotai";
 import { useMemo, useState } from "react";
 //@ts-ignore
 import HTMLRenderer from "react-html-renderer";
 
 export default function Main() {
   const [onAfrican, setOnAfrican] = useState(true);
+  const [_, setSideModal] = useAtom(ATOMS.showSideModal);
+
   const pricings = useMemo(
     () => [
       {
@@ -151,6 +156,7 @@ export default function Main() {
                 variant="primary"
                 fullWidth
                 title="Subscribe"
+                onClick={()=>setSideModal({ show: true, component: <Subscription /> })}
               />
 
               <p className="text-black-900 text-sm text-center font-inter my-4">
