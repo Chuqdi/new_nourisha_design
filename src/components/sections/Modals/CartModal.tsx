@@ -30,6 +30,7 @@ const Checkout = () => {
         parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee)
       }`}
       variant="primary"
+      className="py-6 h-[2.7rem]"
       onClick={() => {
         if (user?.user?._id) {
           setSideModal({

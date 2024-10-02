@@ -38,7 +38,7 @@ export default function Main() {
     const data = onLogin
       ? {
           ...loginFormik?.values,
-          device_id: "device_id",
+          device_id,
         }
       : signUpForm?.values;
 

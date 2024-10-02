@@ -60,8 +60,8 @@ const useCart = () => {
     axiosClient.put("cart", {
       itemId,
       quantity,
-      device_id: "device_id",
-      temp_id:"device_id"
+      device_id: device_id,
+      temp_id:device_id
 
     });
     RefreshCart();
@@ -72,13 +72,13 @@ const useCart = () => {
       data: {
         itemId,
         quantity,
-        device_id: "device_id",
+        device_id: device_id,
       },
       headers: {
         "device-id": "29a1df4646cb3417c19994a59a3e022a",
         Authorization: `Bearer ${token}`,
-        device_id: "device_id",
-        temp_id: "device_id",
+        device_id: device_id,
+        temp_id: device_id,
       },
     });
     RefreshCart();
@@ -88,8 +88,8 @@ const useCart = () => {
     const data = {
       itemId: item._id,
       quantity: 1,
-      device_id: "device_id",
-      temp_id: "device_id",
+      device_id: device_id,
+      temp_id: device_id,
     };
 
     await axiosClient.put("cart", data);

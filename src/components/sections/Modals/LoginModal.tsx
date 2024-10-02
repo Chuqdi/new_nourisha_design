@@ -27,7 +27,7 @@ export default function LoginModal({
   const onSubmit = async (data: { email: string; password: string }) => {
     const d = {
       ...values,
-      device_id: "device_id",
+      device_id,
     };
 
     const createdUser = await makeRequest("auth/login", data);
