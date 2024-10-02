@@ -262,7 +262,7 @@ export default function Main() {
                   <h4 className="text-[2rem] md:text-[3.5rem] text-center font-NewSpiritBold">
                     {option?.title}
                   </h4>
-                  <p className="text-[#030517] text-base font-inter">
+                  <p className="text-[#030517] text-center text-base font-inter">
                     {option.description}
                   </p>
                 </div>

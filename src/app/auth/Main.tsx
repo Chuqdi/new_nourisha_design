@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import { CART_TEMP_ID } from "@/hooks/useCart";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
@@ -35,10 +36,13 @@ export default function Main() {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    const temp_id = localStorage.getItem(CART_TEMP_ID);
+    alert(temp_id)
     const data = onLogin
       ? {
           ...loginFormik?.values,
           device_id,
+          temp_id
         }
       : signUpForm?.values;
 
@@ -124,7 +128,10 @@ export default function Main() {
               disabled={isLoading}
               title={onLogin ? "Log in" : "Create account"}
             />
-            <div className="w-full text-center text-black-900 font-inter text-lg">
+            <div
+              onClick={() => setOnLogin(!onLogin)}
+              className="cursor-pointer w-full text-center text-black-900 font-inter text-lg"
+            >
               {onLogin ? "Don't have an account? " : "Already have an account?"}
               <span className="text-primary-orange-900">
                 {onLogin ? "Sign Up" : " Log in"}

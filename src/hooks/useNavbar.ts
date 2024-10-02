@@ -12,17 +12,28 @@ export default () => {
     {
       page: "/single_meals",
       isActive: pathName === "/single_meals",
-      name: "Single meals",
+      name: "Single Meals",
     },
     {
       page: "/bulk_meals",
       isActive: pathName === "/bulk_meals",
-      name: "Bulk meals",
+      name: "Bulk Meals",
+    },
+    {
+      page: "/party_plan",
+      isActive: pathName === "/bulk_meals",
+      name: "Party Plans",
     },
     {
       page: "/about_us",
       isActive: pathName === "/about_us",
-      name: "Help",
+      name: "About Us",
+      options: [],
+    },
+    {
+      page: "/#faq",
+      isActive: pathName === "/about_us",
+      name: "FAQ",
       options: [],
     },
     {

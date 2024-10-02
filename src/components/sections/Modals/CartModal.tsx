@@ -89,7 +89,7 @@ function CartItem({ item }: { item: ICartItem }) {
     removeItemFrommCart(item?.item?._id!, item?.quantity);
   };
   return (
-    <div className=" p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
+    <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
       <div className="flex items-start gap-3">
         <div>
           <img

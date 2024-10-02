@@ -118,7 +118,7 @@ export default function FaqSection() {
     return questions.slice(0, 4);
   }, [moreLoaded]);
   return (
-    <div className="flex gap-6 flex-col w-full bg-white mx-auto  rounded-[2rem] ">
+    <div id="faq" className="flex gap-6 flex-col w-full bg-white mx-auto  rounded-[2rem] ">
       {mainQuestions.map((question, index) => (
         <SingleQuestion
           index={index}

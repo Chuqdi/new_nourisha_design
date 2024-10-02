@@ -31,11 +31,10 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   };
 
   const { data, isLoading, isError } = useQuery(
-    queryKeys.AUTH_USER_ME,
+    "queryKeys.AUTH_USER_ME",
     fetchUser,
     {
-      // cacheTime: 1000,
-      retry: false,
+      staleTime:1800000,
     }
   );
 

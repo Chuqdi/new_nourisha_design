@@ -9,8 +9,7 @@ import Button from "@/components/ui/Button";
 import DownloadApp from "@/components/ui/DownloadApp";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import Image from "next/image";
+import Marquee from "react-fast-marquee";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -119,16 +118,17 @@ export default function Main() {
         <div className="w-full  p-2  md:p-0 md:ml-[3rem] flex flex-col gap-5">
           <div>
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
-              Savor the Flavors with Nourisha
+              Savour the Flavors with Nourisha
             </h2>
             <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
               Allow yourself to explore your culinary desires and fully immerse
-              in the excitement of authentic flavors.
+              in the excitement of authentic Africa, Asian and European flavors.
             </p>
           </div>
           <div className="my-0 md:my-0">
             <Button
               fullWidth={isMobile}
+              onClick={() => router.push("/meal_plans")}
               variant="primary"
               title="Get started"
               className="h-[2.75rem] rounded-[3rem]  py-8 md:py-6  font-bold font-inter "
@@ -147,14 +147,32 @@ export default function Main() {
           </div>
         </div>
         {isMobile ? (
-          <img src="/images/taste.png" className="w-full z-[999]" />
+          <img src="/images/taste.png" className="w-full " />
         ) : (
-         
-          <img src="/images/taste.png" className=" w-[37.1875rem] h-[20.35225rem] z-[999]" />
+          <img
+            src="/images/taste.png"
+            className=" w-[37.1875rem] h-[20.35225rem] "
+          />
         )}
       </div>
+      <Marquee className="py-[1.5rem]   bg-background2" autoFill>
+        {bannerOptions.map((option, index) => (
+          <div
+            key={`banner_option${index}`}
+            className="flex items-center gap-1 whitespace-nowrap mx-3 "
+          >
+            <img
+              src={`/images/banner/${option.image}`}
+              className="h-[2.725rem] "
+            />
+            <p className="text-black-900 font-inter text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
+              {option.title}
+            </p>
+          </div>
+        ))}
+      </Marquee>
 
-      <div className="  w-full py-[1.5rem] px-6.25 bg-background2 marquee-wrapper">
+      {/* <div className="  w-full py-[1.5rem] px-6.25 bg-background2 marquee-wrapper">
         <div className="marquee-slide flex items-center gap-20 ">
           {bannerOptions.map((option, index) => (
             <div
@@ -188,16 +206,14 @@ export default function Main() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
-    
       <div className="mt-20" />
       {isMobile ? (
         <img src="/images/absolute_menu.png" />
       ) : (
         <img src="/images/absolute_menu_desktop.png" />
       )}
-      
 
       <div className="my-[5rem] mx-0 md:mx-6.25">
         <h3 className="font-NewSpiritBold text-4xl text-center">
@@ -276,11 +292,12 @@ export default function Main() {
             Discover Our Diverse Culinary Offerings
           </h3>
           <p className="text-black-900 font-inter text-lg leading-[1.6875rem] tracking-[-0.01688rem] w-[85%]">
-            At Nourisha, we bring you the authentic flavors from African, Asia and Europe with its unique culinary traditions. Our carefully
+            At Nourisha, we bring you the authentic flavors from African, Asia
+            and Europe with its unique culinary traditions. Our carefully
             curated menu currently features:
           </p>
 
-          <MealSelectionSection  isHome />
+          <MealSelectionSection isHome />
         </div>
       </div>
 
@@ -290,7 +307,7 @@ export default function Main() {
         </h4>
         <TestmoniesSection />
         <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
-          Rated <span className="font-bold">4.5</span> / 5. Showing our 5 star
+          Rated <span className="font-bold">5</span> / 5. Showing our 5 star
           reviews.
         </p>
       </div>

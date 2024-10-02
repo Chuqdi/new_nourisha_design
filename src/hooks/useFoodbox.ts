@@ -110,7 +110,7 @@ export default function () {
   const getMealExtraFromMealAndDay = (meal: IMeal, day: IFoodBoxDayType) => {
     if (mealExtraSelection) {
       const storedExtra =mealExtraSelection;
-      const selectedExtra = storedExtra.find((item) => {
+      const selectedExtra = storedExtra?.find((item) => {
         return item?.meal?._id === meal?._id && day === item?.day;
       });
       return selectedExtra;

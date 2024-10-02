@@ -46,7 +46,7 @@ export default function RequestQuoteModal({ close }:{ close:()=> void }) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label>Event type</label>
+          <label>Number of guests</label>
           <Input type="number" className="rounded-[0.75rem]" />
         </div>
 
@@ -56,7 +56,7 @@ export default function RequestQuoteModal({ close }:{ close:()=> void }) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label>Enter the meals you want</label>
+          <label>Any more informations about this order?</label>
           <TextArea />
         </div>
       </form>

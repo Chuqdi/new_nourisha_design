@@ -1,8 +1,6 @@
 "use client";
-import { BREAKPOINT } from "@/config";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { useMediaQuery } from "react-responsive";
+import Marquee from "react-fast-marquee";
 import Ratings from "../ui/Rating";
 
 const responsive = {
@@ -225,19 +223,13 @@ I'll be coming back to leave another review once I have tried out the wonderful 
     caption: `Good Good Good.`,
     date: "12 June 2024",
   },
-  {
-    name: "Hammed Adegbenro",
-    description: `Good Good Good.`,
-    caption: `Good Good Good.`,
-    date: "12 June 2024",
-  },
  
 ];
 
 
 export default function TestmoniesSection() {
   return (
-    <div className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
+    <Marquee speed={30} className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
       <div
         style={{
           animation: "250s slide infinite linear",
@@ -266,6 +258,6 @@ export default function TestmoniesSection() {
         ))}
       </div>
      
-    </div>
+    </Marquee>
   );
 }

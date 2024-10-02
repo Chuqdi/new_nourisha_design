@@ -7,8 +7,10 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
-import useFingerPrint from "./useFingerPrint";
+import { UserContext } from "@/HOC/UserContext";
 
+const CART_SESSION_ID = "cart_session_id";
+export const CART_TEMP_ID = "cart_temp_id";
 const useCart = () => {
   const [cartItems, setCartItems] = useAtom<ICartItem[]>(ATOMS.cartItems);
   const setCartDetails = useSetAtom(ATOMS.cartDetails);
@@ -17,8 +19,12 @@ const useCart = () => {
   const { getToken } = useAuthToken();
   const device_id = navigator?.userAgent?.replace(/\s+/g, "_");
   const token = getToken();
+  const user = useContext(UserContext);
   const getCartSessionDetails = () => {
-    return axiosClient.get("cart");
+    const cartSessionId = localStorage.getItem(CART_SESSION_ID);
+    return axiosClient.get(
+      user?.user?._id ? "cart" : `cart/web?session_id=${cartSessionId}`
+    );
   };
   const {
     data,
@@ -56,31 +62,43 @@ const useCart = () => {
     };
   }, [cartItems]);
 
-  const updateItemBE = async (itemId: string, quantity: number) => {
-    axiosClient.put("cart", {
-      itemId,
-      quantity,
-      device_id: device_id,
-      temp_id:device_id
+  const updateLocalStorageStates = (data: any) => {
+    localStorage.setItem(CART_SESSION_ID, data?.data?.data?.session_id);
+    localStorage.setItem(CART_TEMP_ID, data?.data?.data?.temp_id);
+  };
 
-    });
+  const updateItemBE = async (itemId: string, quantity: number) => {
+    const res = axiosClient
+      .put("cart", {
+        itemId,
+        quantity,
+        device_id: device_id,
+        temp_id: device_id,
+      })
+      .then((data) => {
+        updateLocalStorageStates(data);
+      });
     RefreshCart();
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
-    await axios.delete(`${process.env.API_URL}cart`, {
-      data: {
-        itemId,
-        quantity,
-        device_id: device_id,
-      },
-      headers: {
-        "device-id": "29a1df4646cb3417c19994a59a3e022a",
-        Authorization: `Bearer ${token}`,
-        device_id: device_id,
-        temp_id: device_id,
-      },
-    });
+    await axios
+      .delete(`${process.env.API_URL}cart`, {
+        data: {
+          itemId,
+          quantity,
+          device_id: device_id,
+        },
+        headers: {
+          "device-id": "29a1df4646cb3417c19994a59a3e022a",
+          Authorization: `Bearer ${token}`,
+          device_id: device_id,
+          temp_id: device_id,
+        },
+      })
+      .then((data) => {
+        updateLocalStorageStates(data);
+      });
     RefreshCart();
   };
 
@@ -92,7 +110,9 @@ const useCart = () => {
       temp_id: device_id,
     };
 
-    await axiosClient.put("cart", data);
+    await axiosClient.put("cart", data).then((data) => {
+      updateLocalStorageStates(data);
+    });
     RefreshCart();
   };
 

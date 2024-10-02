@@ -154,7 +154,7 @@ export default function MealPlan() {
         />
       </Modal>
       <div className="flex flex-col gap-6 mt-32">
-        <MessageBtn title="OUR MEAL PLANS" />
+        <MessageBtn title="MEAL PLANS" />
         <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Meal Plans
         </h3>
@@ -166,7 +166,7 @@ export default function MealPlan() {
         </p>
 
         <div className="flex justify-center ">
-          <div className="bg-[#F2F4F7] flex w-[90%] md:w-[21.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
+          <div className="bg-[#F2F4F7] flex w-[90%] md:w-[30.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
             <p
               onClick={() => setOnAfrican(true)}
               className={`
@@ -191,7 +191,7 @@ export default function MealPlan() {
                   }
                   `}
             >
-              Asian meal plans
+              Asian & European meal plans
             </p>
           </div>
         </div>

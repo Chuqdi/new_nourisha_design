@@ -48,14 +48,14 @@ export default function Navbar() {
           "https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US"
         ),
     },
-    {
-      image: "uk.svg",
-      options: [],
-    },
+    // {
+    //   image: "uk.svg",
+    //   options: [],
+    // },
   ];
   return (
     !cartLoading && (
-      <div className="fixed flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
+      <div className="absolute flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
         <Logo className="h-6" />
         {!isMobile && (
           <div className="flex gap-10">
@@ -93,6 +93,7 @@ export default function Navbar() {
                     className="h-[1.25rem]"
                     src={`/images/navbar/${option.image}`}
                   />
+                  {/* @ts-ignore */}
                   {option.options && (
                     <Icon className=" w-8 h-8" icon="icon-park-outline:down" />
                   )}
