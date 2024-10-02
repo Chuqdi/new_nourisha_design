@@ -3,7 +3,7 @@ import FaqSection from "./FaqSection";
 
 export default function CommonQuestionsSection() {
   return (
-    <div className="-my-10 md:my-[5rem] mx-0 md:mx-6.25  ">
+    <div id="faq" className="-my-10 md:my-[5rem] mx-0 md:mx-6.25  ">
       <div className="bg-background2 rounded-none md:rounded-[2.5rem] h-[17.875rem] flex flex-col  items-center pt-[2.5rem]">
         <h4 className="text-black-900 font-NewSpiritBold text-[2rem]">
           Common Questions
