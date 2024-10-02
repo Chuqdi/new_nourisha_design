@@ -8,6 +8,7 @@ import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
 import { UserContext } from "@/HOC/UserContext";
+import useFingerPrint from "./useFingerPrint";
 
 const CART_SESSION_ID = "cart_session_id";
 export const CART_TEMP_ID = "cart_temp_id";
@@ -17,7 +18,7 @@ const useCart = () => {
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
-  const device_id = navigator?.userAgent?.replace(/\s+/g, "_");
+  const device_id = useFingerPrint();
   const token = getToken();
   const user = useContext(UserContext);
   const getCartSessionDetails = () => {
