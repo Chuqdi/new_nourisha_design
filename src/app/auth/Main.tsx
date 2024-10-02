@@ -37,7 +37,6 @@ export default function Main() {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const temp_id = localStorage.getItem(CART_TEMP_ID);
-    alert(temp_id)
     const data = onLogin
       ? {
           ...loginFormik?.values,
