@@ -34,7 +34,9 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     "queryKeys.AUTH_USER_ME",
     fetchUser,
     {
-      staleTime:1800000,
+      staleTime: 1800000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
 
