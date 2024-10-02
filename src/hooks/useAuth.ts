@@ -18,6 +18,8 @@ const  useAuth = () => {
     req.headers["device-id"] = `29a1df4646cb3417c19994a59a3e022a`;
     req.headers["Authorization"] = `Bearer ${token}`;
     req.headers["device_id"] = "device_id";
+    req.headers["temp_id"]="device_id"
+
     return req;
   });
 
