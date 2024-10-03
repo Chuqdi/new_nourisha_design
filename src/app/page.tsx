@@ -13,6 +13,7 @@ import Marquee from "react-fast-marquee";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function Main() {
   const intervalRef = useRef();
@@ -52,15 +53,18 @@ export default function Main() {
       title: "Select the meals that is right for you",
       description:
         "With a large menu option to choose from, you'll be spoilt for choice!",
+      icon: <Icon className="w-6 h-6"  color="#fff" icon="ep:food" />,
     },
     {
       title: "Place your order and choose a delivery option",
       description: "We update our menu regularly with exciting new meals",
+      icon: <Icon className="w-6 h-6" color="#fff" icon="fluent:cart-24-regular" />,
     },
     {
       title: "Get freshly prepared meals delivered",
       description:
         "Receive your fresh cooked meals, chilled & ready for the fridge.",
+      icon: <Icon className="w-6 h-6" color="#fff" icon="streamline:transfer-van" />,
     },
   ];
 
@@ -122,7 +126,8 @@ export default function Main() {
             </h2>
             <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
               Allow yourself to explore your culinary desires and fully immerse
-              in the excitement of authentic African, Asian and European flavors.
+              in the excitement of authentic African, Asian and European
+              flavors.
             </p>
           </div>
           <div className="my-0 md:my-0">
@@ -226,7 +231,9 @@ export default function Main() {
               key={`how_it_works_${index}`}
             >
               <div className="relative">
-                <img src="/images/primary_cart.png" className="w-12 h-1w-12" />
+                <div className="bg-primary-orange-900 w-12 h-12 rounded-full flex justify-center items-center">
+                  {works.icon}
+                </div>
                 <div className="absolute text-[0.75rem] text-black-900 text-center top-[-0.2rem] right-[-0.4rem] w-5 h-5 bg-white rounded-full flex justify-center items-center font-inter font-bold">
                   0{index + 1}
                 </div>
@@ -307,7 +314,7 @@ export default function Main() {
         </h4>
         <TestmoniesSection />
         <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
-          Rated <span className="font-bold">5</span> / 5. Showing our 5 star
+          Rated <span className="font-bold">5</span>/5. Showing our 5 star
           reviews.
         </p>
       </div>

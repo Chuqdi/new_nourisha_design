@@ -229,12 +229,12 @@ I'll be coming back to leave another review once I have tried out the wonderful 
 
 export default function TestmoniesSection() {
   return (
-    <Marquee speed={30} className="  w-full py-[1.5rem] px-6.25 bg-white marquee-wrapper gap-3">
+    <Marquee speed={20} className="  w-full py-[1.5rem] px-6.25 bg-white">
       <div
         style={{
-          animation: "250s slide infinite linear",
+          animation: "350s slide infinite linear",
         }}
-        className="marquee-slide flex items-center gap-0"
+        className="marquee-slide flex items-center "
       >
         {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 37).map((testmonies, index) => (
           <div

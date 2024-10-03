@@ -7,7 +7,7 @@ export default function DownloadTheAppWidgetSection() {
     <div className="gap-5  md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full  items-center justify-center  ">
       <img
         src="/images/start_subscription.png"
-        className="mt-5 md:mt-0 h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto shadow-btn"
+        className="mt-5 md:mt-0 h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto "
       />
       <div className=" flex flex-col gap-4">
         <h4 className="font-NewSpiritBold text-[2rem] text-center md:text-left md:text-[3.5rem] text-primary-Green-900  tracking-[-0.14rem]">
@@ -17,8 +17,7 @@ export default function DownloadTheAppWidgetSection() {
           className="text-black-900 font-inter text-lg
           leading-[1.6875rem] text-center md:text-left tracking-[-0.01688rem] w-full md:w-4/5 "
         >
-          Join other people who enjoy and savor authentic intercontinental  cuisine with
-          Nourisha
+          Join other people who enjoy and savour authentic African, Asian and European Cuisines with Nourisha
         </p>
         <div className="flex justify-center md:justify-start items-center gap-[1.35rem]">
           <div className="flex justify-center items-center w-10 h-10 border-[1.25px] border-[#323546] rounded-full">

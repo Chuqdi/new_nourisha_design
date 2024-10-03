@@ -103,7 +103,7 @@ export default function SingleCartItemSection({
           {meal?.calories}KCal
         </p>
 
-        <div className="text-xl md:text-[2rem]">
+        <div className="text-xl md:text-xlg">
           {
             COUNTRIES.find((country) =>
               country?.name
