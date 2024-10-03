@@ -93,7 +93,7 @@ export default function Main() {
               }
               `}
           >
-            African meal plans
+            African Meal Plans
           </p>
           <p
             onClick={() => setOnAfrican(false)}

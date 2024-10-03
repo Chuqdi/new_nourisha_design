@@ -3,12 +3,12 @@ export default function (){
     return [
         {
           icon: "mingcute:facebook-fill",
-          link: "https://web.facebook.com/people/Eatnourisha/100068259570536/?mibextid=LQQJ4d",
+          link: "https://www.facebook.com/profile.php?id=61552035710769",
           title: "Facebook",
         },
         {
           icon: "ri:twitter-x-fill",
-          link: "https://x.com/nourisha12/status/1652961343736086529?s=46&mx=2",
+          link: "https://x.com/eatnourisha",
           title: "X",
         },
         {

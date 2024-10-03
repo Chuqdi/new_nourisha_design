@@ -178,7 +178,7 @@ export default function MealPlan() {
               }
               `}
             >
-              African meal plans
+              African Meal Plans
             </p>
             <p
               onClick={() => setOnAfrican(false)}
@@ -191,7 +191,7 @@ export default function MealPlan() {
                   }
                   `}
             >
-              Asian & European meal plans
+              Asian & European Meal Plans
             </p>
           </div>
         </div>

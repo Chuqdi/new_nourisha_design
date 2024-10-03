@@ -71,7 +71,7 @@ export default function MealSelectionSection({
         >
           {!isHome && !isMobile && (
             <p className="text-black-900 text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
-              Choose a country:
+              Select a category:
             </p>
           )}
           {CONTINENTS.map((country, index) => {

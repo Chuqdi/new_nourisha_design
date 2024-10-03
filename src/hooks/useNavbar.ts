@@ -21,7 +21,7 @@ export default () => {
     },
     {
       page: "/party_plan",
-      isActive: pathName === "/bulk_meals",
+      isActive: pathName === "/party_plan",
       name: "Party Plans",
     },
     {
