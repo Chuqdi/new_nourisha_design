@@ -26,9 +26,8 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const user = useContext(UserContext);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
-  const device_id = localStorage?.getItem(DEVICE_ID)
+  const device_id = localStorage?.getItem(DEVICE_ID);
   const cartItems = useAtomValue(ATOMS.cartItems);
-  const [loading, setLoading ] =useState(true);
   const sideBarOptions = [
     {
       image: "cart.svg",
@@ -58,10 +57,7 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-      user?.refreshUser();
-    }, 2000);
+    user?.refreshUser();
   }, []);
   return (
     !cartLoading && (
@@ -112,7 +108,7 @@ export default function Navbar() {
           )}
           {!isMobile && (
             <div>
-              {loading ||user?.isLoading ? (
+              {user?.isLoading ? (
                 <div>
                   <Icon
                     color="#FE7E00"
