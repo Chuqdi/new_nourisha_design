@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { ATOMS } from "@/store/atoms";
+import { useAtomValue } from "jotai";
 
 export default function Main() {
   const intervalRef = useRef();
@@ -44,6 +46,7 @@ export default function Main() {
       title: "Ready In minutes",
     },
   ];
+  const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const router = useRouter();
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
@@ -53,18 +56,22 @@ export default function Main() {
       title: "Select the meals that is right for you",
       description:
         "With a large menu option to choose from, you'll be spoilt for choice!",
-      icon: <Icon className="w-6 h-6"  color="#fff" icon="ep:food" />,
+      icon: <Icon className="w-6 h-6" color="#fff" icon="ep:food" />,
     },
     {
       title: "Place your order and choose a delivery option",
       description: "We update our menu regularly with exciting new meals",
-      icon: <Icon className="w-6 h-6" color="#fff" icon="fluent:cart-24-regular" />,
+      icon: (
+        <Icon className="w-6 h-6" color="#fff" icon="fluent:cart-24-regular" />
+      ),
     },
     {
       title: "Get freshly prepared meals delivered",
       description:
         "Receive your fresh cooked meals, chilled & ready for the fridge.",
-      icon: <Icon className="w-6 h-6" color="#fff" icon="streamline:transfer-van" />,
+      icon: (
+        <Icon className="w-6 h-6" color="#fff" icon="streamline:transfer-van" />
+      ),
     },
   ];
 
@@ -120,7 +127,7 @@ export default function Main() {
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32 items-center">
         <div className="w-full  p-2  md:p-0 md:ml-[3rem] flex flex-col gap-5">
-          <div>
+          <div className={`${cartLoading?'w-3/5':'w-full'}`}>
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
               Savour the Flavors with Nourisha
             </h2>
@@ -151,14 +158,15 @@ export default function Main() {
             <DownloadApp />
           </div>
         </div>
-        {isMobile ? (
-          <img src="/images/taste.png" className="w-full z-10" />
-        ) : (
-          <img
-            src="/images/taste.png"
-            className=" w-[37.1875rem] h-[20.35225rem] z-10 "
-          />
-        )}
+        {!cartLoading &&
+          (isMobile ? (
+            <img src="/images/taste.png" className="w-full z-10" />
+          ) : (
+            <img
+              src="/images/taste.png"
+              className=" w-[37.1875rem] h-[20.35225rem] z-10 "
+            />
+          ))}
       </div>
       <Marquee className="py-[1.5rem]   bg-background2" autoFill>
         {bannerOptions.map((option, index) => (

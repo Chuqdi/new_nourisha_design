@@ -6,7 +6,7 @@ import { IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
-import useFingerPrint from "@/hooks/useFingerPrint";
+import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { loginUserScheme } from "@/lib/scheme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useFormik } from "formik";
@@ -20,7 +20,7 @@ export default function LoginModal({
   setUser: (user: IUser) => void;
 }) {
   const { setToken } = useAuthToken();
-  const device_id = useFingerPrint();
+  const device_id = localStorage?.getItem(DEVICE_ID)
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const { makeRequest, isLoading } = useAuth();
 

@@ -3,7 +3,7 @@ import Navbar from "@/components/commons/Navbar";
 import Button from "@/components/ui/Button";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
-import useFingerPrint from "@/hooks/useFingerPrint";
+import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
@@ -19,7 +19,7 @@ export default function Main() {
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
   const router = useRouter();
-  const device_id = useFingerPrint();
+  const device_id = localStorage?.getItem(DEVICE_ID)
 
   const options = [
     {
@@ -40,7 +40,6 @@ export default function Main() {
     const data = onLogin
       ? {
           ...loginFormik?.values,
-          device_id,
           temp_id
         }
       : signUpForm?.values;
@@ -49,6 +48,8 @@ export default function Main() {
       onLogin ? "auth/login" : "auth/register",
       data
     );
+
+    
     if (createdUser) {
       setToken(createdUser.token);
       localStorage.setItem("AUTH_USER_EMAIL", data.email);

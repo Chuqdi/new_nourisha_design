@@ -9,13 +9,14 @@ import { AnimatePresence } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import CartModal from "../sections/Modals/CartModal";
 import Button from "../ui/Button";
 import Logo from "../ui/Logo";
 import MobileNavbar from "./MobileNavbar";
+import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -25,12 +26,14 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const user = useContext(UserContext);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
+  const device_id = localStorage?.getItem(DEVICE_ID)
   const cartItems = useAtomValue(ATOMS.cartItems);
+  const [loading, setLoading ] =useState(true);
   const sideBarOptions = [
     {
       image: "cart.svg",
       onClick: () => setSideModal({ show: true, component: <CartModal /> }),
-      count:cartItems?.length,
+      count: cartItems?.length,
     },
     // {
     //   image: "apple.svg",
@@ -53,6 +56,13 @@ export default function Navbar() {
     //   options: [],
     // },
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+      user?.refreshUser();
+    }, 2000);
+  }, []);
   return (
     !cartLoading && (
       <div className="absolute flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
@@ -84,12 +94,11 @@ export default function Navbar() {
                     option?.onClick && option?.onClick();
                   }}
                 >
-                  {
-                    !!option?.count &&
+                  {!!option?.count && (
                     <div className="absolute text-[0.7rem] top-[-0.5rem] right-[-0.3rem] bg-[#FF4159] text-white flex justify-center items-center rounded-[6rem] min-h-[1.5rem] min-w-[1.5rem] overflow-hidden p-1">
                       {option.count}
-                      </div>
-                  }
+                    </div>
+                  )}
                   <img
                     className="h-[1.25rem]"
                     src={`/images/navbar/${option.image}`}
@@ -103,18 +112,28 @@ export default function Navbar() {
           )}
           {!isMobile && (
             <div>
-              <Button
-                onClick={() => {
-                  user?.user?._id
-                    ? setSideModal({
-                        show: true,
-                        component: <MainAccount />,
-                      })
-                    : router.push("/auth");
-                }}
-                title={user?.user?._id ? "Dashboard" : "Login"}
-                variant="secondary"
-              />
+              {loading ||user?.isLoading ? (
+                <div>
+                  <Icon
+                    color="#FE7E00"
+                    className="w-6 h-6"
+                    icon="eos-icons:loading"
+                  />
+                </div>
+              ) : (
+                <Button
+                  onClick={() => {
+                    user?.user?._id
+                      ? setSideModal({
+                          show: true,
+                          component: <MainAccount />,
+                        })
+                      : router.push("/auth");
+                  }}
+                  title={user?.user?._id ? "Dashboard" : "Login"}
+                  variant="secondary"
+                />
+              )}
             </div>
           )}
 

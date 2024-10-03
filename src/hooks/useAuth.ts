@@ -1,28 +1,26 @@
-"use client"
+"use client";
 import { useToast } from "@/ui/use-toast";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useAuthToken from "./useAuthToken";
-import useFingerPrint from "./useFingerPrint";
+import useFingerPrint, { DEVICE_ID } from "./useFingerPrint";
+import { UserContext } from "@/HOC/UserContext";
 
-const  useAuth = () => {
+const useAuth = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const device_id = useFingerPrint();
+  const device_id = localStorage?.getItem(DEVICE_ID)
+  const user = useContext(UserContext);
   const axiosClient = axios.create({
     baseURL: `${process.env.API_URL}/`,
   });
   const { getToken } = useAuthToken();
   const token = getToken();
   axiosClient.interceptors.request.use(async function (req: any) {
-    req.headers["device-id"] = `29a1df4646cb3417c19994a59a3e022a`;
+    req.headers["device-id"] = device_id;
     req.headers["Authorization"] = `Bearer ${token}`;
-    req.headers["device_id"] = device_id;
-    req.headers["temp_id"]=device_id
-
     return req;
   });
-
 
   const makeRequest = async (path: string, data: any) => {
     let responseData: null | any = null;
