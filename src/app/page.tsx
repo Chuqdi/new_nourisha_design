@@ -122,7 +122,7 @@ export default function Main() {
             </h2>
             <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
               Allow yourself to explore your culinary desires and fully immerse
-              in the excitement of authentic Africa, Asian and European flavors.
+              in the excitement of authentic African, Asian and European flavors.
             </p>
           </div>
           <div className="my-0 md:my-0">
@@ -147,11 +147,11 @@ export default function Main() {
           </div>
         </div>
         {isMobile ? (
-          <img src="/images/taste.png" className="w-full " />
+          <img src="/images/taste.png" className="w-full z-10" />
         ) : (
           <img
             src="/images/taste.png"
-            className=" w-[37.1875rem] h-[20.35225rem] "
+            className=" w-[37.1875rem] h-[20.35225rem] z-10 "
           />
         )}
       </div>
@@ -248,7 +248,7 @@ export default function Main() {
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
-        className="py-[5rem] px-[1.25rem] md:px-6.25 flex-col flex gap-8  md:h-[46.375rem] items-center justify-center"
+        className="py-[5rem] px-[1.25rem] md:px-6.25 flex-col flex gap-8  md:h-[46.375rem] items-center justify-center z-0"
       >
         <h4 className="text-black-900 font-NewSpiritBold text-[2.75rem] text-center">
           Explore What Nourisha Offers
