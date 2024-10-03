@@ -17,7 +17,7 @@ export default function DownloadTheAppWidgetSection() {
           className="text-black-900 font-inter text-lg
           leading-[1.6875rem] text-center md:text-left tracking-[-0.01688rem] w-full md:w-4/5 "
         >
-          Join other people who enjoy and savour authentic African, Asian and European Cuisines with Nourisha
+          Join other people who enjoy and savour authentic African, Asian and European Cuisines with Nourisha.
         </p>
         <div className="flex justify-center md:justify-start items-center gap-[1.35rem]">
           <div className="flex justify-center items-center w-10 h-10 border-[1.25px] border-[#323546] rounded-full">

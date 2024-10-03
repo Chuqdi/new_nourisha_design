@@ -56,8 +56,7 @@ export default function SingleCartItemSection({
   activeWeek?: IFoodBoxDayType;
   country: (typeof COUNTRIES)[0];
 }) {
-  const { addFoodBox, removeFoodBox, } =
-    useFoodbox();
+  const { addFoodBox, removeFoodBox } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
@@ -89,15 +88,8 @@ export default function SingleCartItemSection({
     [cartItems]
   );
 
-
-
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
-      {/* {isHome && (
-        <div className="absolute right-[1.04169rem] w-9 h-9 flex justify-center items-center border overflow-hidden rounded-full top-4">
-          <p className="text-[4rem]">{country.flag}</p>
-        </div>
-      )} */}
       <div className="absolute top-2 left-0 right-6 w-full    flex justify-between items-center px-4 py-3 md:py-1">
         <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
           {meal?.calories}KCal
@@ -117,15 +109,28 @@ export default function SingleCartItemSection({
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
-        <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
-          £{meal?.price?.amount}
-        </p>
+      <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
+        £{meal?.price?.amount}
+      </p>
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem]">
         {meal?.name}
       </p>
 
       {isFoodBox ? (
-        <div className=" flex w-full justify-end">
+        <div className="flex w-full justify-between">
+          <button
+            onClick={() =>
+              setFoodInfoModal({
+                show: true,
+                meal,
+              })
+            }
+            className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
+          >
+            <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
+              Meal Info
+            </p>
+          </button>
           {isMealSelected ? (
             <button
               onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
@@ -144,7 +149,7 @@ export default function SingleCartItemSection({
             <button
               onClick={() => {
                 addFoodBox(activeWeek!, meal!);
-                
+
                 if (
                   meal?.name?.toUpperCase()?.includes("RICE") ||
                   meal?.name?.toUpperCase()?.includes("SOUP")

@@ -6,6 +6,7 @@ import SelectOrdertypeModalSection from "@/components/sections/Modals/Selectorde
 import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
 import Modal from "@/components/ui/Modal";
+import { CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IPlan } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
@@ -87,6 +88,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const user = useContext(UserContext);
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
+  const activeSearchContinent = useMemo(()=>onAfrican?CONTINENTS[0]:CONTINENTS[1], [onAfrican])
   const getPlans = () => {
     return axiosClient.get("plans?country=nigeria&weekend=false");
   };
@@ -131,7 +133,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               router.push(
                 `/food_box?plan=${
                   options.find((o, i) => i === activeOptionIndex)?.name
-                }`
+                }&search_continent=${activeSearchContinent?.search}`
               );
             }}
             title="Continue"
@@ -145,6 +147,8 @@ export default function MealPlan() {
   const [orderTypeModal, setShowOrderTypeModal] = useState(false);
   const [onAfrican, setOnAfrican] = useState(true);
 
+ 
+
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
@@ -154,7 +158,6 @@ export default function MealPlan() {
         />
       </Modal>
       <div className="flex flex-col gap-6 mt-32">
-        <MessageBtn title="MEAL PLANS" />
         <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Meal Plans
         </h3>

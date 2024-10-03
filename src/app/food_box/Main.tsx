@@ -165,7 +165,7 @@ const WeeksBreakDown = ({
 
 export default function Main() {
   const navigation = useRouter();
-  const [activeCountry, setActiveCountry] = useState(COUNTRIES[0]);
+  const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
 
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -173,6 +173,15 @@ export default function Main() {
     () => searchParams.get("plan")?.includes("5".toUpperCase()),
     [searchParams]
   );
+  useEffect(() => {
+    if (searchParams.has("search_continent")) {
+      setActiveCountry(
+        CONTINENTS.find(
+          (c) => c.search?.includes(decodeURIComponent(searchParams.get("search_continent")!))
+        )!
+      );
+    }
+  }, [searchParams]);
   const weeks = useMemo(() => {
     if (isWeekly) {
       return DAYS_OF_THE_WEEK.filter((wk) => {
@@ -188,7 +197,12 @@ export default function Main() {
   const { getData } = useUnAuthRequest();
   const [meals, setMeals] = useState<IMeal[]>([]);
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
-  const { initializeFoodBox, emptyBox, initializeFoodMealExtra, getMealExtraFromMealAndDay } = useFoodbox();
+  const {
+    initializeFoodBox,
+    emptyBox,
+    initializeFoodMealExtra,
+    getMealExtraFromMealAndDay,
+  } = useFoodbox();
   const { axiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState("10");
@@ -196,7 +210,7 @@ export default function Main() {
 
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&country=${activeCountry?.name}`
+      `meals/pack?page=1&limit=${limit}&continent=${activeCountry?.search}`
     );
   };
 
@@ -230,19 +244,25 @@ export default function Main() {
           first_meal: IMeal;
           last_meal: IMeal;
         };
-        const firstSelectedExtra = getMealExtraFromMealAndDay(meals?.first_meal,week as IFoodBoxDayType);
+        const firstSelectedExtra = getMealExtraFromMealAndDay(
+          meals?.first_meal,
+          week as IFoodBoxDayType
+        );
 
-        const secondSelectedExtra = getMealExtraFromMealAndDay(meals?.last_meal,week as IFoodBoxDayType);
+        const secondSelectedExtra = getMealExtraFromMealAndDay(
+          meals?.last_meal,
+          week as IFoodBoxDayType
+        );
 
         return {
           [week?.toLowerCase()]: {
             lunch: {
               mealId: meals?.first_meal?._id,
-              extraId:firstSelectedExtra?.extra?._id
+              extraId: firstSelectedExtra?.extra?._id,
             },
             dinner: {
               mealId: meals?.last_meal?._id,
-              extraId:secondSelectedExtra?.extra?._id
+              extraId: secondSelectedExtra?.extra?._id,
             },
           },
         };
@@ -265,7 +285,7 @@ export default function Main() {
     setLoading(true);
     const data = prepareMealForBE();
     axiosClient
-      .post(`lineups`, { ...data, delivery_date,card_token:"off_session" })
+      .post(`lineups`, { ...data, delivery_date, card_token: "off_session" })
       .then((data) => {
         toast({
           variant: "default",
@@ -328,13 +348,15 @@ export default function Main() {
           </p>
           <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
             <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
-              {CONTINENTS.map((country, index) => {
+              {CONTINENTS.filter(
+                (c) => c.search?.includes(decodeURIComponent(searchParams.get("search_continent")!))
+              )!.map((country, index) => {
                 const selected = country === activeCountry;
                 return (
                   <SelectChip
                     key={`countries__${index}`}
                     onClick={() => setActiveCountry(country)}
-                    title={country.name + " Meals"}
+                    title={country.noun + " Meals"}
                     selected={selected}
                   />
                 );

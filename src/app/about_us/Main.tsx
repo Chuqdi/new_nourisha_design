@@ -303,7 +303,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="py-1.25 w-full mx-auto  flex justify-center items-center">
+      <div className="mt-20 mx-1.25 md:mx-6.25 w-full flex justify-center items-center">
         <DownloadTheAppWidgetSection />
       </div>
       <div className="mx-1.25 mt-6.25 md:mx-6.25">

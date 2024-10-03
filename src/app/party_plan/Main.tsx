@@ -125,7 +125,9 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-      <DownloadTheAppWidgetSection />
+      <div className="mt-20 mx-1.25 md:mx-6.25 w-full flex justify-center items-center">
+        <DownloadTheAppWidgetSection />
+      </div>
       <div className="pt-[3rem] px-1.25 md:px-6.25">
         <Footer />
       </div>

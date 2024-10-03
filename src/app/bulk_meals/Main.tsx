@@ -14,7 +14,6 @@ export default function Main() {
     >
       <Navbar />
       <div className="flex flex-col gap-6 mt-32">
-        <MessageBtn title="BULK MEALS" />
         <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Bulk Meal Orders
         </h3>
