@@ -32,22 +32,22 @@ export default function Navbar() {
       onClick: () => setSideModal({ show: true, component: <CartModal /> }),
       count:cartItems?.length,
     },
-    {
-      image: "apple.svg",
-      isOnlyDesktop: true,
-      onClick: () =>
-        router.push(
-          "https://apps.apple.com/gb/app/nourisha-budget-meal-planner/id6451458690"
-        ),
-    },
-    {
-      image: "play_store.svg",
-      isOnlyDesktop: true,
-      onClick: () =>
-        router.push(
-          "https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US"
-        ),
-    },
+    // {
+    //   image: "apple.svg",
+    //   isOnlyDesktop: true,
+    //   onClick: () =>
+    //     router.push(
+    //       "https://apps.apple.com/gb/app/nourisha-budget-meal-planner/id6451458690"
+    //     ),
+    // },
+    // {
+    //   image: "play_store.svg",
+    //   isOnlyDesktop: true,
+    //   onClick: () =>
+    //     router.push(
+    //       "https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US"
+    //     ),
+    // },
     // {
     //   image: "uk.svg",
     //   options: [],
@@ -58,7 +58,7 @@ export default function Navbar() {
       <div className="absolute flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
         <Logo className="h-6" />
         {!isMobile && (
-          <div className="flex gap-10">
+          <div className="flex gap-8">
             {navbarOptions.map((option, index) => (
               <Link
                 href={option.page}
@@ -75,6 +75,7 @@ export default function Navbar() {
         <div className="flex gap-[1.33rem]">
           {sideBarOptions.map(
             (option, index) =>
+              //@ts-ignore
               !(isMobile && option.isOnlyDesktop) && (
                 <div
                   className="cursor-pointer h-8 w-10 rounded-[2rem] flex justify-center items-center bg-[#F2F4F7] gap-1 p-[0.5rem] relative"
