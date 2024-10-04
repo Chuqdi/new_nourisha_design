@@ -40,7 +40,8 @@ export default function RootLayout({
               {loading ? (
                 <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
                   <div className="animate-pulse">
-                    <img src="/images/logo2.svg" className="w-48 h-48" />
+                    <img src="/images/logo2.svg" 
+                    className="w-[35rem] md:w-[45rem] h-auto" />
                   </div>
                 </div>
               ) : (
