@@ -89,12 +89,7 @@ const secondTestmonies = [
     caption: `Food`,
     date: "12 July 2024",
   },
-  {
-    name: "Freeborn Ehirhere",
-    description: `Food was amazing, great customer service and support, fast delivery. I totally rey`,
-    caption: `Food was amazing`,
-    date: "5 June 2024",
-  },
+ 
   {
     name: "Priscilla Darko",
     description: `They are good in cooking and also good at their time`,
@@ -125,12 +120,6 @@ const secondTestmonies = [
     description: `Great food,good portions,lovely taste and quick delivery.I highly recommend.Great customer service and very professional.`,
     caption: `Great food,good portions,lovely taste`,
     date: "18 May 2024",
-  },
-  {
-    name: "Joan Aigboje",
-    description: `Food was amazing, great customer service and support, fast delivery. I totally rey`,
-    caption: `Food was greate`,
-    date: "05 June 2024",
   },
   {
     name: "Akinsola Olawoagbo",
@@ -181,12 +170,7 @@ I'll be coming back to leave another review once I have tried out the wonderful 
     caption: `Good authentic flavours/dishes, quick delivery and great customer service. For easy and tasty African meals, definitely recommend!`,
     date: "04 June 2024",
   },
-  {
-    name: "Joan Aigboje",
-    description: `Food was amazing`,
-    caption: `Food was amazing, great customer service and support, fast delivery. I totally rey`,
-    date: "04 June 2024",
-  },
+  
   {
     name: "Samson Mgbaja",
     description: `Good and Quality meals`,
@@ -239,20 +223,19 @@ export default function TestmoniesSection() {
         {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 37).map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-[27rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2  gap-3 flex flex-col justify-center "
+            className="w-fit text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2  gap-3 flex flex-col justify-center border"
           >
             <div className="flex items-center gap-3">
               <Ratings />
             </div>
-            <p className="text-sm font-inter font-bold w-4/5">
+            <p className="text-sm font-inter font-bold">
               {testmonies?.caption}
             </p>
-            <p className="text-black-900 font-inter text-sm w-4/5">
+            <p className="text-black-900 font-inter text-sm">
               {testmonies?.description}
             </p>
             <div className="font-inter text-sm text-black-900 gap-2 flex ">
               <span className="font-bold">{testmonies?.name}</span>
-              {testmonies?.date}
             </div>
           </div>
         ))}
