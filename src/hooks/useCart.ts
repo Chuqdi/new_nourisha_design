@@ -22,10 +22,11 @@ const useCart = () => {
   const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
   let u = localStorage.getItem(LOGGED_IN_USER);
-  let mainUser = JSON.parse(u ?? "") as IUser | undefined;
+  let mainUser = u && JSON.parse(u ?? "") as IUser | undefined;
   const getCartSessionDetails = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     return axiosClient.get(
+      //@ts-ignore
       mainUser?.email ? "cart" : `cart/web?session_id=${cartSessionId}`
     );
   };
