@@ -1,13 +1,13 @@
 "use client";
 import Navbar from "@/components/commons/Navbar";
+import Subscription from "@/components/sections/Modals/AccountModals/Subscriptions";
 import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import Button from "@/components/ui/Button";
 import SelectChip from "@/components/ui/SelectChip";
-import { CONTINENTS, COUNTRIES, DAYS_OF_THE_WEEK } from "@/config";
+import { CONTINENTS, DAYS_OF_THE_WEEK } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
-import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import useFoodbox from "@/hooks/useFoodbox";
@@ -18,7 +18,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 const SingleWeekendBreakDown = ({
@@ -168,6 +168,7 @@ export default function Main() {
   const navigation = useRouter();
   const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
+  const mealsRef = useRef<HTMLDivElement>(null!);
 
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isWeekly = useMemo(
@@ -212,7 +213,6 @@ export default function Main() {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
-  
 
   const getMeals = () => {
     return getData(
@@ -307,6 +307,10 @@ export default function Main() {
           title: "Error",
           description: msg,
         });
+
+        if (msg?.includes("Subscription is required")) {
+          setSideModal({ show: true, component: <Subscription /> });
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -322,6 +326,7 @@ export default function Main() {
       //@ts-ignore
       setActiveWeek(weeks[currentIndex + 1]);
     }
+    mealsRef?.current?.scrollIntoView();
   };
 
   const { data, isLoading } = useFetch(
@@ -344,7 +349,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    emptyBox()
+    emptyBox();
   }, []);
 
   return (
@@ -387,7 +392,10 @@ export default function Main() {
             </div>
 
             <div className="flex gap-4   items-center  ">
-              <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
+              <div
+                ref={mealsRef}
+                className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit"
+              >
                 <Icon
                   color="#030517"
                   icon="hugeicons:filter-horizontal"

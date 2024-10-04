@@ -124,7 +124,9 @@ const PaymentModal = ({
 
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return loading ? (
-    <p>Loading</p>
+    <div className="w-full h-[3rem] flex justify-center items-center  bg-white rounded-md">
+      <p className="animate-pulse">Loading...</p>
+    </div>
   ) : error ? (
     <p>{error}</p>
   ) : (

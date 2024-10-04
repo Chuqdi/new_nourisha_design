@@ -52,7 +52,7 @@ const SingleSubscription = ({
         <h3 className="text-black-900 font-inter text-[2.5rem] tracking-[-0.1rem] font-bold">
           £{plan.amount}
         </h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-between">
           <p
             className="text-[2rem] font-NewSpiritBold"
             style={{
@@ -72,6 +72,7 @@ const SingleSubscription = ({
         <Button
           variant="primary"
           fullWidth
+          className="py-6 h-[2.75rem] mt-3"
           title={activePlan?._id === plan?._id ? "Active" : "Subscribe"}
           disabled={activePlan?._id === plan?._id}
           onClick={() => {
@@ -119,7 +120,7 @@ export default function Subscription() {
 
   const [activePlan, setActivePlan] = useState<IPlan>();
   const getSubscrptionList = () => {
-    return axiosClient.get("plans");
+    return axiosClient.get("plans?country=nigeria");
   };
 
   const { data, isLoading } = useQuery(
