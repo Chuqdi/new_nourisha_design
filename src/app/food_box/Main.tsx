@@ -19,6 +19,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -176,8 +177,10 @@ export default function Main() {
   useEffect(() => {
     if (searchParams.has("search_continent")) {
       setActiveCountry(
-        CONTINENTS.find(
-          (c) => c.search?.includes(decodeURIComponent(searchParams.get("search_continent")!))
+        CONTINENTS.find((c) =>
+          c.search?.includes(
+            decodeURIComponent(searchParams.get("search_continent")!)
+          )
         )!
       );
     }
@@ -205,12 +208,15 @@ export default function Main() {
   } = useFoodbox();
   const { axiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [limit, setLimit] = useState("10");
+  const [limit, setLimit] = useState("9");
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [phrase] = useDebounce(searchPhrase, 1000);
+  
 
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeCountry?.search}`
+      `meals/pack?page=1&limit=${limit}&continent=${activeCountry?.search}&searchPhrase=${searchPhrase}`
     );
   };
 
@@ -306,10 +312,21 @@ export default function Main() {
         setLoading(false);
       });
   };
+  const goToNextWeek = () => {
+    if (activeWeek === weeks[weeks.length - 1]) {
+      //@ts-ignore
+      setActiveWeek(weeks[0]);
+    } else {
+      //@ts-ignore
+      const currentIndex = weeks.indexOf(activeWeek);
+      //@ts-ignore
+      setActiveWeek(weeks[currentIndex + 1]);
+    }
+  };
 
   const { data, isLoading } = useFetch(
     getMeals,
-    [queryKeys.GET_AVAILABLE_MEAL, activeCountry?.name, limit],
+    [queryKeys.GET_AVAILABLE_MEAL, activeCountry?.name, limit, phrase],
     true
   );
 
@@ -324,6 +341,10 @@ export default function Main() {
   useEffect(() => {
     initializeFoodBox();
     initializeFoodMealExtra();
+  }, []);
+
+  useEffect(() => {
+    emptyBox()
   }, []);
 
   return (
@@ -348,8 +369,10 @@ export default function Main() {
           </p>
           <div className="w-full gap-3 flex flex-col border-t-[0.2px] border-t-[#d5d5d5aa] pt-8 mt-4">
             <div className="grid grid-cols-2 md:flex items-center   gap-5 w-fit">
-              {CONTINENTS.filter(
-                (c) => c.search?.includes(decodeURIComponent(searchParams.get("search_continent")!))
+              {CONTINENTS.filter((c) =>
+                c.search?.includes(
+                  decodeURIComponent(searchParams.get("search_continent")!)
+                )
               )!.map((country, index) => {
                 const selected = country === activeCountry;
                 return (
@@ -373,6 +396,8 @@ export default function Main() {
                 <p className="text-lg text-black-900 font-inter">Filter</p>
               </div>
               <input
+                value={searchPhrase}
+                onChange={(e) => setSearchPhrase(e.target.value)}
                 placeholder="Search Meals"
                 className="w-full h-12 px-[0.45rem] py-4 rounded-[2rem] border-[2px] placeholder:text-sm placeholder:text-black-900 bor  #f2f4f7]"
               />
@@ -409,11 +434,23 @@ export default function Main() {
                       <SingleCartItemSection
                         country={activeCountry}
                         isFoodBox
+                        goToNextWeek={goToNextWeek}
                         meal={meal}
                         activeWeek={activeWeek}
                         key={`cart_item_${index}`}
                       />
                     ))}
+                  </div>
+
+                  <div className="flex items-center justify-center my-8">
+                    <Button
+                      title={isLoading ? "Loading..." : "Load more"}
+                      onClick={() =>
+                        setLimit((value) => (parseInt(value) + 10).toString())
+                      }
+                      variant="primary"
+                      className="py-6 font-bold font-inter h-[2.5rem]"
+                    />
                   </div>
                 </div>
                 <div className="w-full md:w-[30%] rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">

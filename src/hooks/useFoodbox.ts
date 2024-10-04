@@ -107,6 +107,38 @@ export default function () {
     }
   };
 
+  const checkIfBothMealsAreSelected =(day:IFoodBoxDayType)=>{
+    let foodBox;
+    if (box) {
+      foodBox = JSON.parse(box);
+      if (!foodBox[day]) {
+        foodBox[day] = {
+          meals: {
+            first_meal: null,
+            last_meal: null,
+          },
+        };
+      }
+    } else {
+      foodBox = {};
+      //@ts-ignore
+      foodBox[day] = {
+        meals: {
+          first_meal: null,
+          last_meal: null,
+        },
+      };
+    }
+    const isFirstMealAlreadySelected = foodBox[day].meals["first_meal"];
+    const isSecondMealAlreadySelected = foodBox[day].meals["last_meal"];
+    return {
+      isFirstMealAlreadySelected:!!isFirstMealAlreadySelected,
+      isSecondMealAlreadySelected:!!isSecondMealAlreadySelected,
+    };
+
+
+  }
+
   const getMealExtraFromMealAndDay = (meal: IMeal, day: IFoodBoxDayType) => {
     if (mealExtraSelection && !!mealExtraSelection?.length) {
       const storedExtra =mealExtraSelection;
@@ -130,5 +162,6 @@ export default function () {
     emptyBox,
     addExtraItem,
     getMealExtraFromMealAndDay,
+    checkIfBothMealsAreSelected,
   };
 }

@@ -7,7 +7,7 @@ import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -39,7 +39,7 @@ export const CartManipulator = ({
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
       <button
         onClick={() => {
-          onUpdateCart(()=>addItemToCart(meal!, -1));
+          onUpdateCart(() => addItemToCart(meal!, -1));
         }}
         className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
@@ -49,7 +49,7 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={() =>onUpdateCart(()=>addItemToCart(meal, 1))}
+        onClick={() => onUpdateCart(() => addItemToCart(meal, 1))}
         className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
         +
@@ -62,16 +62,21 @@ export default function SingleCartItemSection({
   country,
   isHome,
   meal,
+  fromButtonNext,
   isFoodBox,
   activeWeek,
+  goToNextWeek,
 }: {
   isHome?: boolean;
   meal: IMeal;
   isFoodBox?: boolean;
+  fromButtonNext?: boolean;
   activeWeek?: IFoodBoxDayType;
   country: (typeof COUNTRIES)[0];
+  goToNextWeek?: () => void;
 }) {
-  const { addFoodBox, removeFoodBox } = useFoodbox();
+  const { addFoodBox, removeFoodBox, checkIfBothMealsAreSelected } =
+    useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
@@ -89,19 +94,26 @@ export default function SingleCartItemSection({
   const activeDayMeal = useMemo(() => activeDayBox?.meals, [activeDayBox]) as {
     meals: { first_meal: IMeal; last_meal: IMeal };
   };
-  const isMealSelected = useMemo(
-    () =>
+  const isMealSelected = useMemo(() => {
+    return (
       //@ts-ignore
       activeDayMeal?.first_meal?._id === meal?._id ||
       //@ts-ignore
-      activeDayMeal?.last_meal?._id === meal?._id,
-    [activeDayMeal]
-  );
+      activeDayMeal?.last_meal?._id === meal?._id
+    );
+  }, [activeDayMeal]);
   const cartItemMeal = useMemo(
     () => cartItems.find((i) => i?.item?._id === meal?._id),
 
     [cartItems]
   );
+
+  // useEffect(() => {
+    
+  //   if (bothSelected) {
+  //     goToNextWeek && goToNextWeek();
+  //   }
+  // }, [activeDayMeal]);
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
@@ -165,16 +177,19 @@ export default function SingleCartItemSection({
               onClick={() => {
                 addFoodBox(activeWeek!, meal!);
 
-                if (
-                  meal?.name?.toUpperCase()?.includes("RICE") ||
-                  meal?.name?.toUpperCase()?.includes("SOUP")
-                ) {
-                  setMealExtraModal({
-                    show: true,
-                    meal,
-                    day: undefined,
-                  });
-                }
+                // if (
+                //   meal?.name?.toUpperCase()?.includes("RICE") ||
+                //   meal?.name?.toUpperCase()?.includes("SOUP")
+                // ) {
+                //   setMealExtraModal({
+                //     show: true,
+                //     meal,
+                //     day: undefined,
+                //   });
+                // }
+                const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
+                if(bothSelected?.isFirstMealAlreadySelected) goToNextWeek&&goToNextWeek();
+
               }}
               className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
             >

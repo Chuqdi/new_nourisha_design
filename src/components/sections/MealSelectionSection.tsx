@@ -49,6 +49,7 @@ export default function MealSelectionSection({
       setMeals(data?.data?.data?.data);
     }
   }, [data]);
+
   return (
     <div
       className={`w-full
