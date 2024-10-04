@@ -15,7 +15,7 @@ import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const Checkout = () => {
+const Checkout = ({ coupon }: { coupon: string }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const user = useContext(UserContext);
@@ -37,11 +37,12 @@ const Checkout = () => {
             component: (
               <DeliveryModal
                 setDeliveryDate={set_delivery_date}
-                proceed={async () =>
-                {
+                proceed={async () => {
                   setPaymentModal({
                     show: true,
-                    amount: parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee) ,
+                    amount:
+                      parseInt(cartDetails?.total) +
+                      parseInt(cartDetails?.deliveryFee),
                     onContinue: async () => {
                       const response = await axiosClient.post("orders", {
                         cart_session_id: cartDetails?.session_id,
@@ -51,6 +52,7 @@ const Checkout = () => {
                           country: user?.user?.address?.country,
                         },
                         delivery_date,
+                        coupon,
                       });
 
                       return {
@@ -58,9 +60,8 @@ const Checkout = () => {
                         returnUrl: "https://jobofa.com/text",
                       };
                     },
-                  })
-                }
-                }
+                  });
+                }}
               />
             ),
             show: true,
@@ -83,11 +84,9 @@ const Checkout = () => {
 };
 
 function CartItem({ item }: { item: ICartItem }) {
-  const { removeItemFrommCart, updateItemBE } = useCart();
+  const { addItemToCart } = useCart();
+  const user = useContext(UserContext);
 
-  const onRemoveItem = () => {
-    removeItemFrommCart(item?.item?._id!, item?.quantity);
-  };
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
       <div className="flex items-start gap-3">
@@ -107,17 +106,19 @@ function CartItem({ item }: { item: ICartItem }) {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <button
-          onClick={onRemoveItem}
-          className="text-[#FF4159] text-sm font-inter flex items-center"
-        >
-          <Icon
-            color="#FF4159"
-            className="w-4 h-4"
-            icon="gravity-ui:trash-bin"
-          />
-          <p>Remove</p>
-        </button>
+        {!user?.isLoading && (
+          <button
+            onClick={() => addItemToCart(item?.item!, -item?.quantity)}
+            className="text-[#FF4159] text-sm font-inter flex items-center"
+          >
+            <Icon
+              color="#FF4159"
+              className="w-4 h-4"
+              icon="gravity-ui:trash-bin"
+            />
+            <p>Remove</p>
+          </button>
+        )}
         <CartManipulator meal={item?.item} item={item} />
       </div>
     </div>
@@ -127,7 +128,7 @@ function CartItem({ item }: { item: ICartItem }) {
 function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
-
+  const [coupon, setCoupon] = useState("");
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
 
   return (
@@ -160,7 +161,11 @@ function CartModal() {
         {!!cartItems.length && (
           <div>
             <label>Coupon Code</label>
-            <Input placeholder="Enter coupon code here..." />
+            <Input
+              value={coupon}
+              onChange={(e) => setCoupon(e.target.value)}
+              placeholder="Enter coupon code here..."
+            />
           </div>
         )}
 
@@ -191,7 +196,7 @@ function CartModal() {
           </div>
         )}
 
-        {!!cartItems.length && <Checkout />}
+        {!!cartItems.length && <Checkout coupon={coupon} />}
       </div>
     </SidebarHOC>
   );

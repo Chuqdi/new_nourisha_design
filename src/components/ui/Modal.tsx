@@ -27,7 +27,7 @@ export default function Modal({
     return () => {
       const app_wrapper = document?.getElementById("app_wrapper");
 
-      // app_wrapper!.style.overflowY = "scroll";
+      app_wrapper!.style.overflowY = "scroll";
     };
   }, []);
   return (

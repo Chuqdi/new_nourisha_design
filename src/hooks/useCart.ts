@@ -9,6 +9,7 @@ import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
 import { UserContext } from "@/HOC/UserContext";
 import useFingerPrint, { DEVICE_ID } from "./useFingerPrint";
+import { toast } from "@/ui/use-toast";
 
 const CART_SESSION_ID = "cart_session_id";
 export const CART_TEMP_ID = "cart_temp_id";
@@ -18,7 +19,7 @@ const useCart = () => {
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
-  const device_id = localStorage?.getItem(DEVICE_ID)
+  const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
   const user = useContext(UserContext);
   const getCartSessionDetails = () => {
@@ -73,8 +74,6 @@ const useCart = () => {
       .put("cart", {
         itemId,
         quantity,
-        device_id: device_id,
-        temp_id: device_id,
       })
       .then((data) => {
         updateLocalStorageStates(data);
@@ -91,10 +90,7 @@ const useCart = () => {
           device_id: device_id,
         },
         headers: {
-          "device-id": "29a1df4646cb3417c19994a59a3e022a",
           Authorization: `Bearer ${token}`,
-          device_id: device_id,
-          temp_id: device_id,
         },
       })
       .then((data) => {
@@ -103,18 +99,25 @@ const useCart = () => {
     RefreshCart();
   };
 
-  const addItemToCart = async (item: IMeal) => {
-    const data = {
-      itemId: item._id,
-      quantity: 1,
-      device_id: device_id,
-      temp_id: device_id,
-    };
+  const addItemToCart = async (item: IMeal, quantity?: number) => {
+    if (user?.user?._id) {
+      const data = {
+        itemId: item._id,
+        quantity: quantity ?? 1,
+        device_id: device_id,
+        temp_id: device_id,
+      };
 
-    await axiosClient.put("cart", data).then((data) => {
-      updateLocalStorageStates(data);
-    });
-    RefreshCart();
+      await axiosClient.put("cart", data).then((data) => {
+        updateLocalStorageStates(data);
+      });
+      RefreshCart();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Please login to access cart functionality",
+      });
+    }
   };
 
   const returnValue = useMemo(() => {

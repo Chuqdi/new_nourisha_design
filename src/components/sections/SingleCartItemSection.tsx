@@ -1,11 +1,12 @@
 import { COUNTRIES } from "@/config";
 import { ICartItem, IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
+import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -14,17 +15,18 @@ export const CartManipulator = ({
   item: ICartItem;
   meal: IMeal;
 }) => {
-  const { addItemToCart, removeItemFrommCart } = useCart();
+  const { addItemToCart } = useCart();
+  const user = useContext(UserContext);
 
-  const onAddItemToCart = () => {
-    addItemToCart(meal);
-  };
-
-  return (
+  return user?.isLoading ? (
+    <div>
+      <Icon color="#FE7E00" className="w-6 h-6" icon="eos-icons:loading" />
+    </div>
+  ) : (
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
       <button
         onClick={() => {
-          removeItemFrommCart(meal?._id!, 1);
+          addItemToCart(meal!, -1);
         }}
         className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
@@ -34,7 +36,7 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={onAddItemToCart}
+        onClick={() => addItemToCart(meal)}
         className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
         +
