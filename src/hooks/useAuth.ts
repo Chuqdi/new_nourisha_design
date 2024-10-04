@@ -17,7 +17,7 @@ const useAuth = () => {
   const { getToken } = useAuthToken();
   const token = getToken();
   axiosClient.interceptors.request.use(async function (req: any) {
-    req.headers["device-id"] = device_id;
+    req.headers["device-id"] = device_id??"test_device_id";
     req.headers["Authorization"] = `Bearer ${token}`;
     return req;
   });
