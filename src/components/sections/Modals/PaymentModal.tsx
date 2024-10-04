@@ -9,7 +9,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 
 const Payment = ({
@@ -44,7 +44,7 @@ const Payment = ({
           elements,
           clientSecret,
           confirmParams: {
-            return_url: returnUrl,
+            return_url: "https://www.eatnourisha.com?show_payment_modal=1",
           },
         });
 
@@ -90,6 +90,9 @@ const PaymentModal = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
+  const [error, setError] = useState("");
+  const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
+
   const [options, setOptions] = useState<StripeElementsOptions>({
     // mode: "subscription",
     // amount: Math.round(amount),
@@ -105,6 +108,14 @@ const PaymentModal = ({
           clientSecret,
         });
       })
+      .catch((e) => {
+        setError(e?.response?.data?.message);
+        alert(e?.response?.data?.message ?? "Unable to load payment modal");
+        setPaymentModal({
+          ...paymentModal,
+          show: false,
+        });
+      })
       .finally(() => {
         setLoading(false);
       });
@@ -114,6 +125,8 @@ const PaymentModal = ({
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return loading ? (
     <p>Loading</p>
+  ) : error ? (
+    <p>{error}</p>
   ) : (
     <Elements options={options} stripe={stripePromise}>
       <Payment close={close} getClientSecret={getClientSecret} />

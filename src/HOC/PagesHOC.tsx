@@ -1,19 +1,31 @@
 "use client";
 import ExtraMealSelectionModal from "@/components/sections/Modals/ExtraMealSelectionModal";
 import FoodInfoModal from "@/components/sections/Modals/FoodInfoModal";
+import PaymentConfirmationModal from "@/components/sections/Modals/PaymentConfirmationModal";
 import PaymentModal from "@/components/sections/Modals/PaymentModal";
 import Modal from "@/components/ui/Modal";
 import SideModal from "@/components/ui/SideModal";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue } from "jotai";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const showSideModal = useAtomValue(ATOMS.showSideModal);
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
-  const [showMealExtraModal, setMealExtraModal] = useAtom(ATOMS.showMealExtraSelection);
+  const [showMealExtraModal, setMealExtraModal] = useAtom(
+    ATOMS.showMealExtraSelection
+  );
   const foodInfoModal = useAtomValue(ATOMS.foodInfoModal);
+  const pathName = useSearchParams();
+  const [showPaymentConfirmationModal, setShowPaymentConfirmationModal] = useState(false);
+
+  useEffect(() => {
+    const p = pathName.get("show_payment_modal") && pathName.get("show_payment_modal") === "1";
+    setShowPaymentConfirmationModal(!!p);
+  }, []);
 
   return (
     <div>
@@ -24,10 +36,12 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         />
       </Modal>
 
+      <Modal show={showPaymentConfirmationModal}>
+        <PaymentConfirmationModal close={()=> setShowPaymentConfirmationModal(false)} />
+      </Modal>
 
       <SideModal show={showMealExtraModal.show}>
-        <ExtraMealSelectionModal
-        />
+        <ExtraMealSelectionModal />
       </SideModal>
 
       <Modal show={foodInfoModal.show}>
