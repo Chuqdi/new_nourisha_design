@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo } from "react";
 import { ICartDetail, ICartItem, IMeal } from "../config/types";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import queryKeys from "../config/queryKeys";
 import { useQuery } from "react-query";
@@ -21,11 +21,11 @@ const useCart = () => {
   const { getToken } = useAuthToken();
   const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
-  const user = useContext(UserContext);
+  const user = useAtomValue(ATOMS.loggedInUser);
   const getCartSessionDetails = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     return axiosClient.get(
-      user?.user?._id ? "cart" : `cart/web?session_id=${cartSessionId}`
+      user?._id ? "cart" : `cart/web?session_id=${cartSessionId}`
     );
   };
   const {
@@ -100,7 +100,7 @@ const useCart = () => {
   };
 
   const addItemToCart = async (item: IMeal, quantity?: number) => {
-    if (user?.user?._id) {
+    if (user?._id) {
       const data = {
         itemId: item._id,
         quantity: quantity ?? 1,

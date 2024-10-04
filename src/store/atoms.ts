@@ -5,6 +5,7 @@ import {
   cartItems,
   FOOD_BOX,
   foodInfoModal,
+  loggedInUser,
   mealExtraSelection,
   paymentModal,
   SHOW_SIDE_MODAL,
@@ -21,4 +22,5 @@ export const ATOMS = {
   paymentModal: atom(paymentModal),
   mealExtraSelection: atom(mealExtraSelection),
   showMealExtraSelection: atom(showMealExtraSelection),
+  loggedInUser:atom(loggedInUser)
 };

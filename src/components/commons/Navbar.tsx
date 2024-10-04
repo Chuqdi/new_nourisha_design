@@ -6,7 +6,7 @@ import useNavbar from "@/hooks/useNavbar";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -24,9 +24,9 @@ export default function Navbar() {
   const navbarOptions = useNavbar();
   const router = useRouter();
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
-  const user = useContext(UserContext);
+  const u = useContext(UserContext);
+  const user = useAtomValue(ATOMS.loggedInUser);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
-  const device_id = localStorage?.getItem(DEVICE_ID);
   const cartItems = useAtomValue(ATOMS.cartItems);
   const sideBarOptions = [
     {
@@ -56,9 +56,6 @@ export default function Navbar() {
     // },
   ];
 
-  useEffect(() => {
-    user?.refreshUser();
-  }, []);
   return (
     !cartLoading && (
       <div className="absolute flex justify-between items-center shadow-navbar h-16 py-[1.275rem] px-[1.5rem] rounded-[5rem]    z-[9999] bg-white w-[95%] md:w-[95%] mx-auto right-0 left-0">
@@ -108,7 +105,7 @@ export default function Navbar() {
           )}
           {!isMobile && (
             <div>
-              {user?.isLoading ? (
+              {u?.isLoading ? (
                 <div>
                   <Icon
                     color="#FE7E00"
@@ -119,14 +116,14 @@ export default function Navbar() {
               ) : (
                 <Button
                   onClick={() => {
-                    user?.user?._id
+                    user?._id
                       ? setSideModal({
                           show: true,
                           component: <MainAccount />,
                         })
                       : router.push("/auth");
                   }}
-                  title={user?.user?._id ? "Dashboard" : "Login"}
+                  title={user?._id ? "Dashboard" : "Login"}
                   variant="secondary"
                 />
               )}

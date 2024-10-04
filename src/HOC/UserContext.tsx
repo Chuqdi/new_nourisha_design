@@ -1,22 +1,18 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
-import queryKeys from "../config/queryKeys";
 import { useToast } from "../ui/use-toast";
 import { IUser } from "../config/types";
-import Logo from "@/components/ui/Logo";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
-import dynamic from "next/dynamic";
 import Modal from "@/components/ui/Modal";
 import LoginModal from "@/components/sections/Modals/LoginModal";
-import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
-import axios from "axios";
-import useAuthToken from "@/hooks/useAuthToken";
+import { ATOMS } from "@/store/atoms";
+import { useAtom } from "jotai";
 
 const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";
+export const LOGGED_IN_USER = "logged_in_user";
 export const UserContext = createContext<
   | {
-      user: IUser;
       setUser: (user: IUser) => void;
       refreshUser: () => void;
       isLoading: boolean;
@@ -30,16 +26,13 @@ export const UserContext = createContext<
     isLoading: boolean;
   }
 );
-
 function UserContextProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IUser>({} as IUser);
-  const { toast } = useToast();
+  const [user, setUser] = useState<IUser | undefined>(undefined);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { getToken } = useAuthToken();
   const { axiosClient } = useAuth();
+  const [loggedInUser, setloggedInUser] = useAtom(ATOMS.loggedInUser);
 
   const fetchUser = async () => {
-    axiosClient.get(`customers/me`,);
     return axiosClient.get("customers/me");
   };
 
@@ -50,8 +43,8 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
       staleTime: 1800000,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      enabled: false,
-      retry:false,
+      enabled: true,
+      retry: false,
     }
   );
 
@@ -59,9 +52,15 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     refetch();
   };
 
+  
+  useEffect(() => {
+    const u = localStorage.getItem(LOGGED_IN_USER);
+    setloggedInUser(u ? JSON.parse(u) : undefined);
+  }, []);
   useEffect(() => {
     if (data?.data?.data) {
-      setUser(data?.data?.data);
+      localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
+      setloggedInUser(data?.data?.data);
     }
   }, [data]);
 
@@ -80,7 +79,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   }, [isError]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, refreshUser, isLoading }}>
+    <UserContext.Provider value={{ setUser, refreshUser, isLoading }}>
       <div className="flex-1 w-full">
         <Modal center large show={showLoginModal}>
           <LoginModal
