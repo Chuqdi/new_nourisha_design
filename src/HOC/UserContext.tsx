@@ -7,7 +7,7 @@ import useAuth from "@/hooks/useAuth";
 import Modal from "@/components/ui/Modal";
 import LoginModal from "@/components/sections/Modals/LoginModal";
 import { ATOMS } from "@/store/atoms";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";
 export const LOGGED_IN_USER = "logged_in_user";
@@ -30,7 +30,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { axiosClient } = useAuth();
-  const [loggedInUser, setloggedInUser] = useAtom(ATOMS.loggedInUser);
+  const setloggedInUser = useSetAtom(ATOMS.loggedInUser);
 
   const fetchUser = async () => {
     return axiosClient.get("customers/me");

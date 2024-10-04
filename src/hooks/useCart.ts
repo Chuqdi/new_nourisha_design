@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from "react";
-import { ICartDetail, ICartItem, IMeal } from "../config/types";
+import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import queryKeys from "../config/queryKeys";
@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
-import { UserContext } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useFingerPrint, { DEVICE_ID } from "./useFingerPrint";
 import { toast } from "@/ui/use-toast";
 
@@ -21,11 +21,12 @@ const useCart = () => {
   const { getToken } = useAuthToken();
   const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
-  const user = useAtomValue(ATOMS.loggedInUser);
+  let u = localStorage.getItem(LOGGED_IN_USER);
+  let mainUser = JSON.parse(u ?? "") as IUser | undefined;
   const getCartSessionDetails = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     return axiosClient.get(
-      user?._id ? "cart" : `cart/web?session_id=${cartSessionId}`
+      mainUser?.email ? "cart" : `cart/web?session_id=${cartSessionId}`
     );
   };
   const {
@@ -100,7 +101,7 @@ const useCart = () => {
   };
 
   const addItemToCart = async (item: IMeal, quantity?: number) => {
-    if (user?._id) {
+    if (mainUser && mainUser?.email) {
       const data = {
         itemId: item._id,
         quantity: quantity ?? 1,

@@ -36,7 +36,7 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={() => addItemToCart(meal)}
+        onClick={() => addItemToCart(meal,1)}
         className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
         +
