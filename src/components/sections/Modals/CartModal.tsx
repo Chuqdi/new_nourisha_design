@@ -19,6 +19,7 @@ const Checkout = ({ coupon }: { coupon: string }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const user = useContext(UserContext);
+  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const { axiosClient } = useAuth();
@@ -32,7 +33,7 @@ const Checkout = ({ coupon }: { coupon: string }) => {
       variant="primary"
       className="py-6 h-[2.7rem]"
       onClick={() => {
-        if (user?.user?._id) {
+        if (loggedInUser?.email) {
           setSideModal({
             component: (
               <DeliveryModal
@@ -47,9 +48,9 @@ const Checkout = ({ coupon }: { coupon: string }) => {
                       const response = await axiosClient.post("orders", {
                         cart_session_id: cartDetails?.session_id,
                         delivery_address: {
-                          address_: user?.user?.address?.address_,
-                          city: user?.user?.address?.city,
-                          country: user?.user?.address?.country,
+                          address_: loggedInUser?.address?.address_,
+                          city: loggedInUser?.address?.city,
+                          country: loggedInUser?.address?.country,
                         },
                         delivery_date,
                         coupon,
@@ -87,6 +88,19 @@ function CartItem({ item }: { item: ICartItem }) {
   const { addItemToCart } = useCart();
   const user = useContext(UserContext);
 
+  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+
+  const onUpdateCart = (c: () => void) => {
+    if (loggedInUser?.email) {
+      c();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Please login to access cart functionality",
+      });
+    }
+  };
+
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
       <div className="flex items-start gap-3">
@@ -108,7 +122,7 @@ function CartItem({ item }: { item: ICartItem }) {
       <div className="flex justify-between items-center">
         {!user?.isLoading && (
           <button
-            onClick={() => addItemToCart(item?.item!, -item?.quantity)}
+            onClick={() => onUpdateCart(()=>addItemToCart(item?.item!, -item?.quantity))}
             className="text-[#FF4159] text-sm font-inter flex items-center"
           >
             <Icon

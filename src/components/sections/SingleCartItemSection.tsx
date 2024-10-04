@@ -4,9 +4,10 @@ import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
+import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useContext, useMemo, } from "react";
+import { useContext, useMemo } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -17,6 +18,18 @@ export const CartManipulator = ({
 }) => {
   const { addItemToCart } = useCart();
   const user = useContext(UserContext);
+  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+
+  const onUpdateCart = (c: () => void) => {
+    if (loggedInUser?.email) {
+      c();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Please login to access cart functionality",
+      });
+    }
+  };
 
   return user?.isLoading ? (
     <div>
@@ -26,7 +39,7 @@ export const CartManipulator = ({
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
       <button
         onClick={() => {
-          addItemToCart(meal!, -1);
+          onUpdateCart(()=>addItemToCart(meal!, -1));
         }}
         className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
@@ -36,7 +49,7 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={() => addItemToCart(meal,1)}
+        onClick={() =>onUpdateCart(()=>addItemToCart(meal, 1))}
         className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >
         +

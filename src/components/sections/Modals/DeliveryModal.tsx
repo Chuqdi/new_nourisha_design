@@ -40,7 +40,7 @@ export default function DeliveryModal({
   const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
-  const user = userCtx?.user;
+  const user = useAtomValue(ATOMS.loggedInUser);
   const { axiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState({

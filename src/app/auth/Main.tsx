@@ -9,17 +9,18 @@ import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
-import { LOGGED_IN_USER } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
-  const { makeRequest, isLoading } = useAuth();
+  const { makeRequest, isLoading ,} = useAuth();
   const { setToken } = useAuthToken();
   const router = useRouter();
+  const user = useContext(UserContext);
   const device_id = localStorage?.getItem(DEVICE_ID)
 
   const options = [
@@ -53,14 +54,15 @@ export default function Main() {
     
     if (createdUser) {
       setToken(createdUser.token);
-      localStorage.setItem(LOGGED_IN_USER,JSON.stringify(createdUser?.payload))
+      // localStorage.setItem(LOGGED_IN_USER,JSON.stringify(createdUser?.payload))
       localStorage.setItem("AUTH_USER_EMAIL", data.email);
 
       toast({
         variant: "default",
         title: !onLogin ? "Registeration was successful" : "Login successful",
       });
-      window.location.href = "/";
+      window.location.replace("/");
+      user?.refreshUser();
       // onLogin
       // ?
       // :

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
@@ -21,13 +21,13 @@ const useCart = () => {
   const { getToken } = useAuthToken();
   const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
-  let u = localStorage.getItem(LOGGED_IN_USER);
-  let mainUser = u && JSON.parse(u ?? "") as IUser | undefined;
+
   const getCartSessionDetails = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     return axiosClient.get(
+      "cart"
       //@ts-ignore
-      mainUser?.email ? "cart" : `cart/web?session_id=${cartSessionId}`
+      // mainUser?.email ? "cart" : `cart/web?session_id=${cartSessionId}`
     );
   };
   const {
@@ -51,6 +51,7 @@ const useCart = () => {
       setCartDetails(data?.data?.data?.cart);
     }
   }, [data]);
+
 
   const getCartItemTotal = useMemo(() => {
     let totalDeliveryPrice = 0;
@@ -102,24 +103,17 @@ const useCart = () => {
   };
 
   const addItemToCart = async (item: IMeal, quantity?: number) => {
-    if (mainUser && mainUser?.email) {
-      const data = {
-        itemId: item._id,
-        quantity: quantity ?? 1,
-        device_id: device_id,
-        temp_id: device_id,
-      };
+    const data = {
+      itemId: item._id,
+      quantity: quantity ?? 1,
+      device_id: device_id,
+      temp_id: device_id,
+    };
 
-      await axiosClient.put("cart", data).then((data) => {
-        updateLocalStorageStates(data);
-      });
-      RefreshCart();
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Please login to access cart functionality",
-      });
-    }
+    await axiosClient.put("cart", data).then((data) => {
+      updateLocalStorageStates(data);
+    });
+    RefreshCart();
   };
 
   const returnValue = useMemo(() => {
