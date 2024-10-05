@@ -1,7 +1,7 @@
 "use client";
 
 import { BREAKPOINT } from "@/config";
-import { UserContext } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useNavbar from "@/hooks/useNavbar";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -19,6 +19,7 @@ import MobileNavbar from "./MobileNavbar";
 import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
+import { useQuery } from "react-query";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -27,11 +28,12 @@ export default function Navbar() {
   const router = useRouter();
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const u = useContext(UserContext);
-  const user = useAtomValue(ATOMS.loggedInUser);
   const { getToken } = useAuthToken();
   const [ token, setToken ] = useState<string | false | null>("");
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
+  const { axiosClient } = useAuth();
+  const [ user, setloggedInUser] = useAtom(ATOMS.loggedInUser);
   const sideBarOptions = [
     {
       image: "cart.svg",
@@ -62,7 +64,31 @@ export default function Navbar() {
 
   useEffect(()=>{
     setToken(getToken());
-  }, [])
+  }, []);
+
+  const fetchUser = async () => {
+    return axiosClient.get("customers/me");
+  };
+
+  const { data, isLoading, isError, refetch } = useQuery(
+    ["queryKeys.AUTH_USER_ME"],
+    fetchUser,
+    {
+      staleTime: 1800000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: false,
+    }
+  );
+
+
+  useEffect(() => {
+    if (data?.data?.data) {
+      console.log("User")
+      localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
+      setloggedInUser(data?.data?.data);
+    }
+  }, [data]);
 
   return (
     !cartLoading && (
@@ -113,7 +139,7 @@ export default function Navbar() {
           )}
           {!isMobile && (
             <div>
-              {u?.isLoading ? (
+              {isLoading ? (
                 <div>
                   <Icon
                     color="#FE7E00"
@@ -131,7 +157,7 @@ export default function Navbar() {
                         })
                       : router.push("/auth");
                   }}
-                  title={(user?._id && !!token) ? "Dashboard" : "Login"}
+                  title={(user?._id && !!token && !isError) ? "Dashboard" : "Login"}
                   variant="secondary"
                 />
               )}
