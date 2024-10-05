@@ -109,7 +109,7 @@ export default function SingleCartItemSection({
   );
 
   // useEffect(() => {
-    
+
   //   if (bothSelected) {
   //     goToNextWeek && goToNextWeek();
   //   }
@@ -158,38 +158,13 @@ export default function SingleCartItemSection({
               Meal Info
             </p>
           </button>
-          {isMealSelected ? (
-            <button
-              onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
-              className="flex items-center gap-1"
-            >
-              <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
-                Selected
-              </div>
-              <Icon
-                className="w-5 h-5"
-                color="#FF4159"
-                icon="icomoon-free:bin"
-              />
-            </button>
-          ) : (
+          <div className="flex flex-col items-center gap-2">
             <button
               onClick={() => {
                 addFoodBox(activeWeek!, meal!);
-
-                // if (
-                //   meal?.name?.toUpperCase()?.includes("RICE") ||
-                //   meal?.name?.toUpperCase()?.includes("SOUP")
-                // ) {
-                //   setMealExtraModal({
-                //     show: true,
-                //     meal,
-                //     day: undefined,
-                //   });
-                // }
                 const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
-                if(bothSelected?.isFirstMealAlreadySelected) goToNextWeek&&goToNextWeek();
-
+                if (bothSelected?.isFirstMealAlreadySelected)
+                  goToNextWeek && goToNextWeek();
               }}
               className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
             >
@@ -199,7 +174,23 @@ export default function SingleCartItemSection({
                 icon="icon-park-outline:plus"
               />
             </button>
-          )}
+
+            {isMealSelected && (
+              <button
+                onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
+                className="flex items-center gap-1"
+              >
+                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
+                  Selected
+                </div>
+                <Icon
+                  className="w-5 h-5"
+                  color="#FF4159"
+                  icon="icomoon-free:bin"
+                />
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <div className="flex justify-between items-center mt-3">

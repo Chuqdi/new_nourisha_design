@@ -115,7 +115,7 @@ function CartItem({ item }: { item: ICartItem }) {
             {item?.item?.name}
           </p>
           <p className="text-[0.75rem] font-inter bg-[#FFF2E5] p-1 rounded w-fit flex justify-center items-center">
-            €{item?.item?.price?.amount}
+            £{item?.item?.price?.amount}
           </p>
         </div>
       </div>
