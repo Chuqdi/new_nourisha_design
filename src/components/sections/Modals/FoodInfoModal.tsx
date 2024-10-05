@@ -10,7 +10,7 @@ const FoodInfoModal = () => {
     <div className="bg-white p-4 rounded-[1rem]  max-h-[90vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
         <h3 className="text-black-900 font-NewSpiritBold text-[2rem]">
-          Food info
+          Meal info
         </h3>
         <button
           onClick={() => setFoodInfoModal({ show: false, meal: {} as IMeal })}

@@ -52,7 +52,6 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     refetch();
   };
 
-  
   useEffect(() => {
     const u = localStorage.getItem(LOGGED_IN_USER);
     setloggedInUser(u ? JSON.parse(u) : undefined);
@@ -66,6 +65,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isError) {
+      localStorage.setItem(LOGGED_IN_USER, "");
       setTimeout(() => {
         if (
           !localStorage.getItem(VIEWED_LOGOUT_MODAL) ||

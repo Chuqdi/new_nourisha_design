@@ -3,17 +3,17 @@ import Navbar from "@/components/commons/Navbar";
 import Button from "@/components/ui/Button";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
-import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
+import  { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
-import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
+import {  UserContext } from "@/HOC/UserContext";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);

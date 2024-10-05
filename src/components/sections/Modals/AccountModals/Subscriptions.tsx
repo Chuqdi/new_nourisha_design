@@ -120,7 +120,7 @@ export default function Subscription() {
 
   const [activePlan, setActivePlan] = useState<IPlan>();
   const getSubscrptionList = () => {
-    return axiosClient.get("plans?country=nigeria");
+    return axiosClient.get("plans?country=nigeria&continent=African&weekend=false");
   };
 
   const { data, isLoading } = useQuery(
