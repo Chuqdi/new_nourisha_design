@@ -95,12 +95,12 @@ export default function SingleCartItemSection({
     meals: { first_meal: IMeal; last_meal: IMeal };
   };
   const isMealSelected = useMemo(() => {
-    return (
+    return {
       //@ts-ignore
-      activeDayMeal?.first_meal?._id === meal?._id ||
+      first_meal: activeDayMeal?.first_meal?._id === meal?._id,
       //@ts-ignore
-      activeDayMeal?.last_meal?._id === meal?._id
-    );
+      last_meal: activeDayMeal?.last_meal?._id === meal?._id,
+    };
   }, [activeDayMeal]);
   const cartItemMeal = useMemo(
     () => cartItems.find((i) => i?.item?._id === meal?._id),
@@ -144,7 +144,7 @@ export default function SingleCartItemSection({
       </p>
 
       {isFoodBox ? (
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between items-center">
           <button
             onClick={() =>
               setFoodInfoModal({
@@ -175,13 +175,29 @@ export default function SingleCartItemSection({
               />
             </button>
 
-            {isMealSelected && (
+            {isMealSelected?.first_meal && (
               <button
                 onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
                 className="flex items-center gap-1"
               >
                 <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
-                  Selected
+                  First meal
+                </div>
+                <Icon
+                  className="w-5 h-5"
+                  color="#FF4159"
+                  icon="icomoon-free:bin"
+                />
+              </button>
+            )}
+
+            {isMealSelected?.last_meal && (
+              <button
+                onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
+                className="flex items-center gap-1"
+              >
+                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
+                  Last meal
                 </div>
                 <Icon
                   className="w-5 h-5"
