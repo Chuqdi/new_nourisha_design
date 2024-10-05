@@ -75,7 +75,14 @@ export default function DeliveryModal({
     }
     setLoading(true);
     try {
-      await axiosClient.put(`customers/me`, { address });
+      await axiosClient.put(`customers/me`, { address }).catch((e) => {
+        router.push("/auth");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update address, please login to continue",
+        });
+      });
       userCtx?.setUser({
         ...user,
         //@ts-ignore

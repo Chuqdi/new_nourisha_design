@@ -17,6 +17,8 @@ import Button from "../ui/Button";
 import Logo from "../ui/Logo";
 import MobileNavbar from "./MobileNavbar";
 import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useAuth from "@/hooks/useAuth";
+import useAuthToken from "@/hooks/useAuthToken";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -26,6 +28,8 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const u = useContext(UserContext);
   const user = useAtomValue(ATOMS.loggedInUser);
+  const { getToken } = useAuthToken();
+  const [ token, setToken ] = useState<string | false | null>("");
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
   const sideBarOptions = [
@@ -55,6 +59,10 @@ export default function Navbar() {
     //   options: [],
     // },
   ];
+
+  useEffect(()=>{
+    setToken(getToken());
+  }, [])
 
   return (
     !cartLoading && (
@@ -116,14 +124,14 @@ export default function Navbar() {
               ) : (
                 <Button
                   onClick={() => {
-                    user?._id
+                    (user?._id && !!token)
                       ? setSideModal({
                           show: true,
                           component: <MainAccount />,
                         })
                       : router.push("/auth");
                   }}
-                  title={user?._id ? "Dashboard" : "Login"}
+                  title={(user?._id && !!token) ? "Dashboard" : "Login"}
                   variant="secondary"
                 />
               )}
