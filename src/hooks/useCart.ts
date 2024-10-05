@@ -102,12 +102,10 @@ const useCart = () => {
     RefreshCart();
   };
 
-  const addItemToCart = async (item: IMeal, quantity?: number) => {
+  const addItemToCart = async (item: IMeal, quantity: number) => {
     const data = {
       itemId: item._id,
-      quantity: quantity ?? 1,
-      device_id: device_id,
-      temp_id: device_id,
+      quantity,
     };
 
     await axiosClient.put("cart", data).then((data) => {
