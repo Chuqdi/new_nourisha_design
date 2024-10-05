@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
+import { usePathname, useRouter } from "next/navigation";
 
 const Payment = ({
   close,
@@ -92,7 +93,8 @@ const PaymentModal = ({
   const [clientSecret, setClientSecret] = useState("");
   const [error, setError] = useState("");
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
-
+  const router = useRouter();
+  const pathname = usePathname()
   const [options, setOptions] = useState<StripeElementsOptions>({
     // mode: "subscription",
     // amount: Math.round(amount),
@@ -120,6 +122,12 @@ const PaymentModal = ({
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!paymentModal?.show) {
+      router.replace(pathname, undefined,);
+    }
+  }, [paymentModal?.show]);
   const { amount } = useAtomValue(ATOMS.paymentModal);
 
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
@@ -128,7 +136,9 @@ const PaymentModal = ({
       <p className="animate-pulse">Loading...</p>
     </div>
   ) : error ? (
-    <p>{error}</p>
+    <div className="w-full h-[3rem] flex justify-center items-center  bg-white rounded-md">
+      <p>{error}</p>
+    </div>
   ) : (
     <Elements options={options} stripe={stripePromise}>
       <Payment close={close} getClientSecret={getClientSecret} />

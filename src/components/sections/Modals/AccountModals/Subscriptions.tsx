@@ -11,7 +11,7 @@ import HTMLRenderer from "react-html-renderer";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import queryKeys from "@/config/queryKeys";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { IPlan } from "@/config/types";
 import { loadStripe } from "@stripe/stripe-js";
@@ -21,6 +21,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import PaymentModal from "../PaymentModal";
 import { ATOMS } from "@/store/atoms";
 import { useAtom, useSetAtom } from "jotai";
+import { useSearchParams } from "next/navigation";
 
 const SingleSubscription = ({
   plan,
@@ -32,6 +33,8 @@ const SingleSubscription = ({
   const { axiosClient } = useAuth();
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
+  const searchParams = useSearchParams();
+  const btnRef = useRef<HTMLButtonElement>(null!);
 
   const gradientColors = [
     "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
@@ -39,6 +42,15 @@ const SingleSubscription = ({
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
   ];
   const textColors = ["#9572F9", "#9572F9", "#9572F9"];
+
+  useEffect(() => {
+    const selectedPlan = searchParams.get("plan_id");
+    if (searchParams.get("plan_id")) {
+      if (selectedPlan && searchParams.get("plan_id")?.includes(plan?._id)) {
+        document.getElementById(`subscription_click_btn_${plan?._id}`)?.click();
+      }
+    }
+  }, []);
 
   return (
     <div
@@ -72,6 +84,8 @@ const SingleSubscription = ({
         <Button
           variant="primary"
           fullWidth
+          ref={btnRef}
+          id={`subscription_click_btn_${plan?._id}`}
           className="py-6 h-[2.75rem] mt-3"
           title={activePlan?._id === plan?._id ? "Active" : "Subscribe"}
           disabled={activePlan?._id === plan?._id}
@@ -120,7 +134,9 @@ export default function Subscription() {
 
   const [activePlan, setActivePlan] = useState<IPlan>();
   const getSubscrptionList = () => {
-    return axiosClient.get("plans?country=nigeria&continent=African&weekend=false");
+    return axiosClient.get(
+      "plans?country=nigeria&continent=African&weekend=false"
+    );
   };
 
   const { data, isLoading } = useQuery(

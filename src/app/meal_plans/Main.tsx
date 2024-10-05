@@ -133,6 +133,8 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               router.push(
                 `/food_box?plan=${
                   options.find((o, i) => i === activeOptionIndex)?.name
+                }&plan_id=${
+                  options.find((o, i) => i === activeOptionIndex)?._id
                 }&search_continent=${activeSearchContinent?.search}`
               );
             }}
