@@ -85,7 +85,7 @@ const Checkout = ({ coupon }: { coupon: string }) => {
 };
 
 function CartItem({ item }: { item: ICartItem }) {
-  const { addItemToCart } = useCart();
+  const { addItemToCart, removeItemFrommCart } = useCart();
   const user = useContext(UserContext);
 
   const loggedInUser = useAtomValue(ATOMS.loggedInUser);
@@ -122,7 +122,7 @@ function CartItem({ item }: { item: ICartItem }) {
       <div className="flex justify-between items-center">
         {!user?.isLoading && (
           <button
-            onClick={() => onUpdateCart(()=>addItemToCart(item?.item!, -item?.quantity))}
+            onClick={() => onUpdateCart(()=>removeItemFrommCart(item?.item?._id!, item?.quantity))}
             className="text-[#FF4159] text-sm font-inter flex items-center"
           >
             <Icon

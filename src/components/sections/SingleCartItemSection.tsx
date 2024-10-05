@@ -16,7 +16,7 @@ export const CartManipulator = ({
   item: ICartItem;
   meal: IMeal;
 }) => {
-  const { addItemToCart } = useCart();
+  const { addItemToCart, removeItemFrommCart } = useCart();
   const user = useContext(UserContext);
   const loggedInUser = useAtomValue(ATOMS.loggedInUser);
 
@@ -39,7 +39,7 @@ export const CartManipulator = ({
     <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
       <button
         onClick={() => {
-          onUpdateCart(() => addItemToCart(meal!, -1));
+          onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1));
         }}
         className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
       >

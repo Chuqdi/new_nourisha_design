@@ -24,10 +24,11 @@ const useCart = () => {
 
   const getCartSessionDetails = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
+    let user = localStorage?.getItem(LOGGED_IN_USER);
+    let u = JSON.parse(user ?? "") as IUser;
+
     return axiosClient.get(
-      "cart"
-      //@ts-ignore
-      // mainUser?.email ? "cart" : `cart/web?session_id=${cartSessionId}`
+      !!token && !!u ? "cart" : ""
     );
   };
   const {
@@ -51,7 +52,6 @@ const useCart = () => {
       setCartDetails(data?.data?.data?.cart);
     }
   }, [data]);
-
 
   const getCartItemTotal = useMemo(() => {
     let totalDeliveryPrice = 0;
@@ -79,37 +79,33 @@ const useCart = () => {
         quantity,
       })
       .then((data) => {
-        updateLocalStorageStates(data);
+        // updateLocalStorageStates(data);
       });
     RefreshCart();
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
-    await axios
-      .delete(`${process.env.API_URL}cart`, {
+    await axiosClient
+      .delete(`cart`, {
         data: {
           itemId,
           quantity,
-          device_id: device_id,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
         },
       })
       .then((data) => {
-        updateLocalStorageStates(data);
+        // updateLocalStorageStates(data);
       });
     RefreshCart();
   };
 
   const addItemToCart = async (item: IMeal, quantity: number) => {
     const data = {
-      itemId: item._id,
+      itemId: item?._id,
       quantity,
     };
 
     await axiosClient.put("cart", data).then((data) => {
-      updateLocalStorageStates(data);
+      // updateLocalStorageStates(data);
     });
     RefreshCart();
   };
