@@ -24,7 +24,7 @@ const useAuth = () => {
     let responseData: null | any = null;
     setIsLoading(true);
     await axiosClient
-      .post(path, data)
+      .post(path, data, {headers: {'Content-Type': 'application/json', 'device-id':device_id}})
       .then((response) => {
         responseData = response?.data?.data;
       })

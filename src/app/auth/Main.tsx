@@ -42,7 +42,6 @@ export default function Main() {
     const data = onLogin
       ? {
           ...loginFormik?.values,
-          temp_id:temp_id??"test_temp_id"
         }
       : signUpForm?.values;
 
