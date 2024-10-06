@@ -144,43 +144,47 @@ export default function SingleCartItemSection({
       </p>
 
       {isFoodBox ? (
-        <div className="flex w-full justify-between items-center">
-          <button
-            onClick={() =>
-              setFoodInfoModal({
-                show: true,
-                meal,
-              })
-            }
-            className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
-          >
-            <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
-              Meal Info
-            </p>
-          </button>
-          <div className="flex flex-col items-center gap-2">
+        <div>
+          <div className="flex w-full justify-between items-center">
             <button
-              onClick={() => {
-                addFoodBox(activeWeek!, meal!);
-                const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
-                if (bothSelected?.isFirstMealAlreadySelected)
-                  goToNextWeek && goToNextWeek();
-              }}
-              className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
+              onClick={() =>
+                setFoodInfoModal({
+                  show: true,
+                  meal,
+                })
+              }
+              className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
             >
-              <Icon
-                className="w-6 h-6 text-3xl"
-                color="#fff"
-                icon="icon-park-outline:plus"
-              />
+              <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
+                Meal Info
+              </p>
             </button>
+            <div className="flex flex-col items-center gap-2">
+              <button
+                onClick={() => {
+                  addFoodBox(activeWeek!, meal!);
+                  const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
+                  if (bothSelected?.isFirstMealAlreadySelected)
+                    goToNextWeek && goToNextWeek();
+                }}
+                className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
+              >
+                <Icon
+                  className="w-6 h-6 text-3xl"
+                  color="#fff"
+                  icon="icon-park-outline:plus"
+                />
+              </button>
+            </div>
+          </div>
 
+          <div className="flex flex-col gap-2 justify-between mt-2">
             {isMealSelected?.first_meal && (
               <button
                 onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
-                className="flex items-center gap-1"
+                className="flex items-center flex-1"
               >
-                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
+                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded text-sm md:text-base text-ellipsis text-nowrap flex-1">
                   First meal
                 </div>
                 <Icon
@@ -194,10 +198,10 @@ export default function SingleCartItemSection({
             {isMealSelected?.last_meal && (
               <button
                 onClick={() => removeFoodBox(activeWeek!, meal?._id!)}
-                className="flex items-center gap-1"
+                className="flex items-center flex-1"
               >
-                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded">
-                  Last meal
+                <div className="bg-[#E6FEF2] text-[#04A76C] font-inter tracking-[-0.015rem] leading-[1.5rem] h-8 p-2 flex justify-center items-center rounded text-sm md:text-base text-ellipsis text-nowrap flex-1">
+                  Second meal
                 </div>
                 <Icon
                   className="w-5 h-5"

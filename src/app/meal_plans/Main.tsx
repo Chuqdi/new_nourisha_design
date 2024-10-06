@@ -171,11 +171,11 @@ export default function MealPlan() {
         </p>
 
         <div className="flex justify-center ">
-          <div className="bg-[#F2F4F7] flex w-[90%] md:w-[30.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
+          <div className="bg-[#F2F4F7] flex w-[97%] md:w-[30.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
             <p
               onClick={() => setOnAfrican(true)}
               className={`
-            text-center flex-1 flex justify-center items-center
+            text-center flex-1 flex justify-center items-center text-sm md:text-base
               ${
                 onAfrican
                   ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "
@@ -188,7 +188,7 @@ export default function MealPlan() {
             <p
               onClick={() => setOnAfrican(false)}
               className={`
-                text-center flex-1 flex justify-center items-center
+                text-center flex-1 flex justify-center items-center text-sm md:text-base
                   ${
                     !onAfrican
                       ? "bg-[#E1F0D0] border-[#7DB83A] border-[0.5px] rounded-[2rem] text-[#008000] "

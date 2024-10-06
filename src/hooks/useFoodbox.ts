@@ -65,7 +65,7 @@ export default function () {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Food selected ",
+        description: "Food selection completed",
       });
     }
 

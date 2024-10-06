@@ -321,7 +321,7 @@ export default function Main() {
           So many meals delivered to thousands of satisfied customers
         </h4>
         <TestmoniesSection />
-        <p className="text-center text-lg p-2 md:p-0 font-inter -mt-4">
+        <p className="text-center text-lg  md:p-0 font-inter -mt-4">
           Rated <span className="font-bold">5</span>/5. Showing our 5 star
           reviews.
         </p>
