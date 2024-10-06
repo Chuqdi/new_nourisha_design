@@ -27,9 +27,7 @@ const useCart = () => {
     let user = localStorage?.getItem(LOGGED_IN_USER);
     let u = JSON.parse(user ?? "") as IUser;
 
-    return axiosClient.get(
-      !!token && !!u ? "cart" : ""
-    );
+    return axiosClient.get(!!token && !!u ? "cart" : "");
   };
   const {
     data,
@@ -104,9 +102,17 @@ const useCart = () => {
       quantity,
     };
 
-    await axiosClient.put("cart", data).then((data) => {
-      // updateLocalStorageStates(data);
-    });
+    await axiosClient
+      .put("cart", data)
+      .then((data) => {
+        // updateLocalStorageStates(data);
+      })
+      .catch((e) => {
+        toast({
+          variant: "default",
+          title: e?.response?.data?.message,
+        });
+      });
     RefreshCart();
   };
 

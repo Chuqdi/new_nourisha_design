@@ -1,23 +1,21 @@
 "use client";
 import { useToast } from "@/ui/use-toast";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import useAuthToken from "./useAuthToken";
-import useFingerPrint, { DEVICE_ID } from "./useFingerPrint";
-import { UserContext } from "@/HOC/UserContext";
+import  { DEVICE_ID } from "./useFingerPrint";
 
 const useAuth = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const device_id = localStorage?.getItem(DEVICE_ID)
-  const user = useContext(UserContext);
+  const device_id = localStorage?.getItem(DEVICE_ID);
   const axiosClient = axios.create({
     baseURL: `${process.env.API_URL}/`,
   });
   const { getToken } = useAuthToken();
   const token = getToken();
   axiosClient.interceptors.request.use(async function (req: any) {
-    req.headers["device-id"] = "home-zuzu";
+    req.headers["device-id"] = device_id;
     req.headers["Authorization"] = `Bearer ${token}`;
     return req;
   });

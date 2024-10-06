@@ -47,6 +47,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
       <Modal show={foodInfoModal.show}>
         <FoodInfoModal />
       </Modal>
+      
       {cartLoading && (
         <div
           style={{

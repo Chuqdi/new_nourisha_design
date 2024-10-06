@@ -95,6 +95,7 @@ export default function LoginModal({
               className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
               value={values.email}
               onChange={handleChange("email")}
+              placeholder="Enter your email address"
             />
             {errors.email && <p className="error_text">{errors.email}</p>}
           </div>

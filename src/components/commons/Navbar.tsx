@@ -71,7 +71,7 @@ export default function Navbar() {
   };
 
   const { data, isLoading, isError, refetch } = useQuery(
-    ["queryKeys.AUTH_USER_ME"],
+    ["queryKeys.AUTH_USER_ME2"],
     fetchUser,
     {
       staleTime: 1800000,
