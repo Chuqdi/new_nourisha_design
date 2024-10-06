@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
+import IPInfo from 'ip-info-react';
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -47,7 +48,9 @@ export default function RootLayout({
               ) : (
                 <UserContextProvider>
                   <PagesHOC>
+                  <IPInfo>
                     {children}
+                    </IPInfo>
                     <Toaster />
                   </PagesHOC>
                 </UserContextProvider>

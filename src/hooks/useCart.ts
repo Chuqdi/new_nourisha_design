@@ -1,14 +1,12 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import {  useEffect, useMemo,  } from "react";
 import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom,  useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import queryKeys from "../config/queryKeys";
 import { useQuery } from "react-query";
-import axios from "axios";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
-import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
-import useFingerPrint, { DEVICE_ID } from "./useFingerPrint";
+import { LOGGED_IN_USER, } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
 
 const CART_SESSION_ID = "cart_session_id";
@@ -19,7 +17,6 @@ const useCart = () => {
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
   const { axiosClient } = useAuth();
   const { getToken } = useAuthToken();
-  const device_id = localStorage?.getItem(DEVICE_ID);
   const token = getToken();
 
   const getCartSessionDetails = () => {
