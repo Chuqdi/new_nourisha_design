@@ -122,7 +122,11 @@ function CartItem({ item }: { item: ICartItem }) {
       <div className="flex justify-between items-center">
         {!user?.isLoading && (
           <button
-            onClick={() => onUpdateCart(()=>removeItemFrommCart(item?.item?._id!, item?.quantity))}
+            onClick={() =>
+              onUpdateCart(() =>
+                removeItemFrommCart(item?.item?._id!, item?.quantity)
+              )
+            }
             className="text-[#FF4159] text-sm font-inter flex items-center"
           >
             <Icon
@@ -152,17 +156,20 @@ function CartModal() {
           <p className="text-black-900 text-sm font-inter">Cart Summary</p>
         )}
         {!cartItems.length && (
-          <div className="text-center font-inter text-sm text-black-900">
-            No items in your cart,
-            <Link
-              onClick={() => {
-                setSideModal({ ...sideModal, show: false });
-              }}
-              className="text-primary-orange-900"
-              href="/single_meals"
-            >
-              add here...
-            </Link>
+          <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
+            <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
+            <div>
+              No item(s) in your cart.
+              {/* <Link
+                onClick={() => {
+                  setSideModal({ ...sideModal, show: false });
+                }}
+                className="text-primary-orange-900"
+                href="/single_meals"
+              >
+                add here...
+              </Link> */}
+            </div>
           </div>
         )}
 

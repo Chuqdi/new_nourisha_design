@@ -62,9 +62,9 @@ export default function LoginModal({
     >
       <button
         onClick={close}
-        className="right-2 top-2  absolute bg-[#EDEDF3] flex justify-center items-center rounded-[2rem] w-[1.8rem] h-[1.8rem]"
+        className="right-2 top-2  absolute bg-[#EDEDF3] flex justify-center items-center rounded-[2rem] w-[2.8rem] h-[2.8rem]"
       >
-        <Icon color="#000" className="text-[1.3rem]" icon="iconoir:cancel" />
+        <Icon color="#000" className="w-14 h-14" icon="iconoir:cancel" />
       </button>
       {isMobile ? (
         <img src="/images/login_modal_side.png" className="object-cover w-full h-[20rem]" />

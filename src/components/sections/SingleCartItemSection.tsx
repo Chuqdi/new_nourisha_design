@@ -26,7 +26,7 @@ export const CartManipulator = ({
     } else {
       toast({
         variant: "destructive",
-        title: "Please login to access cart functionality",
+        title: "Please login to continue",
       });
     }
   };
