@@ -8,7 +8,7 @@ export default function DownloadTheAppWidgetSection() {
       <div className="flex-1">
         <img
           src="/images/start_subscription.png"
-          className="mt-5 md:mt-0 h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto "
+          className="mt-5 md:mt-0 h-auto md:h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto "
         />
       </div>
       <div className=" flex flex-col gap-4 flex-1">
