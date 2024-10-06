@@ -22,6 +22,7 @@ const useAuth = () => {
 
   const makeRequest = async (path: string, data: any) => {
     let responseData: null | any = null;
+    alert(device_id)
     setIsLoading(true);
     await axiosClient
       .post(path, data, {headers: {'Content-Type': 'application/json', 'device-id':device_id}})
