@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "use-debounce";
+import CartSideSection from "./CartSideSection";
 
 export default function MealSelectionSection({
   isSingle,
@@ -29,7 +30,7 @@ export default function MealSelectionSection({
   const [phrase] = useDebounce(searchPhrase, 1000);
   const [meals, setMeals] = useState<IMeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-  const [limit, setLimit] = useState(isMobile ? "6" : "9");
+  const [limit, setLimit] = useState(isMobile ? "6" : "10");
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}`
@@ -120,21 +121,26 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      <div
-        className={`
+      <div className="flex items-start gap-2">
+        <div
+          className={`
         grid grid-cols-2 ${
-          colCountClass ? colCountClass : "md:grid-cols-3"
+          colCountClass ? colCountClass : "md:grid-cols-2"
         } gap-4 mt-4
         `}
-      >
-        {meals.map((meal, index) => (
-          <SingleCartItemSection
-            country={activeContinent}
-            isHome={isHome}
-            meal={meal}
-            key={`cart_item_${index}`}
-          />
-        ))}
+        >
+          {meals.map((meal, index) => (
+            <SingleCartItemSection
+              country={activeContinent}
+              isHome={isHome}
+              meal={meal}
+              key={`cart_item_${index}`}
+            />
+          ))}
+        </div>
+        <div className="hidden md:block mt-4">
+          <CartSideSection />
+        </div>
       </div>
 
       <div className="flex items-center justify-center mt-8">

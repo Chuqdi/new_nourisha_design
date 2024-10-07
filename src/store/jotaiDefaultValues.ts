@@ -19,6 +19,10 @@ export const cartDetails = {} as ICartDetail;
 export const loggedInUser = {} as IUser | undefined;
 export const cartIsLoading = false;
 export const device_id = "";
+export const showMobileCartModal = {
+  show:true,
+  showDetails:false,
+};
 export const couponCode:{show:boolean, value:string|undefined} = {
   show: false,
   value: undefined,

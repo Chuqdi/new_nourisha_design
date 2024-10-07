@@ -12,6 +12,7 @@ import {
   paymentModal,
   SHOW_SIDE_MODAL,
   showMealExtraSelection,
+  showMobileCartModal,
 } from "./jotaiDefaultValues";
 import { atomWithStorage } from 'jotai/utils'
 
@@ -28,4 +29,5 @@ export const ATOMS = {
   showMealExtraSelection: atom(showMealExtraSelection),
   loggedInUser:atom(loggedInUser),
   couponCode:atom(couponCode),
+  showMobileCartModal:atom(showMobileCartModal)
 };

@@ -12,9 +12,11 @@ import { useContext, useEffect, useMemo } from "react";
 export const CartManipulator = ({
   meal,
   item,
+  small,
 }: {
   item: ICartItem;
   meal: IMeal;
+  small?: boolean;
 }) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
   const user = useContext(UserContext);
@@ -36,21 +38,22 @@ export const CartManipulator = ({
       <Icon color="#FE7E00" className="w-6 h-6" icon="eos-icons:loading" />
     </div>
   ) : (
-    <div className="bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem] w-[7.68rem] h-[2.5rem] px-[0.25rem] justify-between  items-center flex ">
+    <div className={`bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem]   px-[0.25rem] justify-between  items-center flex ${small?'w-[4.6125rem] h-[1.5rem]':'w-[7.68rem] h-[2.5rem]'}`}>
       <button
         onClick={() => {
           onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1));
         }}
-        className="bg-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
+        className={`bg-white justify-center items-center ${small?'w-[0.975rem] h-[0.975rem] text-sm':'w-8 h-8 text-3xl'}  p-2 rounded-full flex `}
+        
       >
         -
       </button>
-      <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
+      <p className={`text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem] ${small?'text-sm':''}`}>
         {item?.quantity ?? "0"}
       </p>
       <button
         onClick={() => onUpdateCart(() => addItemToCart(meal, 1))}
-        className="bg-primary-orange-900 text-white justify-center items-center w-8 h-8 p-2 rounded-full flex text-3xl"
+        className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${small?'w-[0.975rem] h-[0.975rem] text-sm':'w-8 h-8 text-3xl'}`}
       >
         +
       </button>
@@ -134,7 +137,7 @@ export default function SingleCartItemSection({
       </div>
       <img
         src={meal?.image_url}
-        className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
+        className="w-full h-[15.5625rem] md:h-[23.5625rem] rounded-[0.75rem] object-cover "
       />
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
         £{meal?.price?.amount}

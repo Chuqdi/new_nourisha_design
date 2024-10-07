@@ -1,4 +1,5 @@
 "use client";
+import CartSideSection from "@/components/sections/CartSideSection";
 import EnterCouponCodeModal from "@/components/sections/Modals/EnterCouponCodeModal";
 import ExtraMealSelectionModal from "@/components/sections/Modals/ExtraMealSelectionModal";
 import FoodInfoModal from "@/components/sections/Modals/FoodInfoModal";
@@ -6,13 +7,16 @@ import PaymentConfirmationModal from "@/components/sections/Modals/PaymentConfir
 import PaymentModal from "@/components/sections/Modals/PaymentModal";
 import Modal from "@/components/ui/Modal";
 import SideModal from "@/components/ui/SideModal";
+import { BREAKPOINT } from "@/config";
 import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { AnimatePresence, motion } from "framer-motion";
 import { IPInfoContext } from "ip-info-react";
 import { useAtom, useAtomValue } from "jotai";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const showSideModal = useAtomValue(ATOMS.showSideModal);
@@ -21,6 +25,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const [showMealExtraModal, setMealExtraModal] = useAtom(
     ATOMS.showMealExtraSelection
   );
+  const showMobileCartModal = useAtomValue(ATOMS.showMobileCartModal);
   const f = useFingerPrint();
   const [device_id, set_device_id] = useAtom(ATOMS.device_id);
   const foodInfoModal = useAtomValue(ATOMS.foodInfoModal);
@@ -29,14 +34,14 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const [showPaymentConfirmationModal, setShowPaymentConfirmationModal] =
     useState(false);
   const couponState = useAtomValue(ATOMS.couponCode);
-
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
 
   const userInfo = useContext(IPInfoContext);
 
   useEffect(() => {
     if (userInfo?.ip) {
       set_device_id(userInfo?.ip);
-      localStorage.setItem(DEVICE_ID,userInfo?.ip);
+      localStorage.setItem(DEVICE_ID, userInfo?.ip);
       setLoadingDeviceId(false);
     }
   }, [userInfo?.ip]);
@@ -57,10 +62,8 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         />
       </Modal>
 
-
       <Modal show={couponState.show}>
-        <EnterCouponCodeModal
-        />
+        <EnterCouponCodeModal />
       </Modal>
 
       <Modal show={showPaymentConfirmationModal}>
@@ -77,6 +80,21 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         <FoodInfoModal />
       </Modal>
 
+      <AnimatePresence>
+        {showMobileCartModal.show && isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0  overflow-y-scroll left-0 w-full opacity-75 z-[99999999] flex justify-center bg-[#F2F4F7] `}
+          >
+            <div className="w-full">
+            <CartSideSection />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {loadingDeviceId ? (
         <div
           style={{
@@ -86,7 +104,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
           className="fixed right-0 top-0 bottom-0 left-0 bg-[#000] pointer-events-none z-[999999999] flex justify-center items-center  flex-col"
         >
           <Icon color="#FE7E00" className="w-6 h-6" icon="eos-icons:loading" />
-          <p>Retriving cart details...</p>
+          <p>Retrieving cart details...</p>
         </div>
       ) : (
         cartLoading && (

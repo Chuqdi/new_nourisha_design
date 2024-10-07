@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
 import { useAtom, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
@@ -19,9 +19,15 @@ const useCart = () => {
   const { getAxiosClient } = useAuth();
   const { getToken } = useAuthToken();
   const token = getToken();
+  const [showCartSideModal, setShowCartSideModal] = useAtom(
+    ATOMS.showMobileCartModal
+  );
+
+
+
+
 
   const getCartSessionDetails = () => {
-    const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     let user = localStorage?.getItem(LOGGED_IN_USER);
     let u = JSON.parse(user ?? "") as IUser;
     const id = localStorage.getItem(DEVICE_ID);
@@ -65,11 +71,6 @@ const useCart = () => {
     };
   }, [cartItems]);
 
-  const updateLocalStorageStates = (data: any) => {
-    localStorage.setItem(CART_SESSION_ID, data?.data?.data?.session_id);
-    localStorage.setItem(CART_TEMP_ID, data?.data?.data?.temp_id);
-  };
-
   const updateItemBE = async (itemId: string, quantity: number) => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
@@ -83,6 +84,10 @@ const useCart = () => {
         // updateLocalStorageStates(data);
       });
     RefreshCart();
+    setShowCartSideModal({
+      ...showCartSideModal,
+      show: true,
+    });
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
@@ -106,6 +111,11 @@ const useCart = () => {
         });
       });
     RefreshCart();
+    setShowCartSideModal({
+      ...showCartSideModal,
+      show: true,
+    });
+
   };
 
   const addItemToCart = async (item: IMeal, quantity: number) => {
@@ -128,6 +138,10 @@ const useCart = () => {
         });
       });
     RefreshCart();
+    setShowCartSideModal({
+      ...showCartSideModal,
+      show: true,
+    });
   };
 
   const returnValue = useMemo(() => {

@@ -113,7 +113,6 @@ export default function DeliveryModal({
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <Icon color="#030517" className="w-6 h-6" icon="fluent-mdl2:back" />
           <h4 className="text-black-900 text-2xl font-NewSpiritBold">
             Delivery address
           </h4>
