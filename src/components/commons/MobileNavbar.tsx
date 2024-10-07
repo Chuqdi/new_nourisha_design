@@ -21,7 +21,7 @@ export default function MobileNavbar({ close }: { close: () => void }) {
   const { getUser } = useUser();
   const router = useRouter();
 
-  const isLoggedIn = useMemo(() => !!user?._id, [user]);
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
   useEffect(() => {
     setUser(getUser());
   }, []);
