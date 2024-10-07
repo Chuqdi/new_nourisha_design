@@ -1,24 +1,29 @@
-import { ICartDetail } from "@/config/types";
+import { ICartDetail, IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { ATOMS } from "@/store/atoms";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DeliveryModal from "./Modals/DeliveryModal";
 import Button from "../ui/Button";
 import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useUser from "@/hooks/useUser";
 
 export default ({ coupon }: { coupon: string }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
-  const user = useContext(UserContext);
-  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const { getAxiosClient } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <Button
@@ -28,7 +33,7 @@ export default ({ coupon }: { coupon: string }) => {
       variant="primary"
       className="py-6 h-[2.7rem] w-full"
       onClick={() => {
-        if (loggedInUser?.email) {
+        if (user?.email) {
           setSideModal({
             component: (
               <DeliveryModal
@@ -45,9 +50,9 @@ export default ({ coupon }: { coupon: string }) => {
                       const response = await axiosClient.post("orders", {
                         cart_session_id: cartDetails?.session_id,
                         delivery_address: {
-                          address_: loggedInUser?.address?.address_,
-                          city: loggedInUser?.address?.city,
-                          country: loggedInUser?.address?.country,
+                          address_: user?.address?.address_,
+                          city: user?.address?.city,
+                          country: user?.address?.country,
                         },
                         delivery_date,
                         coupon,

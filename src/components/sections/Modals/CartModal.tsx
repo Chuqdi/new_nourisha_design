@@ -1,32 +1,23 @@
-import { ICartDetail, ICartItem } from "@/config/types";
+import { ICartDetail, ICartItem, IUser } from "@/config/types";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import DeliveryModal from "./DeliveryModal";
-import { useContext, useState } from "react";
-import { UserContext } from "@/HOC/UserContext";
-import useAuth from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import CheckoutSection from "../CheckoutSection";
-
-
+import useUser from "@/hooks/useUser";
 
 function CartItem({ item }: { item: ICartItem }) {
-  const { addItemToCart, removeItemFrommCart } = useCart();
-  const user = useContext(UserContext);
-
-  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+  const { removeItemFrommCart } = useCart();
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
 
   const onUpdateCart = (c: () => void) => {
-    if (loggedInUser?.email) {
+    if (user?.email) {
       c();
     } else {
       toast({
@@ -35,6 +26,10 @@ function CartItem({ item }: { item: ICartItem }) {
       });
     }
   };
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
@@ -55,23 +50,21 @@ function CartItem({ item }: { item: ICartItem }) {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        {!user?.isLoading && (
-          <button
-            onClick={() =>
-              onUpdateCart(() =>
-                removeItemFrommCart(item?.item?._id!, item?.quantity)
-              )
-            }
-            className="text-[#FF4159] text-sm font-inter flex items-center"
-          >
-            <Icon
-              color="#FF4159"
-              className="w-4 h-4"
-              icon="gravity-ui:trash-bin"
-            />
-            <p>Remove</p>
-          </button>
-        )}
+        <button
+          onClick={() =>
+            onUpdateCart(() =>
+              removeItemFrommCart(item?.item?._id!, item?.quantity)
+            )
+          }
+          className="text-[#FF4159] text-sm font-inter flex items-center"
+        >
+          <Icon
+            color="#FF4159"
+            className="w-4 h-4"
+            icon="gravity-ui:trash-bin"
+          />
+          <p>Remove</p>
+        </button>
         <CartManipulator meal={item?.item} item={item} />
       </div>
     </div>
