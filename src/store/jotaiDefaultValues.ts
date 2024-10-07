@@ -16,7 +16,6 @@ export const SHOW_SIDE_MODAL: { show: boolean; component: React.ReactNode } = {
 export const FOOD_BOX: IFoodBox | null = null;
 export const cartItems = [] as ICartItem[];
 export const cartDetails = {} as ICartDetail;
-export const loggedInUser = {} as IUser | undefined;
 export const cartIsLoading = false;
 export const device_id = "";
 export const showMobileCartModal = {

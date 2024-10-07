@@ -11,6 +11,8 @@ import { toast } from "@/ui/use-toast";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import { IUser } from "@/config/types";
+import useUser from "@/hooks/useUser";
 
 export const Checkbox = ({
   checked,
@@ -41,9 +43,10 @@ export default function DeliveryModal({
   const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
-  const user = useAtomValue(ATOMS.loggedInUser);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getAxiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { getUser } = useUser();
   const [address, setAddress] = useState({
     country: user?.address?.country,
     city: user?.address?.city,
@@ -109,6 +112,19 @@ export default function DeliveryModal({
   useEffect(() => {
     setDeliveryDate(delivery_date);
   }, [delivery_date]);
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
+  useEffect(() => {
+    setAddress({
+      country: user?.address?.country,
+      city: user?.address?.city,
+      address_: user?.address?.address_,
+      postcode: user?.address?.postcode,
+    });
+  }, [user]);
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">

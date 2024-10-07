@@ -21,6 +21,8 @@ import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useQuery } from "react-query";
 import { IPInfoContext } from "ip-info-react";
+import useUser from "@/hooks/useUser";
+import { IUser } from "@/config/types";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -28,13 +30,9 @@ export default function Navbar() {
   const navbarOptions = useNavbar();
   const router = useRouter();
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
-  const u = useContext(UserContext);
-  const { getToken } = useAuthToken();
   const [token, setToken] = useState<string | false | null>("");
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
-  const { getAxiosClient } = useAuth();
-  const [user, setloggedInUser] = useAtom(ATOMS.loggedInUser);
   const sideBarOptions = [
     {
       image: "cart.svg",
@@ -62,36 +60,12 @@ export default function Navbar() {
     //   options: [],
     // },
   ];
+  const { getUser } = useUser();
+  const [user, setUser] = useState<undefined | IUser>(undefined);
 
   useEffect(() => {
-    setToken(getToken());
+    setUser(getUser());
   }, []);
-
-  const fetchUser = async () => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-    return axiosClient.get("customers/me");
-  };
-
-  const { data, isLoading, isError, refetch } = useQuery(
-    ["queryKeys.AUTH_USER_ME2"],
-    fetchUser,
-    {
-      staleTime: 1800000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      retry: false,
-    }
-  );
-
-
-
-  useEffect(() => {
-    if (data?.data?.data) {
-      localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
-      setloggedInUser(data?.data?.data);
-    }
-  }, [data]);
 
   return (
     !cartLoading && (
@@ -142,30 +116,18 @@ export default function Navbar() {
           )}
           {!isMobile && (
             <div>
-              {isLoading ? (
-                <div>
-                  <Icon
-                    color="#FE7E00"
-                    className="w-6 h-6"
-                    icon="eos-icons:loading"
-                  />
-                </div>
-              ) : (
-                <Button
-                  onClick={() => {
-                    user?._id && !!token
-                      ? setSideModal({
-                          show: true,
-                          component: <MainAccount />,
-                        })
-                      : router.push("/auth");
-                  }}
-                  title={
-                    user?._id && !!token && !isError ? "Dashboard" : "Login"
-                  }
-                  variant="secondary"
-                />
-              )}
+              <Button
+                onClick={() => {
+                  user?._id && !!token
+                    ? setSideModal({
+                        show: true,
+                        component: <MainAccount />,
+                      })
+                    : router.push("/auth");
+                }}
+                title={user?._id ? "Dashboard" : "Login"}
+                variant="secondary"
+              />
             </div>
           )}
 

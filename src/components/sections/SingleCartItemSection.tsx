@@ -1,13 +1,20 @@
 import { COUNTRIES } from "@/config";
-import { ICartItem, IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
+import {
+  ICartItem,
+  IFoodBox,
+  IFoodBoxDayType,
+  IMeal,
+  IUser,
+} from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
+import useUser from "@/hooks/useUser";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -19,11 +26,11 @@ export const CartManipulator = ({
   small?: boolean;
 }) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
-  const user = useContext(UserContext);
-  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
 
   const onUpdateCart = (c: () => void) => {
-    if (loggedInUser?.email) {
+    if (user?.email) {
       c();
     } else {
       toast({
@@ -32,28 +39,38 @@ export const CartManipulator = ({
       });
     }
   };
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
-  return user?.isLoading ? (
-    <div>
-      <Icon color="#FE7E00" className="w-6 h-6" icon="eos-icons:loading" />
-    </div>
-  ) : (
-    <div className={`bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem]   px-[0.25rem] justify-between  items-center flex ${small?'w-[4.6125rem] h-[1.5rem]':'w-[7.68rem] h-[2.5rem]'}`}>
+  return (
+    <div
+      className={`bg-[#F2F4F7] border-[1px] border-[#F2F4F7] rounded-[3rem]   px-[0.25rem] justify-between  items-center flex ${
+        small ? "w-[4.6125rem] h-[1.5rem]" : "w-[7.68rem] h-[2.5rem]"
+      }`}
+    >
       <button
         onClick={() => {
           onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1));
         }}
-        className={`bg-white justify-center items-center ${small?'w-[0.975rem] h-[0.975rem] text-sm':'w-8 h-8 text-3xl'}  p-2 rounded-full flex `}
-        
+        className={`bg-white justify-center items-center ${
+          small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
+        }  p-2 rounded-full flex `}
       >
         -
       </button>
-      <p className={`text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem] ${small?'text-sm':''}`}>
+      <p
+        className={`text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem] ${
+          small ? "text-sm" : ""
+        }`}
+      >
         {item?.quantity ?? "0"}
       </p>
       <button
         onClick={() => onUpdateCart(() => addItemToCart(meal, 1))}
-        className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${small?'w-[0.975rem] h-[0.975rem] text-sm':'w-8 h-8 text-3xl'}`}
+        className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
+          small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
+        }`}
       >
         +
       </button>
