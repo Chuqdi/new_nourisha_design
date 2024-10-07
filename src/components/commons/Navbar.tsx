@@ -20,6 +20,7 @@ import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useQuery } from "react-query";
+import { IPInfoContext } from "ip-info-react";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -29,11 +30,11 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const u = useContext(UserContext);
   const { getToken } = useAuthToken();
-  const [ token, setToken ] = useState<string | false | null>("");
+  const [token, setToken] = useState<string | false | null>("");
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
-  const { axiosClient } = useAuth();
-  const [ user, setloggedInUser] = useAtom(ATOMS.loggedInUser);
+  const { getAxiosClient } = useAuth();
+  const [user, setloggedInUser] = useAtom(ATOMS.loggedInUser);
   const sideBarOptions = [
     {
       image: "cart.svg",
@@ -62,11 +63,13 @@ export default function Navbar() {
     // },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     setToken(getToken());
   }, []);
 
   const fetchUser = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     return axiosClient.get("customers/me");
   };
 
@@ -82,9 +85,9 @@ export default function Navbar() {
   );
 
 
+
   useEffect(() => {
     if (data?.data?.data) {
-      console.log("User")
       localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
       setloggedInUser(data?.data?.data);
     }
@@ -150,14 +153,16 @@ export default function Navbar() {
               ) : (
                 <Button
                   onClick={() => {
-                    (user?._id && !!token)
+                    user?._id && !!token
                       ? setSideModal({
                           show: true,
                           component: <MainAccount />,
                         })
                       : router.push("/auth");
                   }}
-                  title={(user?._id && !!token && !isError) ? "Dashboard" : "Login"}
+                  title={
+                    user?._id && !!token && !isError ? "Dashboard" : "Login"
+                  }
                   variant="secondary"
                 />
               )}

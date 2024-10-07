@@ -19,9 +19,7 @@ export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
   const { makeRequest, isLoading ,} = useAuth();
   const { setToken } = useAuthToken();
-  const router = useRouter();
   const user = useContext(UserContext);
-  const device_id = localStorage?.getItem(DEVICE_ID)
 
   const options = [
     {

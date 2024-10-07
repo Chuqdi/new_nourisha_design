@@ -1,37 +1,38 @@
 "use client";
-import { useAtomValue, useSetAtom } from "jotai";
+import {  useAtomValue, useSetAtom } from "jotai";
 import Button from "../ui/Button";
 import { ATOMS } from "@/store/atoms";
 import { ICartDetail, ICartItem } from "@/config/types";
 import DeliveryModal from "./Modals/DeliveryModal";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import useCart from "@/hooks/useCart";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
-import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
 import Link from "next/link";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
-function Main () {
-  const user = useContext(UserContext);
+function Main() {
+  const user = useAtomValue(ATOMS.loggedInUser);
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const [loading, setLoading] = useState(false);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
 
   const { getCartSessionDetails, emptyCart } = useCart();
   const [session_id, set_session_id] = useState();
 
-  const {
-    data: CartSessionData,
-    isLoading,
-    refetch,
-  } = useQuery("GET_CART_SESSION", getCartSessionDetails);
+  const { data: CartSessionData, isLoading } = useQuery(
+    "GET_CART_SESSION",
+    getCartSessionDetails
+  );
 
   const onSubmit = async () => {
-    const address = user?.user?.address;
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+    const address = user?.address;
     setLoading(true);
     await axiosClient
       .post(`orders`, {
@@ -74,10 +75,7 @@ function Main () {
     }
   }, [CartSessionData]);
 
-  return (
-
-    user?.user?._id
-    ?
+  return user?._id ? (
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
       <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
         Cart summary
@@ -150,16 +148,21 @@ function Main () {
         variant="primary"
       />
     </div>
-    :
+  ) : (
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3  flex-col gap-3 mb-8 text center ">
-        <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
+      <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
         Cart summary
       </h4>
-     <p className="text-center">
-     <Link  href="/auth" className="text-base text-center font-inter mt-4 text-primary-orange-900 w-full">Login to view details...</Link>
-     </p>
+      <p className="text-center">
+        <Link
+          href="/auth"
+          className="text-base text-center font-inter mt-4 text-primary-orange-900 w-full"
+        >
+          Login to view details...
+        </Link>
+      </p>
     </div>
   );
 }
 
-export  default  Main;
+export default Main;

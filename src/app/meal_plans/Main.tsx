@@ -11,6 +11,7 @@ import queryKeys from "@/config/queryKeys";
 import { IPlan } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
@@ -84,12 +85,14 @@ const SinglePlan = ({
 };
 const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const [activeOptionIndex, setActiveOptionIndex] = useState(1);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const user = useContext(UserContext);
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
   const activeSearchContinent = useMemo(()=>onAfrican?CONTINENTS[0]:CONTINENTS[1], [onAfrican])
   const getPlans = () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     return axiosClient.get("plans?country=nigeria&weekend=false");
   };
 

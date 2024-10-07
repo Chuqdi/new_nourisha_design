@@ -10,6 +10,7 @@ import queryKeys from "@/config/queryKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { ATOMS } from "@/store/atoms";
@@ -207,7 +208,7 @@ export default function Main() {
     initializeFoodMealExtra,
     getMealExtraFromMealAndDay,
   } = useFoodbox();
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState("9");
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
@@ -289,6 +290,8 @@ export default function Main() {
     }
 
     setLoading(true);
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     const data = prepareMealForBE();
     axiosClient
       .post(`lineups`, { ...data, delivery_date, card_token: "off_session" })

@@ -1,13 +1,14 @@
-import {  useEffect, useMemo,  } from "react";
+import { useEffect, useMemo } from "react";
 import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
-import { useAtom,  useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import queryKeys from "../config/queryKeys";
 import { useQuery } from "react-query";
 import useAuthToken from "./useAuthToken";
 import useAuth from "./useAuth";
-import { LOGGED_IN_USER, } from "@/HOC/UserContext";
+import { LOGGED_IN_USER } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
+import { DEVICE_ID } from "./useFingerPrint";
 
 const CART_SESSION_ID = "cart_session_id";
 export const CART_TEMP_ID = "cart_temp_id";
@@ -15,7 +16,7 @@ const useCart = () => {
   const [cartItems, setCartItems] = useAtom<ICartItem[]>(ATOMS.cartItems);
   const setCartDetails = useSetAtom(ATOMS.cartDetails);
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const { getToken } = useAuthToken();
   const token = getToken();
 
@@ -23,6 +24,8 @@ const useCart = () => {
     const cartSessionId = localStorage.getItem(CART_SESSION_ID);
     let user = localStorage?.getItem(LOGGED_IN_USER);
     let u = JSON.parse(user ?? "") as IUser;
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
 
     return axiosClient.get(!!token && !!u ? "cart" : "");
   };
@@ -68,6 +71,9 @@ const useCart = () => {
   };
 
   const updateItemBE = async (itemId: string, quantity: number) => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+
     const res = axiosClient
       .put("cart", {
         itemId,
@@ -80,6 +86,9 @@ const useCart = () => {
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+
     await axiosClient
       .delete(`cart`, {
         data: {
@@ -89,12 +98,13 @@ const useCart = () => {
       })
       .then((data) => {
         // updateLocalStorageStates(data);
-      }) .catch((e) => {
+      })
+      .catch((e) => {
         toast({
           variant: "default",
           title: e?.response?.data?.message,
         });
-      });;
+      });
     RefreshCart();
   };
 
@@ -103,6 +113,8 @@ const useCart = () => {
       itemId: item?._id,
       quantity,
     };
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
 
     await axiosClient
       .put("cart", data)

@@ -14,14 +14,11 @@ import queryKeys from "@/config/queryKeys";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { IPlan } from "@/config/types";
-import { loadStripe } from "@stripe/stripe-js";
-import { toast } from "@/ui/use-toast";
-import Modal from "@/components/ui/Modal";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import PaymentModal from "../PaymentModal";
 import { ATOMS } from "@/store/atoms";
 import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import Input from "@/components/ui/Input";
 
 const SingleSubscription = ({
   plan,
@@ -30,15 +27,17 @@ const SingleSubscription = ({
   activePlan?: IPlan;
   plan: IPlan;
 }) => {
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement>(null!);
+  const [isSelected, setSelected] = useState(false);
+  const [coupon, setCoupon] = useState("");
 
   const gradientColors = [
-    "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
-    "linear-gradient(208deg, #FE7E00 16.32%, #FE0000 105.01%)",
+    // "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
+    // "linear-gradient(208deg, #FE7E00 16.32%, #FE0000 105.01%)",
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
   ];
   const textColors = ["#9572F9", "#9572F9", "#9572F9"];
@@ -47,17 +46,19 @@ const SingleSubscription = ({
     const selectedPlan = searchParams.get("plan_id");
     if (searchParams.get("plan_id")) {
       if (selectedPlan && searchParams.get("plan_id")?.includes(plan?._id)) {
-        document.getElementById(`subscription_click_btn_${plan?._id}`)?.click();
+        // document.getElementById(`subscription_click_btn_${plan?._id}`)?.click();
+        setSelected(true);
       }
     }
   }, []);
 
   return (
     <div
-      className="p-3 rounded-[0.75rem]"
+      className="p-3 rounded-[0.75rem] border"
       style={{
-        background:
-          gradientColors[Math.floor(Math.random() * gradientColors.length)],
+        background: isSelected
+          ? gradientColors[Math.floor(Math.random() * gradientColors.length)]
+          : undefined,
       }}
     >
       <div className="bg-white p-3 rounded-[0.75rem]">
@@ -73,12 +74,23 @@ const SingleSubscription = ({
           >
             {plan.name}
           </p>
-          <div className="bg-[#E6FEF2] rounded-[0.375rem] py-0 px-2 flex justify-center items-center h-8 text-primary-Green-900">
-            {plan.subscription_interval}ly
-          </div>
+          {isSelected && (
+            <div className="bg-[#E6FEF2] rounded-[0.375rem] py-0 px-2 flex justify-center items-center h-8 text-primary-Green-900">
+              Selected
+            </div>
+          )}
         </div>
         <div className="w-4/5">
           <HTMLRenderer html={plan?.description} />
+        </div>
+
+        <div className="w-full mt-3">
+          <label>Do you have a coupon code?</label>
+          <Input
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value)}
+            placeholder="Enter coupon code"
+          />
         </div>
 
         <Button
@@ -102,7 +114,10 @@ const SingleSubscription = ({
                   clientSecret = "";
                 let data = {
                   plan_id: plan?._id,
+                  coupon,
                 };
+                const id = localStorage.getItem(DEVICE_ID);
+                const axiosClient = getAxiosClient(id!);
                 await axiosClient
                   .post("billings/subscribe", data)
                   .then(async (response) => {
@@ -130,10 +145,13 @@ const SingleSubscription = ({
 };
 
 export default function Subscription() {
-  const { axiosClient } = useAuth();
-
+  const { getAxiosClient } = useAuth();
+  const [plans, setPlans] = useState<IPlan[]>([]);
   const [activePlan, setActivePlan] = useState<IPlan>();
+  const searchParams = useSearchParams();
   const getSubscrptionList = () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
       "plans?country=nigeria&continent=African&weekend=false"
     );
@@ -145,6 +163,8 @@ export default function Subscription() {
   );
 
   const getActiveSubscriptionDetails = () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     return axiosClient.get("subscriptions/me");
   };
 
@@ -157,6 +177,27 @@ export default function Subscription() {
     }
   }, [SubscriptionDetails]);
 
+  function filterById(items: IPlan[], id?: string | null) {
+    if (!id) {
+      return items;
+    }
+
+    const itemIndex = items.findIndex((item) => item._id === id);
+    if (itemIndex === -1) {
+      return items;
+    }
+
+    const [selectedItem] = items.splice(itemIndex, 1);
+    return [selectedItem, ...items];
+  }
+
+  useEffect(() => {
+    if (data?.data?.data?.data) {
+      const selectedPlan = searchParams.get("plan_id");
+      setPlans(filterById(data?.data?.data?.data as IPlan[], selectedPlan));
+    }
+  }, [data?.data?.data]);
+
   return (
     <SidebarHOC isBack title="Subscriptions">
       {LoadingSubscriptionDetails && (
@@ -165,7 +206,7 @@ export default function Subscription() {
         </p>
       )}
       <div className="w-full grid grid-cols-1 gap-4">
-        {data?.data?.data?.data?.map((plan: IPlan, index: number) => (
+        {plans.map((plan: IPlan, index: number) => (
           <SingleSubscription
             activePlan={activePlan}
             key={`plan_${index}`}

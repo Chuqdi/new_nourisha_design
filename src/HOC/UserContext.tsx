@@ -8,6 +8,7 @@ import Modal from "@/components/ui/Modal";
 import LoginModal from "@/components/sections/Modals/LoginModal";
 import { ATOMS } from "@/store/atoms";
 import { useAtom, useSetAtom } from "jotai";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";
 export const LOGGED_IN_USER = "logged_in_user";
@@ -29,10 +30,12 @@ export const UserContext = createContext<
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const setloggedInUser = useSetAtom(ATOMS.loggedInUser);
 
   const fetchUser = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient =getAxiosClient(id!);
     return axiosClient.get("customers/me");
   };
 

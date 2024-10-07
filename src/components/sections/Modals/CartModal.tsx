@@ -14,6 +14,7 @@ import useAuth from "@/hooks/useAuth";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 const Checkout = ({ coupon }: { coupon: string }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
@@ -22,7 +23,7 @@ const Checkout = ({ coupon }: { coupon: string }) => {
   const loggedInUser = useAtomValue(ATOMS.loggedInUser);
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const router = useRouter();
 
   return (
@@ -45,6 +46,8 @@ const Checkout = ({ coupon }: { coupon: string }) => {
                       parseInt(cartDetails?.total) +
                       parseInt(cartDetails?.deliveryFee),
                     onContinue: async () => {
+                      const id = localStorage.getItem(DEVICE_ID);
+                      const axiosClient = getAxiosClient(id!);
                       const response = await axiosClient.post("orders", {
                         cart_session_id: cartDetails?.session_id,
                         delivery_address: {

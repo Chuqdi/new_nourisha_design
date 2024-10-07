@@ -16,8 +16,13 @@ export const SHOW_SIDE_MODAL: { show: boolean; component: React.ReactNode } = {
 export const FOOD_BOX: IFoodBox | null = null;
 export const cartItems = [] as ICartItem[];
 export const cartDetails = {} as ICartDetail;
-export const loggedInUser = {} as IUser|undefined;
+export const loggedInUser = {} as IUser | undefined;
 export const cartIsLoading = false;
+export const device_id = "";
+export const couponCode:{show:boolean, value:string|undefined} = {
+  show: false,
+  value: undefined,
+};
 export const foodInfoModal: { show: boolean; meal: IMeal } = {
   show: false,
   meal: {} as IMeal,
@@ -27,8 +32,7 @@ export const showInfoModal: { show: boolean; meal: IMeal; day?: string } = {
   meal: {} as IMeal,
 };
 
-
-export const mealExtraSelection:IStoredExtraType[] =[];
+export const mealExtraSelection: IStoredExtraType[] = [];
 export const showMealExtraSelection: {
   show: boolean;
   meal?: IMeal;

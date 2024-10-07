@@ -3,6 +3,8 @@ import {
   cartDetails,
   cartIsLoading,
   cartItems,
+  couponCode,
+  device_id,
   FOOD_BOX,
   foodInfoModal,
   loggedInUser,
@@ -11,6 +13,7 @@ import {
   SHOW_SIDE_MODAL,
   showMealExtraSelection,
 } from "./jotaiDefaultValues";
+import { atomWithStorage } from 'jotai/utils'
 
 export const ATOMS = {
   showSideModal: atom(SHOW_SIDE_MODAL),
@@ -19,8 +22,10 @@ export const ATOMS = {
   cartDetails: atom(cartDetails),
   cartIsLoading: atom(cartIsLoading),
   foodInfoModal: atom(foodInfoModal),
+  device_id:atomWithStorage(device_id,""),
   paymentModal: atom(paymentModal),
   mealExtraSelection: atom(mealExtraSelection),
   showMealExtraSelection: atom(showMealExtraSelection),
-  loggedInUser:atom(loggedInUser)
+  loggedInUser:atom(loggedInUser),
+  couponCode:atom(couponCode),
 };

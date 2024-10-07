@@ -7,7 +7,7 @@ import { Inter } from "next/font/google";
 import { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
-import IPInfo from 'ip-info-react';
+import IPInfo from "ip-info-react";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -38,23 +38,25 @@ export default function RootLayout({
         <JotaiProvider>
           <QueryClientProvider client={queryClient}>
             <body id="app_wrapper" className={`${interFont.variable} relative`}>
-              {loading ? (
-                <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
-                  <div className="animate-pulse">
-                    <img src="/images/logo2.svg" 
-                    className="w-[35rem] md:w-[45rem] h-auto" />
+              <IPInfo>
+                {loading ? (
+                  <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
+                    <div className="animate-pulse">
+                      <img
+                        src="/images/logo2.svg"
+                        className="w-[35rem] md:w-[45rem] h-auto"
+                      />
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <UserContextProvider>
-                  <PagesHOC>
-                  <IPInfo>
-                    {children}
-                    </IPInfo>
-                    <Toaster />
-                  </PagesHOC>
-                </UserContextProvider>
-              )}
+                ) : (
+                  <UserContextProvider>
+                    <PagesHOC>
+                      {children}
+                      <Toaster />
+                    </PagesHOC>
+                  </UserContextProvider>
+                )}
+              </IPInfo>
             </body>
           </QueryClientProvider>
         </JotaiProvider>

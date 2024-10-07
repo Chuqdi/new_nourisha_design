@@ -10,6 +10,7 @@ import PaymentMethodModal from "./PaymentMethodModal";
 import { toast } from "@/ui/use-toast";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 export const Checkbox = ({
   checked,
@@ -41,7 +42,7 @@ export default function DeliveryModal({
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
   const user = useAtomValue(ATOMS.loggedInUser);
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState({
     country: user?.address?.country,
@@ -74,6 +75,8 @@ export default function DeliveryModal({
       return;
     }
     setLoading(true);
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     try {
       await axiosClient.put(`customers/me`, { address }).catch((e) => {
         router.push("/auth");
