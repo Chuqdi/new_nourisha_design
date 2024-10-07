@@ -8,20 +8,26 @@ import Button from "../ui/Button";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/config/types";
+import useUser from "@/hooks/useUser";
 
 export default function MobileNavbar({ close }: { close: () => void }) {
   const navbarOptions = useNavbar();
   const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const user = useContext(UserContext);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
   const router = useRouter();
 
-  const isLoggedIn = useMemo(() => !!user?.user?._id, [user]);
+  const isLoggedIn = useMemo(() => !!user?._id, [user]);
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
-    <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 ">
+    <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 max-h-[100vh] overflow-y-scroll ">
       <div className="flex justify-between items-center px-4">
         <Logo className="w-40 h-40 object-contain" />
         <Icon

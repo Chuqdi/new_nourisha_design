@@ -1,4 +1,4 @@
-import { ICartDetail, ICartItem } from "@/config/types";
+import { ICartDetail, ICartItem, IUser } from "@/config/types";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
@@ -11,15 +11,15 @@ import CheckoutSection from "./CheckoutSection";
 import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
+import useUser from "@/hooks/useUser";
 
 function CartItem({ item }: { item: ICartItem }) {
   const { removeItemFrommCart } = useCart();
-  const user = useContext(UserContext);
-
-  const loggedInUser = useAtomValue(ATOMS.loggedInUser);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
 
   const onUpdateCart = (c: () => void) => {
-    if (loggedInUser?.email) {
+    if (user?.email) {
       c();
     } else {
       toast({
@@ -28,6 +28,10 @@ function CartItem({ item }: { item: ICartItem }) {
       });
     }
   };
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <div className="p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5 bg-white">
@@ -50,22 +54,20 @@ function CartItem({ item }: { item: ICartItem }) {
       <div className="flex justify-between items-center">
         <CartManipulator small meal={item?.item} item={item} />
 
-        {!user?.isLoading && (
-          <button
-            onClick={() =>
-              onUpdateCart(() =>
-                removeItemFrommCart(item?.item?._id!, item?.quantity)
-              )
-            }
-            className="text-[#FF4159] text-sm font-inter flex items-center"
-          >
-            <Icon
-              color="#FF4159"
-              className="w-4 h-4"
-              icon="gravity-ui:trash-bin"
-            />
-          </button>
-        )}
+        <button
+          onClick={() =>
+            onUpdateCart(() =>
+              removeItemFrommCart(item?.item?._id!, item?.quantity)
+            )
+          }
+          className="text-[#FF4159] text-sm font-inter flex items-center"
+        >
+          <Icon
+            color="#FF4159"
+            className="w-4 h-4"
+            icon="gravity-ui:trash-bin"
+          />
+        </button>
       </div>
     </div>
   );
@@ -84,19 +86,19 @@ function CartSideSection() {
     <div className="bg-[#F2F4F7] p-2  w-full md:w-[19.5rem] rounded-none md:rounded-[0.75rem]  flex flex-col justify-between gap-4 max-h-[80vh] md:max-h-fit overflow-y-scroll md:overflow-y-auto  md:max-h-auto">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
-         {
-          isMobile && <button
-          className="w-10 h-10 rounded-full flex justify-center items-center bg-white"
-          onClick={() =>
-            setShowCartSideModal({
-              ...showCartSideModal,
-              show: false,
-            })
-          }
-        >
-          <Icon className="w-6 h-6" icon="proicons:cancel" />
-        </button>
-         }
+          {isMobile && (
+            <button
+              className="w-10 h-10 rounded-full flex justify-center items-center bg-white"
+              onClick={() =>
+                setShowCartSideModal({
+                  ...showCartSideModal,
+                  show: false,
+                })
+              }
+            >
+              <Icon className="w-6 h-6" icon="proicons:cancel" />
+            </button>
+          )}
           <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
             Cart({cartItems?.length})
           </h4>
@@ -187,7 +189,9 @@ function CartSideSection() {
           )}
         </div>
       )}
-      <div className={`w-full ${showCartSideModal?.showDetails?'pb-8':'pb-2'}`}>
+      <div
+        className={`w-full ${showCartSideModal?.showDetails ? "pb-8" : "pb-2"}`}
+      >
         {!!cartItems.length && <CheckoutSection coupon={coupon} />}
       </div>
     </div>
