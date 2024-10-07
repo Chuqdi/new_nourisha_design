@@ -25,7 +25,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const [showMealExtraModal, setMealExtraModal] = useAtom(
     ATOMS.showMealExtraSelection
   );
-  const showMobileCartModal = useAtomValue(ATOMS.showMobileCartModal);
+  const [ showMobileCartModal, setShowMobileCartModal ] = useAtom(ATOMS.showMobileCartModal);
   const f = useFingerPrint();
   const [device_id, set_device_id] = useAtom(ATOMS.device_id);
   const foodInfoModal = useAtomValue(ATOMS.foodInfoModal);
@@ -52,6 +52,13 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
       pathName.get("show_payment_modal") === "1";
     setShowPaymentConfirmationModal(!!p);
   }, []);
+
+
+  useEffect(()=>{
+    if(paymentModal?.show){
+      setShowMobileCartModal({...showMobileCartModal, show: false });
+    }
+  },[paymentModal?.show])
 
   return (
     <div>
