@@ -63,7 +63,7 @@ export default function DeliveryModal({
       return;
     }
 
-    if (!user?._id) {
+    if (!user?.email) {
       toast({
         variant: "default",
         title: "Error",

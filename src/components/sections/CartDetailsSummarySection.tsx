@@ -75,7 +75,7 @@ function Main() {
     }
   }, [CartSessionData]);
 
-  return user?._id ? (
+  return user?.email ? (
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
       <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
         Cart summary
