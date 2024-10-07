@@ -98,7 +98,7 @@ function CartSideSection() {
         </button>
          }
           <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
-            Cart(3)
+            Cart({cartItems?.length})
           </h4>
         </div>
         {isMobile && (
