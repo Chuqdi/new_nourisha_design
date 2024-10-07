@@ -79,7 +79,8 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
       <Modal show={foodInfoModal.show}>
         <FoodInfoModal />
       </Modal>
-
+      {
+        !loadingDeviceId &&
       <AnimatePresence>
         {showMobileCartModal.show && isMobile && (
           <motion.div
@@ -94,6 +95,8 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
           </motion.div>
         )}
       </AnimatePresence>
+      }
+
 
       {loadingDeviceId ? (
         <div
