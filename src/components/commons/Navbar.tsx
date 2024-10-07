@@ -1,26 +1,20 @@
 "use client";
 
 import { BREAKPOINT } from "@/config";
-import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useNavbar from "@/hooks/useNavbar";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import {  useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import CartModal from "../sections/Modals/CartModal";
 import Button from "../ui/Button";
 import Logo from "../ui/Logo";
 import MobileNavbar from "./MobileNavbar";
-import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
-import useAuth from "@/hooks/useAuth";
-import useAuthToken from "@/hooks/useAuthToken";
-import { useQuery } from "react-query";
-import { IPInfoContext } from "ip-info-react";
 import useUser from "@/hooks/useUser";
 import { IUser } from "@/config/types";
 
@@ -30,7 +24,6 @@ export default function Navbar() {
   const navbarOptions = useNavbar();
   const router = useRouter();
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
-  const [token, setToken] = useState<string | false | null>("");
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
   const sideBarOptions = [
@@ -118,14 +111,14 @@ export default function Navbar() {
             <div>
               <Button
                 onClick={() => {
-                  user?._id 
+                  user?.email 
                     ? setSideModal({
                         show: true,
                         component: <MainAccount />,
                       })
                     : router.push("/auth");
                 }}
-                title={user?._id ? "Dashboard" : "Login"}
+                title={user?.email ? "Dashboard" : "Login"}
                 variant="secondary"
               />
             </div>
