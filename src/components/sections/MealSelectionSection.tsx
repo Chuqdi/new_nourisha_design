@@ -3,7 +3,7 @@
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import { BREAKPOINT, CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
-import { IMeal } from "@/config/types";
+import { IMeal, IUser } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -12,6 +12,7 @@ import Button from "../ui/Button";
 import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "use-debounce";
 import CartSideSection from "./CartSideSection";
+import useUser from "@/hooks/useUser";
 
 export default function MealSelectionSection({
   isSingle,
@@ -31,6 +32,8 @@ export default function MealSelectionSection({
   const [meals, setMeals] = useState<IMeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const [limit, setLimit] = useState(isMobile ? "6" : "10");
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}`
@@ -50,6 +53,10 @@ export default function MealSelectionSection({
       setMeals(data?.data?.data?.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <div
@@ -125,7 +132,7 @@ export default function MealSelectionSection({
         <div
           className={`
         grid grid-cols-2 ${
-          colCountClass ? colCountClass : "md:grid-cols-2"
+          colCountClass ? colCountClass : user?.email?"md:grid-cols-2":"md:grid-cols-3"
         } gap-4 mt-4
         `}
         >
@@ -138,9 +145,11 @@ export default function MealSelectionSection({
             />
           ))}
         </div>
-        <div className="hidden md:block mt-4">
-          <CartSideSection />
-        </div>
+        {user?.email && (
+          <div className="hidden md:block mt-4">
+            <CartSideSection />
+          </div>
+        )}
       </div>
 
       <div className="flex items-center justify-center mt-8">

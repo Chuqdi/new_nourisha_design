@@ -8,12 +8,15 @@ import ReferalHistory from "./ReferalHistory";
 import queryKeys from "@/config/queryKeys";
 import useAuth from "@/hooks/useAuth";
 import { useQuery } from "react-query";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 export default function Referal() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const { axiosClient} = useAuth();
+  const { getAxiosClient} = useAuth();
 
   const getReferalStats = () => {
+    const id = localStorage.get(DEVICE_ID);
+    const axiosClient = getAxiosClient(id);
     return axiosClient.get("referrals/stats");
   };
   const { data, } = useQuery(

@@ -5,26 +5,26 @@ import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSetAtom } from "jotai";
 import ChangePassword from "./ChangePassword";
-import { UserContext } from "@/HOC/UserContext";
-import { FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent,  useEffect,  useState } from "react";
 import useAuthToken from "@/hooks/useAuthToken";
 import axios from "axios";
 import { toast } from "@/ui/use-toast";
+import { IUser } from "@/config/types";
+import useUser from "@/hooks/useUser";
 
 
 export default function MyProfile() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const profileImageRef = useRef<HTMLImageElement>(null!);
   const [isLoading, setIsLoading] = useState(false);
-  const user = useContext(UserContext);
-  const inputRef = useRef<HTMLInputElement>(null!);
   const { getToken } = useAuthToken();
   const token = getToken();
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser,setUser:setMainUser } = useUser();
   const [formData, setFormData] = useState({
-    address_: user?.user?.address?.address_,
-    city: user?.user?.address?.city,
-    country: user?.user?.address?.country,
-    postcode: user?.user?.address?.postcode,
+    address_: user?.address?.address_,
+    city: user?.address?.city,
+    country: user?.address?.country,
+    postcode: user?.address?.postcode,
   });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,7 +52,8 @@ export default function MyProfile() {
         }
       )
       .then((data) => {
-        user?.setUser(data?.data?.data);
+        setMainUser(data?.data?.data);
+        setUser(data?.data?.data);
         toast({
           title: "Profile Updated",
           description: "Your profile has been updated",
@@ -68,6 +69,19 @@ export default function MyProfile() {
       });
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
+  useEffect(()=>{
+    setFormData({
+      address_: user?.address?.address_,
+      city: user?.address?.city,
+      country: user?.address?.country,
+      postcode: user?.address?.postcode,
+    })
+  }, [ user ])
   return (
     <SidebarHOC isBack title="My Profile">
       <div className="w-full">

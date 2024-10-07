@@ -32,7 +32,7 @@ export default () => {
     },
     {
       page: "/#faq",
-      isActive: pathName === "/about_us",
+      isActive: pathName === "/faq",
       name: "FAQ",
       options: [],
     },

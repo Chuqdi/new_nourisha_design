@@ -1,10 +1,18 @@
+import { IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
+import useUser from "@/hooks/useUser";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 function ReferalInput() {
-  const user = useContext(UserContext);
   const [copied, setCopied] = useState(false);
+
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <div className="w-full flex gap-3 mt-4">
@@ -12,12 +20,12 @@ function ReferalInput() {
         <input
           type="text"
           readOnly
-          value={user?.user?.ref_code}
+          value={user?.ref_code}
           className="bg-white rounded-[0.5rem] w-full h-[3rem] p-3"
         />
         <p
           onClick={() => {
-            navigator.clipboard.writeText(user?.user?.ref_code!);
+            navigator.clipboard.writeText(user?.ref_code!);
             setCopied(true);
             setTimeout(() => {
               setCopied(false);

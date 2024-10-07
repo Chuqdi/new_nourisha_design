@@ -122,7 +122,9 @@ letter-spacing: -0.03rem;
 
 
 
-
+body{
+  overflow-x: hidden !important;;
+}
 label {
   margin-left: 0.7rem;
 }

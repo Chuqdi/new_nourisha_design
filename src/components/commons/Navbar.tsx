@@ -118,7 +118,7 @@ export default function Navbar() {
             <div>
               <Button
                 onClick={() => {
-                  user?._id && !!token
+                  user?._id 
                     ? setSideModal({
                         show: true,
                         component: <MainAccount />,
