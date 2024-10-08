@@ -33,6 +33,15 @@ export const forgotPasswordScheme = yup.object().shape({
     email: yup.string().email("Please enter a valid email").required("Please enter your email"),
 });
 
+export const forgotPasswordResetScheme = yup.object().shape({
+    password: yup.string().min(8, "Password must be more than 8 characters").required("Please enter your Password").matches(
+        /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+        "Password must contain at least 8 characters, one uppercase, one number and one special case character"
+    ),
+    confirm_password: yup.string().oneOf([yup.ref("password")], "Password Confirmation and New Password does not match").required("Password Confirmation is required"),
+
+});
+
 
 export const registerUserScheme = yup.object().shape({
     email: yup.string().email("Please enter a valid email").required("Please enter your email"),

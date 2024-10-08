@@ -25,11 +25,9 @@ export default function Main() {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    const temp_id = localStorage.getItem(CART_TEMP_ID);
     const data = values;
 
     const createdUser = await makeRequest("auth/request/reset-otp", data);
-
     if (createdUser) {
       toast({
         variant: "default",
@@ -84,15 +82,6 @@ export default function Main() {
               disabled={isLoading}
               title="Continue"
             />
-            <div
-              onClick={() => setOnLogin(!onLogin)}
-              className="cursor-pointer w-full text-center text-black-900 font-inter text-lg"
-            >
-              {onLogin ? "Don't have an account? " : "Already have an account?"}
-              <span className="text-primary-orange-900">
-                {onLogin ? "Sign Up" : " Log in"}
-              </span>
-            </div>
           </div>
         </form>
         <div className="flex-1">
