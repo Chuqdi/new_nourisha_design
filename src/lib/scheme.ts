@@ -29,6 +29,10 @@ export const updateUserPasswordScheme = yup.object().shape({
 });
 
 
+export const forgotPasswordScheme = yup.object().shape({
+    email: yup.string().email("Please enter a valid email").required("Please enter your email"),
+});
+
 
 export const registerUserScheme = yup.object().shape({
     email: yup.string().email("Please enter a valid email").required("Please enter your email"),

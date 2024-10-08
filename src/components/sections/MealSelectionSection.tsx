@@ -3,7 +3,7 @@
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import { BREAKPOINT, CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
-import { IMeal, IUser } from "@/config/types";
+import { ICartItem, IMeal, IUser } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -13,6 +13,8 @@ import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "use-debounce";
 import CartSideSection from "./CartSideSection";
 import useUser from "@/hooks/useUser";
+import { useAtomValue } from "jotai";
+import { ATOMS } from "@/store/atoms";
 
 export default function MealSelectionSection({
   isSingle,
@@ -31,7 +33,8 @@ export default function MealSelectionSection({
   const [phrase] = useDebounce(searchPhrase, 1000);
   const [meals, setMeals] = useState<IMeal[]>([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-  const [limit, setLimit] = useState(isMobile ? "6" : "10");
+  const [limit, setLimit] = useState("6");
+  const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
   const getMeals = () => {
@@ -132,7 +135,7 @@ export default function MealSelectionSection({
         <div
           className={`
         grid grid-cols-2 ${
-          colCountClass ? colCountClass : user?.email?"md:grid-cols-2":"md:grid-cols-3"
+          colCountClass ? colCountClass : "md:grid-cols-3"
         } gap-4 mt-4
         `}
         >
@@ -145,7 +148,7 @@ export default function MealSelectionSection({
             />
           ))}
         </div>
-        {user?.email && (
+        {(user?.email && !!cartItems.length) && (
           <div className="hidden md:block mt-4">
             <CartSideSection />
           </div>

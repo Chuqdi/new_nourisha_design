@@ -154,7 +154,7 @@ export default function SingleCartItemSection({
       </div>
       <img
         src={meal?.image_url}
-        className="w-full h-[15.5625rem] md:h-[23.5625rem] rounded-[0.75rem] object-cover "
+        className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
         £{meal?.price?.amount}

@@ -36,7 +36,7 @@ export default function Login({ formikObj }: {formikObj:any} ) {
 
        <Link
         className="underline text-black-900 font-inter text-base font-semibold"
-        href=""
+        href="/forgot_password"
       >
         Forgot Password?
       </Link> 

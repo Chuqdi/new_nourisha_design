@@ -182,13 +182,15 @@ export default function Subscription() {
       return items;
     }
 
-    const itemIndex = items.findIndex((item) => item._id === id);
-    if (itemIndex === -1) {
-      return items;
-    }
+    return items?.filter(item => item._id === id);
 
-    const [selectedItem] = items.splice(itemIndex, 1);
-    return [selectedItem, ...items];
+    // const itemIndex = items.findIndex((item) => item._id === id);
+    // if (itemIndex === -1) {
+    //   return items;
+    // }
+
+    // const [selectedItem] = items.splice(itemIndex, 1);
+    // return [selectedItem, ...items];
   }
 
   useEffect(() => {
@@ -197,6 +199,10 @@ export default function Subscription() {
       setPlans(filterById(data?.data?.data?.data as IPlan[], selectedPlan));
     }
   }, [data?.data?.data]);
+
+
+
+ 
 
   return (
     <SidebarHOC isBack title="Subscriptions">

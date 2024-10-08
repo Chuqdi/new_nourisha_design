@@ -89,11 +89,11 @@ const SingleWeekendBreakDown = ({
                         </p>
                       )}
                     </div>
-                    {week === activeWeek && (
+                    {/* {week === activeWeek && ( */}
                       <button
                         onClick={() => {
                           removeFoodBox(
-                            activeWeek!,
+                            week! as IFoodBoxDayType,
                             activeDayMeal?.first_meal?._id!
                           );
                         }}
@@ -101,7 +101,7 @@ const SingleWeekendBreakDown = ({
                       >
                         <Icon icon="fa6-solid:minus" />
                       </button>
-                    )}
+                    {/* )} */}
                   </div>
                 )}
 
@@ -118,11 +118,11 @@ const SingleWeekendBreakDown = ({
                         </p>
                       )}
                     </div>
-                    {week === activeWeek && (
+                    {/* {week === activeWeek && ( */}
                       <button
                         onClick={() =>
                           removeFoodBox(
-                            activeWeek!,
+                            week! as IFoodBoxDayType,
                             activeDayMeal?.last_meal?._id!
                           )
                         }
@@ -130,7 +130,7 @@ const SingleWeekendBreakDown = ({
                       >
                         <Icon icon="fa6-solid:minus" />
                       </button>
-                    )}
+                    {/* )} */}
                   </div>
                 )}
               </div>

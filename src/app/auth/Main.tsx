@@ -59,7 +59,7 @@ export default function Main() {
         title: !onLogin ? "Registeration was successful" : "Login successful",
       });
       window.location.replace("/");
-      user?.refreshUser();
+   
       // onLogin
       // ?
       // :
