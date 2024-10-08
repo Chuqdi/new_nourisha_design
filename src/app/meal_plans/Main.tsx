@@ -34,7 +34,7 @@ const SinglePlan = ({
     if (option?.name?.includes("5")) {
       return onAfrican?"8":"7.10";
     } else if (option.name?.includes("MONTHLY")) {
-      return onAfrican?"7.1.4":"6.85"
+      return onAfrican?"7.14":"6.85"
     }
     return onAfrican?"7.14":"6.85";
   }, [onAfrican]);
