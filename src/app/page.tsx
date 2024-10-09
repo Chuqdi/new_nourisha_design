@@ -10,6 +10,8 @@ import DownloadApp from "@/components/ui/DownloadApp";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
 import Marquee from "react-fast-marquee";
+//@ts-ignore
+import HTMLRenderer from "react-html-renderer";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -101,6 +103,13 @@ export default function Main() {
       btnText: "Order now",
     },
   ];
+
+  const adsWidget = [
+    {
+      icon: "🎁",
+      title: "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b>Free 5th order within 30 days.</p>",
+    },
+  ];
   useEffect(() => {
     //@ts-ignore
     intervalRef.current = setTimeout(() => {
@@ -125,7 +134,19 @@ export default function Main() {
         className=" absolute right-0 top-0 h-[32.5rem] md:h-[60.0625rem] w-full md:w-[50rem] z-0 "
       />
       <Navbar />
-      <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32 items-center md:items-start">
+      <div className="flex justify-center items-center bg-white w-full  my-32 mb-[5.06rem]">
+        <div className="w-[27.4375rem] mx-auto flex items-center text-black">
+          <Icon className="w-6 h-6 cursor-pointer z-50" icon="lsicon:left-filled" />
+          {adsWidget.map((ads, index) => (
+            <div className="flex items-center gap-1" key={`widget_${index}`}>
+              <div>{ads.icon}</div>
+              <HTMLRenderer html={ads.title} />
+            </div>
+          ))}
+          <Icon className="w-6 h-6 cursor-pointer z-50" icon="lsicon:right-outline" />
+        </div>
+      </div>
+      <div className="flex flex-col-reverse md:flex-row my-32 mt-2 mb-8 md:mb-32 items-center md:items-start">
         <div className="w-full   p-2  md:p-0 md:ml-[2rem] flex flex-col gap-5">
           <div>
             <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[3.5rem] md:tracking-[-0.135rem]">
@@ -158,15 +179,17 @@ export default function Main() {
             <DownloadApp />
           </div>
         </div>
-        {
-          (isMobile ? (
-            <img src="/images/taste.png" className={`w-full ${cartLoading?"z-0":" z-10"}`} />
-          ) : (
-            <img
-              src="/images/taste.png"
-              className={`w-[50%] h-auto ${cartLoading?"z-0":" z-10"}`}
-            />
-          ))}
+        {isMobile ? (
+          <img
+            src="/images/taste.png"
+            className={`w-full ${cartLoading ? "z-0" : " z-10"}`}
+          />
+        ) : (
+          <img
+            src="/images/taste.png"
+            className={`w-[50%] h-auto ${cartLoading ? "z-0" : " z-10"}`}
+          />
+        )}
       </div>
       <Marquee className="py-[1.5rem]   bg-background2" autoFill>
         {bannerOptions.map((option, index) => (
@@ -184,7 +207,6 @@ export default function Main() {
           </div>
         ))}
       </Marquee>
-
 
       <div className="mt-20" />
       {isMobile ? (
