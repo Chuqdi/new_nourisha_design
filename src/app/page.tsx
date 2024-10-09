@@ -164,7 +164,7 @@ export default function Main() {
           ) : (
             <img
               src="/images/taste.png"
-              className={`w-[37.1875rem] h-[20.35225rem] ${cartLoading?"z-0":" z-10"}`}
+              className={`w-[40.1875rem] h-auto ${cartLoading?"z-0":" z-10"}`}
             />
           ))}
       </div>
@@ -185,41 +185,6 @@ export default function Main() {
         ))}
       </Marquee>
 
-      {/* <div className="  w-full py-[1.5rem] px-6.25 bg-background2 marquee-wrapper">
-        <div className="marquee-slide flex items-center gap-20 ">
-          {bannerOptions.map((option, index) => (
-            <div
-              key={`banner_option${index}`}
-              className="flex items-center gap-2 whitespace-nowrap "
-            >
-              <img
-                src={`/images/banner/${option.image}`}
-                className="h-[2.725rem]"
-              />
-              <p className="text-black-900 font-inter text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
-                {option.title}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="marquee-slide flex items-center gap-20 ">
-          {bannerOptions.map((option, index) => (
-            <div
-              key={`banner_image_${index}`}
-              className="flex items-center gap-2 whitespace-nowrap "
-            >
-              <img
-                src={`/images/banner/${option.image}`}
-                className="h-[2.725rem]"
-              />
-              <p className="text-black-900 font-inter text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
-                {option.title}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div> */}
 
       <div className="mt-20" />
       {isMobile ? (
