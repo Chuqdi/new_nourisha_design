@@ -164,7 +164,7 @@ export default function Main() {
           ) : (
             <img
               src="/images/taste.png"
-              className={`w-[40.1875rem] h-auto ${cartLoading?"z-0":" z-10"}`}
+              className={`w-[50%] h-auto ${cartLoading?"z-0":" z-10"}`}
             />
           ))}
       </div>
