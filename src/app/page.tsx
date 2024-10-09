@@ -126,9 +126,9 @@ export default function Main() {
       />
       <Navbar />
       <div className="flex flex-col-reverse md:flex-row my-32 mb-8 md:mb-32 items-center md:items-start">
-        <div className="w-full  p-2  md:p-0 md:ml-[3rem] flex flex-col gap-5">
+        <div className="w-full   p-2  md:p-0 md:ml-[2rem] flex flex-col gap-5">
           <div>
-            <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[4.5rem] md:leading-[5.85rem] md:tracking-[-0.135rem]">
+            <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[3.5rem] md:tracking-[-0.135rem]">
               Savour the Flavors with Nourisha
             </h2>
             <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
@@ -164,7 +164,7 @@ export default function Main() {
           ) : (
             <img
               src="/images/taste.png"
-              className={`w-[38.1875rem] h-[23rem] ${cartLoading?"z-0":" z-10"}`}
+              className={`w-[40.1875rem] h-auto ${cartLoading?"z-0":" z-10"}`}
             />
           ))}
       </div>
