@@ -66,7 +66,7 @@ export const CONTINENTS = [
     name: "Africa",
     noun: "African",
     flag: "🇳🇬",
-    search: "Africa",
+    search: "African",
   },
   {
     name: "Asia",
