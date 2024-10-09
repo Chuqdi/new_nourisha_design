@@ -72,7 +72,7 @@ export const CONTINENTS = [
     name: "Asia",
     noun: "Asian & European",
     flag: "🇬🇭",
-    search: "Asian & European",
+    search: "Asian",
   },
 ];
 export const COUNTRIES = [
