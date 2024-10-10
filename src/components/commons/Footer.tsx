@@ -137,6 +137,7 @@ export default function Footer() {
                   className=" leading-[1.5rem] tracking-[-0.015rem] gap-2 text-base  text-black-900 flex items-center"
                   key={`link_option_${i}`}
                   href={link.link}
+                  target="__blank"
                 >
                   <Icon className="w-6 h-6" icon={link.icon} color="" />
                   {link.title}
