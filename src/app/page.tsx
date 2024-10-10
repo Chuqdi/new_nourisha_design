@@ -107,7 +107,7 @@ export default function Main() {
   const adsWidget = [
     {
       icon: "🎁",
-      title: "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b>Free 5th order within 30 days.</p>",
+      title: "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b> <i>99%</i>Free 5th order within 30 days.</p>",
     },
   ];
   useEffect(() => {
