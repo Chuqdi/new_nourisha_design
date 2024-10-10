@@ -135,10 +135,10 @@ export default function Main() {
       />
       <Navbar />
       <div className="flex justify-center items-center bg-white w-full  my-32 mb-[5.06rem]">
-        <div className="w-[27.4375rem] mx-auto flex items-center text-black">
+        <div className="w-[90%]  md:w-[27.4375rem] mx-auto  items-center text-black flex justify-center ">
           <Icon className="w-6 h-6 cursor-pointer z-50" icon="lsicon:left-filled" />
           {adsWidget.map((ads, index) => (
-            <div className="flex items-center gap-1" key={`widget_${index}`}>
+            <div className="flex items-center gap-1 text-[0.75rem] md:text-sm" key={`widget_${index}`}>
               <div>{ads.icon}</div>
               <HTMLRenderer html={ads.title} />
             </div>
