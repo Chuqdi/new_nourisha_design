@@ -24,11 +24,11 @@ const FoodInfoModal = () => {
           />
         </button>
       </div>
-      <img
+      {/* <img
       src={meal?.image_url}
       className="h-auto w-auto rounded-[0.5rem] mt-4 "
-      />
-      {/* <div
+      /> */}
+      <div
         style={{
           backgroundImage: `url(${meal?.image_url})`,
           backgroundRepeat: "no-repeat",
@@ -36,7 +36,7 @@ const FoodInfoModal = () => {
           backgroundPosition: "center",
         }}
         className="h-[16.3125rem] w-full rounded-[0.5rem] mt-4"
-      /> */}
+      />
       <h3 className="text-black-900 text-[1.5rem] tracking-[-0.045rem] leading-[1.95rem] font-NewSpiritBold mt-4">
         {meal?.name}
       </h3>
