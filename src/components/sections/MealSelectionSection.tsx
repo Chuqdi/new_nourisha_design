@@ -42,7 +42,7 @@ export default function MealSelectionSection({
 
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}&orderType=${pathName?.toUpperCase() === "/bulk_meals".toUpperCase()?"bulk-order":"both"}`
+      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}${pathName?.toUpperCase() === "/bulk_meals".toUpperCase()&&"&orderType=bulk-order"}`
     );
   };
 

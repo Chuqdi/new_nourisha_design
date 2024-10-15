@@ -28,6 +28,7 @@ export const CartManipulator = ({
   const { addItemToCart, removeItemFrommCart } = useCart();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
+  const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
 
   const onUpdateCart = (c: () => void) => {
     if (user?.email) {
@@ -67,7 +68,19 @@ export const CartManipulator = ({
         {item?.quantity ?? "0"}
       </p>
       <button
-        onClick={() => onUpdateCart(() => addItemToCart(meal, 1))}
+        onClick={() => {
+          onUpdateCart(() => addItemToCart(meal, 1));
+          if (
+            !!meal?.expected_proteins?.length ||
+            !!meal?.expected_swallow?.length
+          ) {
+            setMealExtraModal({
+              meal,
+              day: undefined,
+              show: true,
+            });
+          }
+        }}
         className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
         }`}
@@ -183,11 +196,16 @@ export default function SingleCartItemSection({
               <button
                 onClick={() => {
                   addFoodBox(activeWeek!, meal!);
-                  setMealExtraModal({
-                    meal,
-                    day: activeWeek,
-                    show: true,
-                  });
+                  if (
+                    !!meal?.expected_proteins?.length ||
+                    !!meal?.expected_swallow?.length
+                  ) {
+                    setMealExtraModal({
+                      meal,
+                      day: activeWeek,
+                      show: true,
+                    });
+                  }
                   const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
                   if (bothSelected?.isFirstMealAlreadySelected)
                     goToNextWeek && goToNextWeek();

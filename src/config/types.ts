@@ -33,6 +33,8 @@ export interface IMeal {
   available_quantity?: string;
   category?: string;
   country?: string;
+  expected_proteins?:string[];
+  expected_swallow?:string[];
   orderType?: string;
   is_available: boolean;
   meals?: string[];

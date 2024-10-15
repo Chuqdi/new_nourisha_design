@@ -90,17 +90,17 @@ const SingleWeekendBreakDown = ({
                       )}
                     </div>
                     {/* {week === activeWeek && ( */}
-                      <button
-                        onClick={() => {
-                          removeFoodBox(
-                            week! as IFoodBoxDayType,
-                            activeDayMeal?.first_meal?._id!
-                          );
-                        }}
-                        type="button"
-                      >
-                        <Icon icon="fa6-solid:minus" />
-                      </button>
+                    <button
+                      onClick={() => {
+                        removeFoodBox(
+                          week! as IFoodBoxDayType,
+                          activeDayMeal?.first_meal?._id!
+                        );
+                      }}
+                      type="button"
+                    >
+                      <Icon icon="fa6-solid:minus" />
+                    </button>
                     {/* )} */}
                   </div>
                 )}
@@ -119,17 +119,17 @@ const SingleWeekendBreakDown = ({
                       )}
                     </div>
                     {/* {week === activeWeek && ( */}
-                      <button
-                        onClick={() =>
-                          removeFoodBox(
-                            week! as IFoodBoxDayType,
-                            activeDayMeal?.last_meal?._id!
-                          )
-                        }
-                        type="button"
-                      >
-                        <Icon icon="fa6-solid:minus" />
-                      </button>
+                    <button
+                      onClick={() =>
+                        removeFoodBox(
+                          week! as IFoodBoxDayType,
+                          activeDayMeal?.last_meal?._id!
+                        )
+                      }
+                      type="button"
+                    >
+                      <Icon icon="fa6-solid:minus" />
+                    </button>
                     {/* )} */}
                   </div>
                 )}
@@ -485,9 +485,16 @@ export default function Main() {
                         {numberOfMealsSelected}/{weeks.length}
                       </p>
                     </div>
-                    <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                      Add {weeks.length} more days to complete your plan
-                    </p>
+                    {!!(weeks.length - numberOfMealsSelected) ? (
+                      <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
+                        Add {weeks.length - numberOfMealsSelected} more days to
+                        complete your plan
+                      </p>
+                    ) : (
+                      <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
+                        Completed
+                      </p>
+                    )}
                   </div>
 
                   <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />

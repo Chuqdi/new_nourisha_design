@@ -10,28 +10,46 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 const Option = ({
-  extra,
+  extra_id,
   setSelectedExtras,
   selectedExtras,
 }: {
-  extra?: IExtraItem;
-  setSelectedExtras: (value: IExtraItem|undefined) => void;
-  selectedExtras: IExtraItem|undefined;
+  extra_id?: string;
+  setSelectedExtras: (value: IExtraItem | undefined) => void;
+  selectedExtras: IExtraItem | undefined;
 }) => {
-  const selected = useMemo(() => {
-    return selectedExtras?._id === extra?._id;
-  }, [selectedExtras, extra]);
+  const id = localStorage.getItem(DEVICE_ID);
+  const { getAxiosClient } = useAuth();
+  const axiosClient = getAxiosClient(id!);
+  const [extra, setExtra] = useState<undefined | IExtraItem>(undefined);
 
-  return (
+  const getPlans = () => {
+    return axiosClient.get(`meals/extras`);
+  };
+
+  const { data, isLoading } = useQuery("GET_EXTRAS" + extra_id, getPlans);
+
+  useEffect(() => {
+    if (data?.data?.data) {
+      const ex = ([...(data?.data?.data?.swallow?.data ?? []),...(data?.data?.data?.protein?.data ?? [])]).find(
+        (e: IExtraItem) => e._id === extra_id
+      );
+      setExtra(ex);
+    }
+  }, [data]);
+
+  const selected = useMemo(() => {
+    return selectedExtras?._id === extra_id;
+  }, [selectedExtras, extra_id]);
+
+  return isLoading ? (
+    <p className="text-center">Loading...</p>
+  ) : (
     <div
       onClick={() => {
-        setSelectedExtras(
-          selected
-            ? undefined
-            :extra
-        );
+        setSelectedExtras(selected ? undefined : extra);
       }}
-      className={`w-full p-4 rounded-[0.75rem] border-[2px] ${
+      className={`w-full p-4 rounded-[0.75rem] border-[2px] z-0 ${
         selected ? "border-[#FE7E00]" : "border-[#EDEDF3]"
       } flex justify-between items-center`}
     >
@@ -51,35 +69,18 @@ const Option = ({
 function ExtraMealSelectionModal() {
   const [extraModal, setExtraModal] = useAtom(ATOMS.showMealExtraSelection);
   const { addExtraItem } = useFoodbox();
-  const { getAxiosClient } = useAuth();
-  const id = localStorage.getItem(DEVICE_ID);
-  const axiosClient = getAxiosClient(id!);
-  const [extras, setExtras] = useState<{
-    protein: { data: IExtraItem[]; totalCount: number };
-    swallow: { totalCount: number; data: IExtraItem[] };
-  }>({
-    protein: { data: [], totalCount: 0 },
-    swallow: { data: [], totalCount: 0 },
-  });
-  const [selectedExtras, setSelectedExtras] = useState<IExtraItem|undefined>(undefined);
 
-  const getPlans = () => {
-    return axiosClient.get("meals/extras");
-  };
-
-  const { data, isLoading } = useQuery("GET_EXTRAS", getPlans);
-
-  useEffect(() => {
-    if (data?.data?.data) {
-      setExtras(data?.data?.data);
-    }
-  }, [data]);
+  const [selectedExtras, setSelectedExtras] = useState<IExtraItem | undefined>(
+    undefined
+  );
 
   return (
     <div className="w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll">
       <div className="h-[30rem] w-full relative">
         <div
-          onClick={() => setExtraModal({ show: false, meal: undefined, day:undefined })}
+          onClick={() =>
+            setExtraModal({ show: false, meal: undefined, day: undefined })
+          }
           className="cursor-pointer w-6 h-6 justify-center flex rounded-full items-center bg-black absolute right-4 top-4 "
         >
           <Icon color="#fff" icon="proicons:cancel" />
@@ -97,77 +98,72 @@ function ExtraMealSelectionModal() {
         <h3 className="text-black-900 font-inter text-[1.25rem] font-[500]">
           {extraModal?.meal?.name}
         </h3>
-        {isLoading ? (
-          <p className="text-center text-sm font-inter ">Loading...</p>
-        ) : (
-          <>
-            {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
-              <div>
-                {!!extras?.swallow?.totalCount && (
-                  <>
-                    <p className="text-black-900 font-inter text-sm mt-3">
-                      Select swallow
-                    </p>
-                    <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
-                      Choose one
-                    </p>
-                  </>
-                )}
-                {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
-                  <div className="flex flex-col gap-3 mt-3">
-                    {extras?.swallow?.data?.map((extra) => (
-                      <Option
-                        key={extra?._id}
-                        extra={extra}
-                        selectedExtras={selectedExtras}
-                        setSelectedExtras={setSelectedExtras}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
 
-            {extraModal?.meal?.name?.toUpperCase()?.includes("RICE") && (
-              <div className="mt-4">
-                {!!extras?.protein?.totalCount && (
-                  <>
-                    <p className="text-black-900 font-inter text-sm mt-3">
-                      Select protein
-                    </p>
-                    <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
-                      Choose one
-                    </p>
-                  </>
-                )}
-
+        <>
+          {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
+            <div>
+              {!!extraModal?.meal?.expected_swallow?.length && (
+                <>
+                  <p className="text-black-900 font-inter text-sm mt-3">
+                    Select swallow
+                  </p>
+                  <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
+                    Choose one
+                  </p>
+                </>
+              )}
+              {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
                 <div className="flex flex-col gap-3 mt-3">
-                  {extras?.protein?.data?.map((extra) => (
+                  {extraModal?.meal?.expected_swallow?.map((extra) => (
                     <Option
-                      key={extra?._id}
-                      extra={extra}
+                      key={extra}
+                      extra_id={extra}
                       selectedExtras={selectedExtras}
                       setSelectedExtras={setSelectedExtras}
                     />
                   ))}
                 </div>
+              )}
+            </div>
+          )}
+
+          {extraModal?.meal?.name?.toUpperCase()?.includes("RICE") && (
+            <div className="mt-4">
+              {!!extraModal?.meal?.expected_proteins?.length && (
+                <>
+                  <p className="text-black-900 font-inter text-sm mt-3">
+                    Select protein
+                  </p>
+                  <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
+                    Choose one
+                  </p>
+                </>
+              )}
+
+              <div className="flex flex-col gap-3 mt-3">
+                {extraModal?.meal?.expected_proteins?.map((extra) => (
+                  <Option
+                    key={extra}
+                    extra_id={extra}
+                    selectedExtras={selectedExtras}
+                    setSelectedExtras={setSelectedExtras}
+                  />
+                ))}
               </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
+        </>
       </div>
 
-      {!isLoading && (
-        <Button
-          title="Select"
-          onClick={() => {
-            addExtraItem(selectedExtras,);
-            setExtraModal({ show: false, meal: undefined, day: undefined });
-          }}
-          variant="primary"
-          className="py-6 h-[2.75rem] mt-4"
-        />
-      )}
+      <Button
+        title="Select"
+        onClick={() => {
+          addExtraItem(selectedExtras);
+          setExtraModal({ show: false, meal: undefined, day: undefined });
+        }}
+        variant="primary"
+        className="py-6 h-[2.75rem] mt-4"
+      />
     </div>
   );
 }
