@@ -32,19 +32,19 @@ const SinglePlan = ({
   const selected = activeOptionIndex === index;
   const perMealPrice = useMemo(() => {
     if (option?.name?.includes("5")) {
-      return onAfrican?"8":"7.10";
+      return onAfrican ? "8" : "7.10";
     } else if (option.name?.includes("MONTHLY")) {
-      return onAfrican?"7.14":"6.85"
+      return onAfrican ? "7.14" : "6.85";
     }
-    return onAfrican?"7.14":"6.85";
+    return onAfrican ? "7.14" : "6.85";
   }, [onAfrican]);
   const totalPrice = useMemo(() => {
     if (option?.name?.includes("5")) {
-      return onAfrican?option?.amount:"71";
+      return onAfrican ? option?.amount : "71";
     } else if (option.name?.includes("MONTHLY")) {
-      return onAfrican?option?.amount:"383.06"
+      return onAfrican ? option?.amount : "383.06";
     }
-    return onAfrican?option?.amount:"95.09";
+    return onAfrican ? option?.amount : "95.09";
   }, [onAfrican]);
   return (
     <div
@@ -62,7 +62,7 @@ const SinglePlan = ({
         </p>
       </div>
 
-      <h3 className="font-NewSpiritBold  text-[3.5rem] text-[#323546]">
+      <h3 className="font-NewSpiritBold  text-[3rem] text-[#323546]">
         {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
@@ -72,8 +72,6 @@ const SinglePlan = ({
       <div>
         <p className="text-black-900 font-inter text-base">
           £{perMealPrice}/meal
-          
-          
         </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           <span>Total: </span>
@@ -89,18 +87,21 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const user = useContext(UserContext);
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
-  const activeSearchContinent = useMemo(()=>onAfrican?CONTINENTS[0]:CONTINENTS[1], [onAfrican])
+  const activeSearchContinent = useMemo(
+    () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
+    [onAfrican]
+  );
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-    return axiosClient.get("plans?country=nigeria&weekend=false");
+    return axiosClient.get(`plans?continent=African`);
   };
-
+  //${activeSearchContinent.noun}
   const { data, isLoading } = useQuery(queryKeys.GET_PLANS, getPlans);
 
   useEffect(() => {
     if (data?.data?.data?.data) {
-      setOptions(data?.data?.data?.data);
+      setOptions(data?.data?.data?.data?.reverse());
     }
   }, [data]);
 
@@ -152,8 +153,6 @@ export default function MealPlan() {
   const [orderTypeModal, setShowOrderTypeModal] = useState(false);
   const [onAfrican, setOnAfrican] = useState(true);
 
- 
-
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
@@ -203,7 +202,7 @@ export default function MealPlan() {
             </p>
           </div>
         </div>
-        <div className="w-full md:w-[90%] mx-auto">
+        <div className="w-full md:w-full mx-auto">
           <MealPlanSelection onAfrican={onAfrican} />
         </div>
 
