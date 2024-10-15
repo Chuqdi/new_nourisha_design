@@ -33,6 +33,18 @@ export const CartManipulator = ({
   const onUpdateCart = (c: () => void) => {
     if (user?.email) {
       c();
+      if (
+        !!meal?.expected_proteins?.length ||
+        !!meal?.expected_swallow?.length
+      ) {
+        setTimeout(() => {
+          setMealExtraModal({
+            meal,
+            day: undefined,
+            show: true,
+          });
+        }, 4000);
+      }
     } else {
       toast({
         variant: "destructive",
@@ -70,16 +82,6 @@ export const CartManipulator = ({
       <button
         onClick={() => {
           onUpdateCart(() => addItemToCart(meal, 1));
-          if (
-            !!meal?.expected_proteins?.length ||
-            !!meal?.expected_swallow?.length
-          ) {
-            setMealExtraModal({
-              meal,
-              day: undefined,
-              show: true,
-            });
-          }
         }}
         className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"

@@ -14,7 +14,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { IPInfoContext } from "ip-info-react";
 import { useAtom, useAtomValue } from "jotai";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -35,6 +35,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
     useState(false);
   const couponState = useAtomValue(ATOMS.couponCode);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+
 
   const userInfo = useContext(IPInfoContext);
 
@@ -79,7 +80,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         />
       </Modal>
 
-      <SideModal show={showMealExtraModal.show}>
+      <SideModal show={showMealExtraModal.show && !cartLoading}>
         <ExtraMealSelectionModal />
       </SideModal>
 
