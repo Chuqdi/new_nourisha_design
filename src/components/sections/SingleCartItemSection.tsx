@@ -183,6 +183,11 @@ export default function SingleCartItemSection({
               <button
                 onClick={() => {
                   addFoodBox(activeWeek!, meal!);
+                  setMealExtraModal({
+                    meal,
+                    day: activeWeek,
+                    show: true,
+                  });
                   const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
                   if (bothSelected?.isFirstMealAlreadySelected)
                     goToNextWeek && goToNextWeek();

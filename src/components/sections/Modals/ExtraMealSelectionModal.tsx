@@ -1,6 +1,7 @@
 import Button from "@/components/ui/Button";
 import { IExtraItem } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -50,7 +51,9 @@ const Option = ({
 function ExtraMealSelectionModal() {
   const [extraModal, setExtraModal] = useAtom(ATOMS.showMealExtraSelection);
   const { addExtraItem } = useFoodbox();
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
+  const id = localStorage.getItem(DEVICE_ID);
+  const axiosClient = getAxiosClient(id!);
   const [extras, setExtras] = useState<{
     protein: { data: IExtraItem[]; totalCount: number };
     swallow: { totalCount: number; data: IExtraItem[] };
