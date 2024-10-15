@@ -15,6 +15,7 @@ import CartSideSection from "./CartSideSection";
 import useUser from "@/hooks/useUser";
 import { useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
+import { usePathname } from "next/navigation";
 
 export default function MealSelectionSection({
   isSingle,
@@ -37,9 +38,11 @@ export default function MealSelectionSection({
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
+  const pathName = usePathname();
+
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}`
+      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}&orderType=${pathName?.toUpperCase() === "/bulk_meals".toUpperCase()?"bulk-order":"both"}`
     );
   };
 
