@@ -33,6 +33,7 @@ export interface IMeal {
   available_quantity?: string;
   category?: string;
   description?:string;
+  spice_level:string;
   country?: string;
   expected_proteins?:string[];
   expected_swallow?:string[];
