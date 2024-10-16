@@ -6,7 +6,7 @@ import RequestQuoteModal from "@/components/sections/Modals/RequestQuoteModal";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { BREAKPOINT } from "@/config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 export default function AboutPage() {
@@ -38,7 +38,18 @@ export default function AboutPage() {
     },
   ]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+
+
   return (
+    <>
+     <title>
+     Order Party Meals & Food Delivery Services in UK | Exceptional Culinary Mastery | Nourisha
+      </title>
+      <meta
+        name="description"
+        content="Are you planning a memorable party or event in the UK?  We specialize in crafting delectable party meals & dishes that will leave your guests raving. Order our party meal today!"
+      />
+    
     <div className="w-full h-full relative pt-6">
       <Navbar />
       <Modal show={showQuoteModal}>
@@ -132,5 +143,6 @@ export default function AboutPage() {
         <Footer />
       </div>
     </div>
+    </>
   );
 }

@@ -4,9 +4,23 @@ import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
 import MessageBtn from "@/components/ui/MessageBtn";
+import { useEffect } from "react";
 
 export default function Main() {
+
+
+
+
+  
   return (
+    <>
+     <title>
+     Bulk Meal Order | Meal  Prep & Food Delivery  Services in UK | Nourisha
+      </title>
+      <meta
+        name="description"
+        content="Hosting an event or just stocking up? Order meals in bulk from NOURISHA in the UK. Browse  & select from a wide range of African, Asian & European healthy meals delivered fresh across the UK."
+      />
     <div
       className={`
       w-full h-full relative pt-6
@@ -40,5 +54,6 @@ export default function Main() {
         <Footer />
       </div>
     </div>
+    </>
   );
 }

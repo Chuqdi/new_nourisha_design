@@ -106,47 +106,57 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   }, [data]);
 
   return (
-    <div className="mx-1.25 md:mx-6.25 my-6">
-      <div className="grid grid-cols-1 md:flex gap-4">
-        {isLoading && (
-          <div className="flex justify-center items-center w-full">
-            <p className="text-center font-inter text-sm">Loading...</p>
+    <>
+      <title>
+        Best African, Asian and European Meal Plans & Delivery in the UK |
+        Nourisha
+      </title>
+      <meta
+        name="description"
+        content="Discover a wide range of freshly-cooked Nigerian, African, Asian and European meal plans from NOURISHA- Meal prep & food delivery service in the UK. Lunch & Dinner  meals delivered from less than £100/week . Choose your meals and order now."
+      />
+      <div className="mx-1.25 md:mx-6.25 my-6">
+        <div className="grid grid-cols-1 md:flex gap-4">
+          {isLoading && (
+            <div className="flex justify-center items-center w-full">
+              <p className="text-center font-inter text-sm">Loading...</p>
+            </div>
+          )}
+          {options.map((option, index) => {
+            return (
+              <SinglePlan
+                option={option}
+                onAfrican={onAfrican}
+                index={index}
+                activeOptionIndex={activeOptionIndex}
+                setActiveOptionIndex={setActiveOptionIndex}
+                key={`meal_selection_${index}`}
+              />
+            );
+          })}
+        </div>
+
+        {!isLoading && (
+          <div className="flex justify-center items-center mt-4 ">
+            <Button
+              variant="primary"
+              // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
+              className="h-[2.7rem] py-6  w-full md:w-auto"
+              onClick={() => {
+                router.push(
+                  `/food_box?plan=${
+                    options.find((o, i) => i === activeOptionIndex)?.name
+                  }&plan_id=${
+                    options.find((o, i) => i === activeOptionIndex)?._id
+                  }&search_continent=${activeSearchContinent?.search}`
+                );
+              }}
+              title="Continue"
+            />
           </div>
         )}
-        {options.map((option, index) => {
-          return (
-            <SinglePlan
-              option={option}
-              onAfrican={onAfrican}
-              index={index}
-              activeOptionIndex={activeOptionIndex}
-              setActiveOptionIndex={setActiveOptionIndex}
-              key={`meal_selection_${index}`}
-            />
-          );
-        })}
       </div>
-
-      {!isLoading && (
-        <div className="flex justify-center items-center mt-4 ">
-          <Button
-            variant="primary"
-            // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
-            className="h-[2.7rem] py-6  w-full md:w-auto"
-            onClick={() => {
-              router.push(
-                `/food_box?plan=${
-                  options.find((o, i) => i === activeOptionIndex)?.name
-                }&plan_id=${
-                  options.find((o, i) => i === activeOptionIndex)?._id
-                }&search_continent=${activeSearchContinent?.search}`
-              );
-            }}
-            title="Continue"
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 export default function MealPlan() {

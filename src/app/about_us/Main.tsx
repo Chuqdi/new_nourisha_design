@@ -7,6 +7,7 @@ import MessageBtn from "@/components/ui/MessageBtn";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 
 export default function Main() {
@@ -122,7 +123,19 @@ export default function Main() {
       image: "community.png",
     },
   ];
+
+  useEffect(()=>{
+    document.title="";
+  }, []);
   return (
+    <>
+      <title>
+      About Us -  Meal Prep  & Delivery services in UK | Nourisha
+      </title>
+      <meta
+        name="description"
+        content="Nourisha serves everyone looking for the convenience and health benefits of nutritious, ready-to-eat meals delivered straight to their doorstep in the UK."
+      />
     <div className="w-full h-full relative pt-6">
       <Navbar />
 
@@ -310,5 +323,6 @@ export default function Main() {
         <Footer />
       </div>
     </div>
+    </>
   );
 }
