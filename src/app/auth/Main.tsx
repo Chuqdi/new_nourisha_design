@@ -13,7 +13,7 @@ import { useContext, useEffect, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
-import {  UserContext } from "@/HOC/UserContext";
+import {  LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
@@ -51,7 +51,7 @@ export default function Main() {
     
     if (createdUser) {
       setToken(createdUser.token);
-      // localStorage.setItem(LOGGED_IN_USER,JSON.stringify(createdUser?.payload))
+      localStorage.setItem(LOGGED_IN_USER,JSON.stringify(createdUser?.payload))
       localStorage.setItem("AUTH_USER_EMAIL", data.email);
 
       toast({

@@ -172,7 +172,7 @@ export default function Main() {
           <div className="w-full   p-2  md:p-0 md:ml-[2rem] flex flex-col gap-5">
             <div>
               <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[3.5rem] md:tracking-[-0.135rem]">
-                Savour the Flavors with Nourisha
+                Savour the Flavours with Nourisha
               </h2>
               <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
                 Allow yourself to explore your culinary desires and fully

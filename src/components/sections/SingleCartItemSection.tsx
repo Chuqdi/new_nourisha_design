@@ -14,6 +14,7 @@ import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
+import { usePathname } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 
 export const CartManipulator = ({
@@ -116,6 +117,7 @@ export default function SingleCartItemSection({
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
+  const pathName = usePathname();
 
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -171,9 +173,12 @@ export default function SingleCartItemSection({
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
+      {
+        pathName?.toUpperCase() !== "/food_box".toUpperCase() &&
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
         £{meal?.price?.amount}
       </p>
+      }
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem]">
         {meal?.name}
       </p>

@@ -83,14 +83,15 @@ export default function DeliveryModal({
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     try {
-      await axiosClient.put(`customers/me`, { address }).catch((e) => {
-        router.push("/auth");
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to update address, please login to continue",
-        });
-      });
+      await axiosClient.put(`customers/me`, { address })
+      // .catch((e) => {
+      //   router.push("/auth");
+      //   toast({
+      //     variant: "destructive",
+      //     title: "Error",
+      //     description: "Failed to update address, please login to continue",
+      //   });
+      // });
       userCtx?.setUser({
         ...user,
         //@ts-ignore

@@ -7,7 +7,7 @@ import { ICartItem, IMeal, IUser } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../ui/Button";
 import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "use-debounce";
@@ -16,6 +16,7 @@ import useUser from "@/hooks/useUser";
 import { useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname } from "next/navigation";
+import ComingSoonSection from "./ComingSoonSection";
 
 export default function MealSelectionSection({
   isSingle,
@@ -42,9 +43,21 @@ export default function MealSelectionSection({
 
   const getMeals = () => {
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}${pathName?.toUpperCase() === "/bulk_meals".toUpperCase()&&"&orderType=bulk-order"}`
+      `meals/pack?page=1&limit=${limit}&continent=${
+        activeContinent.search
+      }&searchPhrase=${searchPhrase}${
+        pathName?.toUpperCase() === "/bulk_meals".toUpperCase() &&
+        "&orderType=bulk-order"
+      }`
     );
   };
+
+  const isComingSoon = useMemo(() => {
+    return (
+      activeContinent?.search?.toUpperCase() === "Asian".toUpperCase() &&
+      pathName?.toUpperCase() === "/bulk_meals".toUpperCase()
+    );
+  }, [activeContinent, pathName]);
 
   const { data, isLoading } = useFetch(
     getMeals,
@@ -108,7 +121,7 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      {isSingle && (
+      {(isSingle && !isComingSoon) && (
         <div className="flex gap-4 mt-4  items-center">
           {isMobile && (
             <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
@@ -133,45 +146,48 @@ export default function MealSelectionSection({
           <p>Loading...</p>
         </div>
       )}
-
-      <div className="flex items-start gap-2">
-       <div>
-
-       <div
-          className={`
+      {isComingSoon ? (
+        <div className="my-8 w-full">
+          <ComingSoonSection />
+        </div>
+      ) : (
+        <div className="flex items-start gap-2">
+          <div className="w-full">
+            <div
+              className={`
         grid grid-cols-2 ${
           colCountClass ? colCountClass : "md:grid-cols-3"
         } gap-4 mt-4
         `}
-        >
-          {meals.map((meal, index) => (
-            <SingleCartItemSection
-              country={activeContinent}
-              isHome={isHome}
-              meal={meal}
-              key={`cart_item_${index}`}
-            />
-          ))}
-        </div>
+            >
+              {meals.map((meal, index) => (
+                <SingleCartItemSection
+                  country={activeContinent}
+                  isHome={isHome}
+                  meal={meal}
+                  key={`cart_item_${index}`}
+                />
+              ))}
+            </div>
 
-
-        <div className="flex items-center justify-center mt-8">
-        <Button
-          title={isLoading ? "Loading..." : "Load more"}
-          onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
-          variant="primary"
-          className="py-6 font-bold font-inter h-[2.5rem]"
-        />
-      </div>
-       </div>
-        {(user?.email && !!cartItems.length) && (
-          <div className="hidden md:block mt-4">
-            <CartSideSection />
+            <div className="flex items-center justify-center mt-8">
+              <Button
+                title={isLoading ? "Loading..." : "Load more"}
+                onClick={() =>
+                  setLimit((value) => (parseInt(value) + 10).toString())
+                }
+                variant="primary"
+                className="py-6 font-bold font-inter h-[2.5rem]"
+              />
+            </div>
           </div>
-        )}
-      </div>
-
-    
+          {user?.email && !!cartItems.length && (
+            <div className="hidden md:block mt-4">
+              <CartSideSection />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

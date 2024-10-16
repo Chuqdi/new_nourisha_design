@@ -126,10 +126,10 @@ export default function LoginModal({
           >
             No Thanks
           </button>
-          <div className="text-center text-sm text-black-900 font-semibold">
+          {/* <div className="text-center text-sm text-black-900 font-semibold">
             By Subscribing you agree to receive marketing communications from
             us. To opt-out, click unsubscribe at the bottom of our emails
-          </div>
+          </div> */}
         </div>
       </form>
     </div>
