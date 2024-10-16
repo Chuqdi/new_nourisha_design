@@ -71,6 +71,15 @@ const FoodInfoModal = () => {
         </div>
       </div>
 
+      <div className="mt-5">
+        <h4 className="text-black-900 text-[1.5rem] font-NewSpiritBold">
+          Description
+        </h4>
+        <p className="text-[#323546] font-inter text-[1.25rem]">
+          {meal?.description}
+        </p>
+      </div>
+
       <div className="flex flex-col gap-4 mt-5">
         <div>
           <h4 className="text-black-900 text-[1.5rem] font-NewSpiritBold">

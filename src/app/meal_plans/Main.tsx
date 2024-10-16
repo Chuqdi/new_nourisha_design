@@ -46,6 +46,7 @@ const SinglePlan = ({
     }
     return onAfrican ? option?.amount : "95.09";
   }, [onAfrican]);
+
   return (
     <div
       onClick={() => setActiveOptionIndex(index)}
@@ -62,19 +63,21 @@ const SinglePlan = ({
         </p>
       </div>
 
-      <h3 className="font-NewSpiritBold  text-[3rem] text-[#323546]">
-        {option?.name?.includes("5")
+      <h3 className="font-NewSpiritBold  text-[2.5rem] text-[#323546]">
+        {/* {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
           ? "56 Meals"
-          : "14 Meals"}
+          : "14 Meals"} */}
+        {option?.name}
       </h3>
       <div>
         <p className="text-black-900 font-inter text-base">
-          £{perMealPrice}/meal
+          {/* £{perMealPrice}/meal £{option?.amount}/meal */}
+          {option?.description}
         </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
-          <span>Total: </span>
+          {/* <span>Total: </span> */}
           <span className="font-bold">£{totalPrice}</span>
         </p>
       </div>
@@ -91,17 +94,21 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
   );
+
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-    return axiosClient.get(`plans?continent=African`);
+    return axiosClient.get(`plans?continent=${activeSearchContinent?.search}`);
   };
   //${activeSearchContinent.noun}
-  const { data, isLoading } = useQuery(queryKeys.GET_PLANS, getPlans);
+  const { data, isLoading } = useQuery(
+    [queryKeys.GET_PLANS, activeSearchContinent?.search],
+    getPlans
+  );
 
   useEffect(() => {
     if (data?.data?.data?.data) {
-      setOptions(data?.data?.data?.data?.reverse());
+      setOptions(data?.data?.data?.data);
     }
   }, [data]);
 
@@ -115,13 +122,13 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
         name="description"
         content="Discover a wide range of freshly-cooked Nigerian, African, Asian and European meal plans from NOURISHA- Meal prep & food delivery service in the UK. Lunch & Dinner  meals delivered from less than £100/week . Choose your meals and order now."
       />
-      <div className="mx-1.25 md:mx-6.25 my-6">
+      <div className="mx-1.25 md:mx-[2rem] my-6">
+        {isLoading && (
+          <div className="flex justify-center items-center w-full">
+            <p className="text-center font-inter text-sm">Loading...</p>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:flex gap-4">
-          {isLoading && (
-            <div className="flex justify-center items-center w-full">
-              <p className="text-center font-inter text-sm">Loading...</p>
-            </div>
-          )}
           {options.map((option, index) => {
             return (
               <SinglePlan

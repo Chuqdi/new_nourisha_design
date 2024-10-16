@@ -135,7 +135,9 @@ export default function MealSelectionSection({
       )}
 
       <div className="flex items-start gap-2">
-        <div
+       <div>
+
+       <div
           className={`
         grid grid-cols-2 ${
           colCountClass ? colCountClass : "md:grid-cols-3"
@@ -151,14 +153,9 @@ export default function MealSelectionSection({
             />
           ))}
         </div>
-        {(user?.email && !!cartItems.length) && (
-          <div className="hidden md:block mt-4">
-            <CartSideSection />
-          </div>
-        )}
-      </div>
 
-      <div className="flex items-center justify-center mt-8">
+
+        <div className="flex items-center justify-center mt-8">
         <Button
           title={isLoading ? "Loading..." : "Load more"}
           onClick={() => setLimit((value) => (parseInt(value) + 10).toString())}
@@ -166,6 +163,15 @@ export default function MealSelectionSection({
           className="py-6 font-bold font-inter h-[2.5rem]"
         />
       </div>
+       </div>
+        {(user?.email && !!cartItems.length) && (
+          <div className="hidden md:block mt-4">
+            <CartSideSection />
+          </div>
+        )}
+      </div>
+
+    
     </div>
   );
 }

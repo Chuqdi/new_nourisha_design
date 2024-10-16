@@ -32,6 +32,7 @@ export interface IUser {
 export interface IMeal {
   available_quantity?: string;
   category?: string;
+  description?:string;
   country?: string;
   expected_proteins?:string[];
   expected_swallow?:string[];
