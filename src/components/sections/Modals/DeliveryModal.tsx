@@ -35,9 +35,11 @@ export const Checkbox = ({
 export default function DeliveryModal({
   proceed,
   setDeliveryDate,
+  hidDeliveryDate,
 }: {
   proceed: () => Promise<void>;
   setDeliveryDate: (d: string) => void;
+  hidDeliveryDate?: boolean;
 }) {
   const [delivery_date, set_delivery_date] = useState("");
   const router = useRouter();
@@ -55,7 +57,7 @@ export default function DeliveryModal({
   });
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!delivery_date) {
+    if (!delivery_date && !hidDeliveryDate) {
       toast({
         variant: "destructive",
         title: "Please select a delivery date",
@@ -147,15 +149,17 @@ export default function DeliveryModal({
       </p>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-6">
-        <div>
-          <label>Delivery date</label>
-          <Input
-            value={delivery_date}
-            type="date"
-            onChange={(e) => set_delivery_date(e.target.value)}
-            className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
-          />
-        </div>
+        {!hidDeliveryDate && (
+          <div>
+            <label>Delivery date</label>
+            <Input
+              value={delivery_date}
+              type="date"
+              onChange={(e) => set_delivery_date(e.target.value)}
+              className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+            />
+          </div>
+        )}
 
         <div>
           <label>Country</label>

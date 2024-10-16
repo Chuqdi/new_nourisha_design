@@ -506,6 +506,10 @@ export default function Main() {
                           <DeliveryModal
                             setDeliveryDate={set_delivery_date}
                             proceed={createLineUp}
+                            hidDeliveryDate={searchParams
+                              .get("search_continent")
+                              ?.toUpperCase()
+                              ?.includes("Asian".toUpperCase())}
                           />
                         ),
                         show: true,
