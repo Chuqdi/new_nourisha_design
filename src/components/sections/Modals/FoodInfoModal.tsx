@@ -41,7 +41,7 @@ const FoodInfoModal = () => {
         {meal?.name}
       </h3>
 
-      <div className="grid grid-cols-4 mt-5 gap-3">
+      <div className="grid grid-cols-5 mt-5 gap-3">
         <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
           <h4 className="text-black-900 text-base font-NewSpiritBold">
             {meal?.calories} kcal
@@ -68,6 +68,15 @@ const FoodInfoModal = () => {
             {meal?.mealInfo?.nutrition?.protein}
           </h4>
           <p className="text-[#323546] font-inter font-base">PROTEIN</p>
+        </div>
+
+
+
+        <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
+          <h4 className="text-black-900 text-base font-NewSpiritBold">
+            {meal?.spice_level}
+          </h4>
+          <p className="text-[#323546] font-inter font-base">SPICE LEVEL</p>
         </div>
       </div>
 
