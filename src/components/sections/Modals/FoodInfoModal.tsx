@@ -69,9 +69,6 @@ const FoodInfoModal = () => {
           </h4>
           <p className="text-[#323546] font-inter font-base">PROTEIN</p>
         </div>
-
-
-
         <div className="flex-1 bg-[#DEF54C] rounded-[0.5rem] py-[0.75rem] px-[0.5rem] flex justify-center items-center flex-col">
           <h4 className="text-black-900 text-base font-NewSpiritBold">
             {meal?.spice_level}
