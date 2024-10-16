@@ -36,8 +36,6 @@ const SingleSubscription = ({
   const [coupon, setCoupon] = useState("");
 
   const gradientColors = [
-    // "linear-gradient(208deg, #E2D8FD 16.32%, #E2D8FD 105.01%)",
-    // "linear-gradient(208deg, #FE7E00 16.32%, #FE0000 105.01%)",
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
   ];
   const textColors = ["#9572F9", "#9572F9", "#9572F9"];
@@ -153,7 +151,7 @@ export default function Subscription() {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
-      "plans?country=nigeria&continent=African&weekend=false"
+      "plans?weekend=true"
     );
   };
 
