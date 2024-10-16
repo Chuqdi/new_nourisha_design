@@ -5,7 +5,7 @@ import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
@@ -31,9 +31,10 @@ const Option = ({
 
   useEffect(() => {
     if (data?.data?.data) {
-      const ex = ([...(data?.data?.data?.swallow?.data ?? []),...(data?.data?.data?.protein?.data ?? [])]).find(
-        (e: IExtraItem) => e._id === extra_id
-      );
+      const ex = [
+        ...(data?.data?.data?.swallow?.data ?? []),
+        ...(data?.data?.data?.protein?.data ?? []),
+      ].find((e: IExtraItem) => e._id === extra_id);
       setExtra(ex);
     }
   }, [data]);
@@ -74,7 +75,6 @@ function ExtraMealSelectionModal() {
     undefined
   );
 
-
   return (
     <div className="w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll">
       <div className="h-[30rem] w-full relative">
@@ -101,48 +101,20 @@ function ExtraMealSelectionModal() {
         </h3>
 
         <>
-          {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
-            <div>
-              {!!extraModal?.meal?.expected_swallow?.length && (
-                <>
-                  <p className="text-black-900 font-inter text-sm mt-3">
-                    Select swallow
-                  </p>
-                  <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
-                    Choose one
-                  </p>
-                </>
-              )}
-              {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
-                <div className="flex flex-col gap-3 mt-3">
-                  {extraModal?.meal?.expected_swallow?.map((extra) => (
-                    <Option
-                      key={extra}
-                      extra_id={extra}
-                      selectedExtras={selectedExtras}
-                      setSelectedExtras={setSelectedExtras}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {extraModal?.meal?.name?.toUpperCase()?.includes("RICE") && (
-            <div className="mt-4">
-              {!!extraModal?.meal?.expected_proteins?.length && (
-                <>
-                  <p className="text-black-900 font-inter text-sm mt-3">
-                    Select protein
-                  </p>
-                  <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
-                    Choose one
-                  </p>
-                </>
-              )}
-
+          <div>
+            {!!extraModal?.meal?.expected_swallow?.length && (
+              <>
+                <p className="text-black-900 font-inter text-sm mt-3">
+                  Select swallow
+                </p>
+                <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
+                  Choose one
+                </p>
+              </>
+            )}
+            {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
               <div className="flex flex-col gap-3 mt-3">
-                {extraModal?.meal?.expected_proteins?.map((extra) => (
+                {extraModal?.meal?.expected_swallow?.map((extra) => (
                   <Option
                     key={extra}
                     extra_id={extra}
@@ -151,8 +123,32 @@ function ExtraMealSelectionModal() {
                   />
                 ))}
               </div>
+            )}
+          </div>
+
+          <div className="mt-4">
+            {!!extraModal?.meal?.expected_proteins?.length && (
+              <>
+                <p className="text-black-900 font-inter text-sm mt-3">
+                  Select protein
+                </p>
+                <p className="bg-[#ECF9F3] rounded-[0.25rem] p-[0.3rem] flex justify-center items-center w-fit text-[0.74rem]">
+                  Choose one
+                </p>
+              </>
+            )}
+
+            <div className="flex flex-col gap-3 mt-3">
+              {extraModal?.meal?.expected_proteins?.map((extra) => (
+                <Option
+                  key={extra}
+                  extra_id={extra}
+                  selectedExtras={selectedExtras}
+                  setSelectedExtras={setSelectedExtras}
+                />
+              ))}
             </div>
-          )}
+          </div>
         </>
       </div>
 
