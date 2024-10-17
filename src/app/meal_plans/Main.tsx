@@ -8,10 +8,11 @@ import MessageBtn from "@/components/ui/MessageBtn";
 import Modal from "@/components/ui/Modal";
 import { CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
-import { IPlan } from "@/config/types";
+import { IPlan, IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
@@ -38,6 +39,7 @@ const SinglePlan = ({
     }
     return onAfrican ? "7.14" : "6.85";
   }, [onAfrican]);
+
   const totalPrice = useMemo(() => {
     if (option?.name?.includes("5")) {
       return onAfrican ? option?.amount : "71";
@@ -87,13 +89,14 @@ const SinglePlan = ({
 const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const [activeOptionIndex, setActiveOptionIndex] = useState(1);
   const { getAxiosClient } = useAuth();
-  const user = useContext(UserContext);
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
   );
+  const { getUser } = useUser();
+  const [user, setUser] = useState<undefined | IUser>(undefined);
 
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
@@ -111,6 +114,10 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       setOptions(data?.data?.data?.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <>
@@ -150,13 +157,15 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
-                router.push(
-                  `/food_box?plan=${
-                    options.find((o, i) => i === activeOptionIndex)?.name
-                  }&plan_id=${
-                    options.find((o, i) => i === activeOptionIndex)?._id
-                  }&search_continent=${activeSearchContinent?.search}`
-                );
+                user?.email
+                  ? router.push(
+                      `/food_box?plan=${
+                        options.find((o, i) => i === activeOptionIndex)?.name
+                      }&plan_id=${
+                        options.find((o, i) => i === activeOptionIndex)?._id
+                      }&search_continent=${activeSearchContinent?.search}`
+                    )
+                  : router.push("/auth");
               }}
               title="Continue"
             />
