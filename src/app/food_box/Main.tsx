@@ -352,7 +352,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    emptyBox();
+    // emptyBox();
   }, []);
 
   return (
