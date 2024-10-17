@@ -13,7 +13,7 @@ import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useUser from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
@@ -177,7 +177,12 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
 };
 export default function MealPlan() {
   const [orderTypeModal, setShowOrderTypeModal] = useState(false);
-  const [onAfrican, setOnAfrican] = useState(true);
+  const searchParams = useSearchParams();
+  const [onAfrican, setOnAfrican] = useState(
+    searchParams?.get("onAsian") && searchParams?.get("onAsian") === "1"
+      ? false
+      : true
+  );
 
   return (
     <div className="w-full h-full relative pt-6">
