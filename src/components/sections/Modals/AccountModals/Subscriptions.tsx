@@ -155,7 +155,7 @@ export default function Subscription() {
     return axiosClient.get(
       `plans?continent=${
         searchContinent === "Asian" ? "Asian" : "African"
-      }weekend=${searchPlan?.includes("5") ? "true" : "false"}`
+      }&weekend=${searchPlan?.includes("5") ? "true" : "false"}`
     );
   };
 
@@ -186,7 +186,11 @@ export default function Subscription() {
       return items;
     }
 
-    return items?.filter((item) => item._id === id);
+    if(!!items?.filter((item) => item._id === id)?.length){
+      return items?.filter((item) => item._id === id);
+    }
+
+    return items ;
 
     // const itemIndex = items.findIndex((item) => item._id === id);
     // if (itemIndex === -1) {
