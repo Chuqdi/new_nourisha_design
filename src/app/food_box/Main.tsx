@@ -294,7 +294,7 @@ export default function Main() {
     const axiosClient = getAxiosClient(id!);
     const data = prepareMealForBE();
     axiosClient
-      .post(`lineups`, { ...data, delivery_date, card_token: "off_session" })
+      .post(`lineups/web`, { ...data, delivery_date, card_token: "off_session" })
       .then((data) => {
         toast({
           variant: "default",
