@@ -275,7 +275,7 @@ export default function Main() {
         };
       }
 
-      return {};
+      return undefined;
     });
   };
 
@@ -293,15 +293,26 @@ export default function Main() {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     const data = prepareMealForBE();
+    console.log({})
+    const value = {
+      ...Object.values(data),
+      delivery_date: delivery_date ?? "",
+    };
+    // console.log();
+    // setLoading(false);
+    // return;
     axiosClient
-      .post(`lineups/web`, { ...data, delivery_date, card_token: "off_session" })
+      .post(`lineups/web`, {
+        ...data,
+        delivery_date: delivery_date ?? "",
+      })
       .then((data) => {
         toast({
           variant: "default",
           title: "Success",
           description: "Line-up created successfully.",
         });
-        emptyBox();
+        // emptyBox();
       })
       .catch((err) => {
         let msg = err?.response?.data?.message ?? "Line-up was not created.";
