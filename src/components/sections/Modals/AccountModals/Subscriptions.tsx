@@ -151,7 +151,7 @@ export default function Subscription() {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
-      "plans?weekend=true"
+      "plans?continent=African"
     );
   };
 
