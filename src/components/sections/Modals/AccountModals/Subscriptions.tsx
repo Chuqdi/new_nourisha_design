@@ -34,7 +34,7 @@ const SingleSubscription = ({
   const btnRef = useRef<HTMLButtonElement>(null!);
   const [isSelected, setSelected] = useState(false);
   const [coupon, setCoupon] = useState("");
-  const [ searchParamQuery, setSearchParamQuery] = useState("");
+  const [searchParamQuery, setSearchParamQuery] = useState("");
 
   const gradientColors = [
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
@@ -53,7 +53,7 @@ const SingleSubscription = ({
   useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    setSearchParamQuery(urlParams.toString())
+    setSearchParamQuery(urlParams.toString());
   }, []);
 
   return (
@@ -134,12 +134,11 @@ const SingleSubscription = ({
                   returnUrl: `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`,
                 };
               },
-             
             });
           }}
         />
         <p className="text-black-900 text-sm text-center font-inter my-4">
-          + £8 For weekend deliveries
+          + £8 for weekend deliveries
         </p>
       </div>
     </div>
