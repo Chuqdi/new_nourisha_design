@@ -110,7 +110,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   );
 
   const sortPlans = (plans: IPlan[]) => {
-    const containsNumber = (str?: string): boolean => /\d/.test(str??"");
+    const containsNumber = (str?: string): boolean => /\d/.test(str ?? "");
     plans.sort((a, b) => {
       if (containsNumber(a?.name) && !containsNumber(b?.name)) {
         return -1;
@@ -164,6 +164,10 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             );
           })}
         </div>
+
+        <p className="text-black-900 text-xl text-center font-inter my-4">
+            + 8 For weekend deliveries
+          </p>
 
         {!isLoading && (
           <div className="flex justify-center items-center mt-4 ">
@@ -250,6 +254,7 @@ export default function MealPlan() {
         </div>
         <div className="w-full md:w-full mx-auto">
           <MealPlanSelection onAfrican={onAfrican} />
+       
         </div>
 
         <div className="w-full">
