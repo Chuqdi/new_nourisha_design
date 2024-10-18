@@ -4,14 +4,13 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import {
   Elements,
   PaymentElement,
-  CardElement,
   useElements,
   useStripe,
   
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";

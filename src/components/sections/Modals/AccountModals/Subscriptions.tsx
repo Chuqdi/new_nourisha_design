@@ -62,18 +62,19 @@ const SingleSubscription = ({
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     setLoadingDiscount(true);
+    const code = coupon.trim();
 
     await axiosClient
       .get("discounts/promos")
       .then((data) => {
         const couponDiscount = data?.data?.data?.data?.find(
           //@ts-ignore
-          (d) => d?.code === coupon
+          (d) => d?.code === code
         );
         if (couponDiscount) {
           const discountPercentage = couponDiscount?.coupon?.percent_off;
           setDisCountedAmount(
-            (plan?.amount! * (100 - discountPercentage)) / 100
+            Math.round((plan?.amount! * (100 - discountPercentage)) / 100)
           );
         } else {
           setDisCountedAmount(0);
@@ -135,11 +136,11 @@ const SingleSubscription = ({
               </span>
             </p>
           )}
-          {loadingDiscount &&
+          {loadingDiscount && (
             <p className="text-center text-sm font-NewSpiritRegular">
               Loading...
             </p>
-          }
+          )}
         </div>
 
         <Button
