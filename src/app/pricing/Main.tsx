@@ -171,7 +171,7 @@ export default function Main() {
                 />
 
                 <p className="text-black-900 text-sm text-center font-inter my-4">
-                + 8 for weekend deliveries
+                + £8 for weekend deliveries
                 </p>
               </div>
             </div>
