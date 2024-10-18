@@ -3,14 +3,9 @@ import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
-import MessageBtn from "@/components/ui/MessageBtn";
-import { useEffect } from "react";
+
 
 export default function Main() {
-
-
-
-
   
   return (
     <>
