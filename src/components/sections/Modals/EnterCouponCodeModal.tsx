@@ -15,6 +15,7 @@ export default () => {
   };
   return (
     <form
+    name="enter_coupon_code_form"
       onSubmit={onSubmit}
       className="bg-white p-4 rounded-md flex flex-col gap-3"
     >

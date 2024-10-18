@@ -50,7 +50,7 @@ export default function Main() {
     <div className="w-full h-full relative pt-6">
       <Navbar />
       <div className="m-1.25 mt-[8rem] md:m-6.25 flex flex-col-reverse md:flex-row items-stretch md:items-center gap-20">
-        <form onSubmit={onSubmit} className="flex-1 flex flex-col gap-16">
+        <form name="formgot_password_form" onSubmit={onSubmit} className="flex-1 flex flex-col gap-16">
           <div className="flex items-center gap-6 justify-center">
             <button
               type="button"

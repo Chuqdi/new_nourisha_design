@@ -85,7 +85,7 @@ export default function MyProfile() {
   return (
     <SidebarHOC isBack title="My Profile">
       <div className="w-full">
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
+        <form name="edit_profile_form" onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
           <div>
             <label>Address</label>
             <Input

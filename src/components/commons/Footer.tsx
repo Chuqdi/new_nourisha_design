@@ -89,7 +89,7 @@ export default function Footer() {
         <h4 className="text-white font-NewSpiritBold text-[2rem] md:text-[2.75rem] tracking-[-0.11rem] mb-5 w-3/5 md:w-full">
           Get the latest updates before they happen
         </h4>
-        <form className="flex flex-col gap-4 mb-8">
+        <form name="get_update_form" className="flex flex-col gap-4 mb-8">
           <Input
             placeholder="Full name"
             className="placeholder:text-sm font-inter text-[#323546]"

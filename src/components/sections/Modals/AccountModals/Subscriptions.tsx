@@ -64,16 +64,12 @@ const SingleSubscription = ({
     setLoadingDiscount(true);
 
     await axiosClient
-      .get("discounts/promos")
+      .get(`discounts/promos/code/${coupon.trim()}`)
       .then((data) => {
-        const couponDiscount = data?.data?.data?.data?.find(
-          //@ts-ignore
-          (d) => d?.code?.trim() === coupon?.trim()
-        );
-        console.log(data?.data?.data?.data);
-        console.log(couponDiscount);
+        const couponDiscount = data?.data?.data;
         if (couponDiscount) {
           const discountPercentage = couponDiscount?.coupon?.percent_off;
+          console.log(couponDiscount)
           setDisCountedAmount(
             (plan?.amount! * (100 - discountPercentage)) / 100
           );

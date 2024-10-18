@@ -73,7 +73,7 @@ export default function Main() {
             </div>
           </div>
 
-          <form className="flex-1 px-4 py-6 bg-white rounded-[2rem] flex flex-col gap-6">
+          <form name="contact_us_form" className="flex-1 px-4 py-6 bg-white rounded-[2rem] flex flex-col gap-6">
             <div>
               <label>Full name</label>
               <input

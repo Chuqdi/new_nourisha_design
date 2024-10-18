@@ -156,7 +156,7 @@ export default function DeliveryModal({
         meal will be delivered to this address
       </p>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-6">
+      <form name="delivery_form" onSubmit={onSubmit} className="flex flex-col gap-6">
         {!hidDeliveryDate && (
           <div>
             <label>Delivery date</label>

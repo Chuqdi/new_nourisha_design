@@ -43,7 +43,7 @@ export default function AddAddressBook() {
   };
   return (
     <SidebarHOC isBack title="Add new address">
-      <form onSubmit={onSubmit} className="flex flex-col gap-6">
+      <form  name="add_form_form" onSubmit={onSubmit} className="flex flex-col gap-6">
         <div>
           <label>Country</label>
           <Input

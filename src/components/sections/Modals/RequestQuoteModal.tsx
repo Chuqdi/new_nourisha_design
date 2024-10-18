@@ -19,7 +19,9 @@ export default function RequestQuoteModal({ close }:{ close:()=> void }) {
         </p>
       </div>
 
-      <form className="flex gap-6 flex-col">
+      <form
+      name="request_quote_modal_form"
+      className="flex gap-6 flex-col">
         <div className="flex flex-col gap-1">
           <label>Full name</label>
           <Input className="rounded-[0.75rem]" />

@@ -20,7 +20,7 @@ export default function LoginModal({
   setUser: (user: IUser) => void;
 }) {
   const { setToken } = useAuthToken();
-  const device_id = localStorage?.getItem(DEVICE_ID)
+  const device_id = localStorage?.getItem(DEVICE_ID);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const { makeRequest, isLoading } = useAuth();
 
@@ -67,7 +67,10 @@ export default function LoginModal({
         <Icon color="#000" className="w-14 h-14" icon="iconoir:cancel" />
       </button>
       {isMobile ? (
-        <img src="/images/login_modal_side.png" className="object-cover w-full h-[20rem]" />
+        <img
+          src="/images/login_modal_side.png"
+          className="object-cover w-full h-[20rem]"
+        />
       ) : (
         <div
           style={{
@@ -81,6 +84,7 @@ export default function LoginModal({
       )}
 
       <form
+        name="login_form"
         onSubmit={handleSubmit}
         className="flex flex-1 flex-col gap-7 py-14 px-6"
       >

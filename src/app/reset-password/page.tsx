@@ -77,7 +77,7 @@ export default function Main() {
       <Navbar />
       <div className="m-1.25 mt-[8rem] md:m-6.25 flex flex-col-reverse md:flex-row items-stretch md:items-center gap-20">
         {validators && validators.customer_id ? (
-          <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
+          <form name="reset_password_form" onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
             <div className="flex items-center gap-6 justify-center">
               <button
                 type="button"
@@ -127,7 +127,7 @@ export default function Main() {
             </div>
           </form>
         ) : (
-          <form onSubmit={onSubmitOTP} className="flex-1 flex flex-col gap-16">
+          <form name="reset_password_otp_form" onSubmit={onSubmitOTP} className="flex-1 flex flex-col gap-16">
             <div className="flex items-center gap-6 justify-center">
               <button
                 type="button"
