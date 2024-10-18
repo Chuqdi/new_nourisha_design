@@ -19,7 +19,6 @@ import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
-import { useRouter } from "next/router";
 
 const SingleSubscription = ({
   plan,
@@ -140,10 +139,7 @@ const SingleSubscription = ({
           }}
         />
         <p className="text-black-900 text-sm text-center font-inter my-4">
-          + £10 For deliveries during the week
-        </p>
-        <p className="text-black-900 text-sm text-center font-inter my-4">
-          + £18 For weekend deliveries
+          + £8 For weekend deliveries
         </p>
       </div>
     </div>
