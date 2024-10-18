@@ -60,10 +60,7 @@ export default function DeliveryModal({
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!delivery_date && !hidDeliveryDate) {
-      toast({
-        variant: "destructive",
-        title: "Please select a delivery date",
-      });
+      alert("Please select a delivery date")
       return;
     }
 
