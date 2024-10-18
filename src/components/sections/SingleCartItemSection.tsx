@@ -6,7 +6,6 @@ import {
   IMeal,
   IUser,
 } from "@/config/types";
-import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import useUser from "@/hooks/useUser";
@@ -14,24 +13,35 @@ import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
-import { usePathname } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export const CartManipulator = ({
   meal,
   item,
   small,
+  activeCountry,
 }: {
   item: ICartItem;
   meal: IMeal;
   small?: boolean;
+  activeCountry?: string;
 }) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
+  const router = useRouter();
+  const pathName = usePathname();
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
 
   const onUpdateCart = (c: () => void) => {
+    if (
+      activeCountry?.toUpperCase() === "Asia".toUpperCase() &&
+      pathName !== "/food_box"
+    ) {
+      router.push("/meal_plans?onAsian=1");
+      return;
+    }
     if (user?.email) {
       c();
       if (
@@ -173,12 +183,11 @@ export default function SingleCartItemSection({
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
-      {
-        pathName?.toUpperCase() !== "/food_box".toUpperCase() &&
-      <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
-        £{meal?.price?.amount}
-      </p>
-      }
+      {pathName?.toUpperCase() !== "/food_box".toUpperCase() && (
+        <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
+          £{meal?.price?.amount}
+        </p>
+      )}
       <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem]">
         {meal?.name}
       </p>
@@ -278,7 +287,11 @@ export default function SingleCartItemSection({
             </p>
           </button>
 
-          <CartManipulator meal={meal} item={cartItemMeal!} />
+          <CartManipulator
+            activeCountry={country?.name}
+            meal={meal}
+            item={cartItemMeal!}
+          />
         </div>
       )}
     </div>

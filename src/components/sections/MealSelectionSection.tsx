@@ -17,6 +17,8 @@ import { useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname } from "next/navigation";
 import ComingSoonSection from "./ComingSoonSection";
+import { useMutation } from "react-query";
+import axios from "axios";
 
 export default function MealSelectionSection({
   isSingle,
@@ -65,6 +67,17 @@ export default function MealSelectionSection({
     true
   );
 
+  const mutation = useMutation({
+    mutationFn: (newTodo) => {
+      return axios.post(`${process.env.API_URL}/meals/pack/search/phrase`, {
+        searchPhrase,
+      });
+    },
+    onSuccess: (data) => {
+      console.log(data?.data?.data?.meals);
+    },
+  });
+
   useEffect(() => {
     //@ts-ignore
     if (data?.data?.data) {
@@ -76,6 +89,12 @@ export default function MealSelectionSection({
   useEffect(() => {
     setUser(getUser());
   }, []);
+
+  useEffect(() => {
+    if (phrase) {
+      mutation.mutate();
+    }
+  }, [phrase]);
 
   return (
     <div
@@ -121,7 +140,7 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      {(isSingle && !isComingSoon) && (
+      {isSingle && !isComingSoon && (
         <div className="flex gap-4 mt-4  items-center">
           {isMobile && (
             <div className="flex items-center gap-[0.25rem] rounded-[2rem] bg-[#F2F4F7] h-12 p-2 w-fit">
@@ -141,7 +160,7 @@ export default function MealSelectionSection({
         </div>
       )}
 
-      {isLoading && (
+      {(isLoading || mutation?.isLoading) && (
         <div className="flex justify-center items-center">
           <p>Loading...</p>
         </div>
@@ -160,7 +179,10 @@ export default function MealSelectionSection({
         } gap-4 mt-4
         `}
             >
-              {meals.map((meal, index) => (
+              {((mutation?.isSuccess && !!searchPhrase?.length)
+                ? (mutation?.data?.data.data?.meals as IMeal[])
+                : meals
+              ).map((meal, index) => (
                 <SingleCartItemSection
                   country={activeContinent}
                   isHome={isHome}

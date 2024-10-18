@@ -45,7 +45,8 @@ const Payment = ({
           elements,
           clientSecret,
           confirmParams: {
-            return_url: "https://www.eatnourisha.com?show_payment_modal=1",
+            return_url:
+              returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
           },
         });
 
@@ -94,7 +95,7 @@ const PaymentModal = ({
   const [error, setError] = useState("");
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [options, setOptions] = useState<StripeElementsOptions>({
     // mode: "subscription",
     // amount: Math.round(amount),
@@ -125,7 +126,7 @@ const PaymentModal = ({
 
   useEffect(() => {
     if (!paymentModal?.show) {
-      router.replace(pathname, undefined,);
+      router.replace(pathname, undefined);
     }
   }, [paymentModal?.show]);
   const { amount } = useAtomValue(ATOMS.paymentModal);

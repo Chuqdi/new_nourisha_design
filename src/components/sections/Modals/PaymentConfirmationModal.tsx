@@ -3,7 +3,7 @@ import React from "react";
 
 function PaymentConfirmationModal({ close }: { close: () => void }) {
   const onClose = () => {
-    window.location.href = "/";
+    // window.location.href = "/";
     close();
   };
   return (

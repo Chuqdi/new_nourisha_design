@@ -19,6 +19,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
+import { useRouter } from "next/router";
 
 const SingleSubscription = ({
   plan,
@@ -34,6 +35,7 @@ const SingleSubscription = ({
   const btnRef = useRef<HTMLButtonElement>(null!);
   const [isSelected, setSelected] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [ searchParamQuery, setSearchParamQuery] = useState("");
 
   const gradientColors = [
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
@@ -44,10 +46,15 @@ const SingleSubscription = ({
     const selectedPlan = searchParams.get("plan_id");
     if (searchParams.get("plan_id")) {
       if (selectedPlan && searchParams.get("plan_id")?.includes(plan?._id)) {
-        // document.getElementById(`subscription_click_btn_${plan?._id}`)?.click();
         setSelected(true);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    setSearchParamQuery(urlParams.toString())
   }, []);
 
   return (
@@ -119,15 +126,16 @@ const SingleSubscription = ({
                 await axiosClient
                   .post("billings/subscribe", data)
                   .then(async (response) => {
-                    return_url = "https://www.jobofa.com";
+                    return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}`;
                     clientSecret = response?.data?.data?.client_secret;
                   });
 
                 return {
                   clientSecret,
-                  returnUrl: "https://jobofa.com/text",
+                  returnUrl: `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`,
                 };
               },
+             
             });
           }}
         />
@@ -147,13 +155,17 @@ export default function Subscription() {
   const [plans, setPlans] = useState<IPlan[]>([]);
   const [activePlan, setActivePlan] = useState<IPlan>();
   const searchParams = useSearchParams();
+  const searchContinent = searchParams?.get("search_continent");
+  const searchPlan = searchParams?.get("plan");
   const getSubscrptionList = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
-      "plans?continent=African"
+      `plans?continent=${searchContinent === "Asian" ? "Asian" : "African"}`
     );
   };
+
+  //weekend = false
 
   const { data, isLoading } = useQuery(
     queryKeys.GET_BILLING_PLANS,
@@ -180,7 +192,11 @@ export default function Subscription() {
       return items;
     }
 
-    return items?.filter(item => item._id === id);
+    if (!!items?.filter((item) => item._id === id)?.length) {
+      return items?.filter((item) => item._id === id);
+    }
+
+    return items;
 
     // const itemIndex = items.findIndex((item) => item._id === id);
     // if (itemIndex === -1) {
@@ -197,10 +213,6 @@ export default function Subscription() {
       setPlans(filterById(data?.data?.data?.data as IPlan[], selectedPlan));
     }
   }, [data?.data?.data]);
-
-
-
- 
 
   return (
     <SidebarHOC isBack title="Subscriptions">
