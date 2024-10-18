@@ -166,7 +166,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
         </div>
 
         <p className="text-black-900 text-xl text-center font-inter my-4">
-            + 8 For weekend deliveries
+        + £8 for weekend deliveries
           </p>
 
         {!isLoading && (
