@@ -62,14 +62,13 @@ const SingleSubscription = ({
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     setLoadingDiscount(true);
-    const code = coupon.trim();
 
     await axiosClient
       .get("discounts/promos")
       .then((data) => {
         const couponDiscount = data?.data?.data?.data?.find(
           //@ts-ignore
-          (d) => d?.code === code
+          (d) => d?.code?.trim() === coupon?.trim()
         );
         console.log(data?.data?.data?.data)
         console.log(couponDiscount)
