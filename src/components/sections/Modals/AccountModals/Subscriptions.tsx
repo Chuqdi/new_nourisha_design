@@ -138,7 +138,8 @@ const SingleSubscription = ({
           }}
         />
         <p className="text-black-900 text-sm text-center font-inter my-4">
-          + £8 for weekend deliveries
+          + <span className="text-base">Free weekday delivery</span> and £8 for
+          weekend delivery
         </p>
       </div>
     </div>

@@ -166,8 +166,9 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
         </div>
 
         <p className="text-black-900 text-xl text-center font-inter my-4">
-        + £8 for weekend deliveries
-          </p>
+          <span className="text-base">Free weekday delivery</span> and £8 for
+          weekend delivery
+        </p>
 
         {!isLoading && (
           <div className="flex justify-center items-center mt-4 ">
@@ -254,7 +255,6 @@ export default function MealPlan() {
         </div>
         <div className="w-full md:w-full mx-auto">
           <MealPlanSelection onAfrican={onAfrican} />
-       
         </div>
 
         <div className="w-full">
