@@ -66,12 +66,12 @@ const SinglePlan = ({
       </div>
 
       <h3 className="font-NewSpiritBold  text-[2.5rem] text-[#323546]">
-        {/* {option?.name?.includes("5")
+        {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
           ? "56 Meals"
-          : "14 Meals"} */}
-        {option?.name}
+          : "14 Meals"}
+        {/* {option?.name} */}
       </h3>
       <div>
         <p className="text-black-900 font-inter text-base">
