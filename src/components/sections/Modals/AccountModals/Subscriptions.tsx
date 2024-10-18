@@ -68,11 +68,16 @@ const SingleSubscription = ({
       .then((data) => {
         const couponDiscount = data?.data?.data;
         if (couponDiscount) {
-          const discountPercentage = couponDiscount?.coupon?.percent_off;
-          console.log(couponDiscount)
-          setDisCountedAmount(
-            (plan?.amount! * (100 - discountPercentage)) / 100
-          );
+          if (couponDiscount?.coupon?.percent_off) {
+            const discountPercentage = couponDiscount?.coupon?.percent_off;
+            setDisCountedAmount(
+              (plan?.amount! * (100 - discountPercentage)) / 100
+            );
+          } else if (couponDiscount?.coupon?.amount_off) {
+            setDisCountedAmount(
+              plan?.amount! - couponDiscount?.coupon?.amount_off
+            );
+          }
         } else {
           setDisCountedAmount(0);
         }

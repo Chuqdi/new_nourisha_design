@@ -72,7 +72,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   return (
     <UserContext.Provider value={{ setUser, isLoading }}>
       <div className="flex-1 w-full">
-        <Modal center large show={showLoginModal}>
+        <Modal center large show={true}>
           <LoginModal
             setUser={setUser}
             close={() => setShowLoginModal(false)}

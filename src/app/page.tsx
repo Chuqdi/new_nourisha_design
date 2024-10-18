@@ -110,7 +110,7 @@ export default function Main() {
     {
       icon: "🎁",
       title:
-        "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b> <i class='text-[#FE7E00]'>99%</i> discount off your 5th order within 30 days.</p>",
+        "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b> <i class='text-[#FE7E00]'>99%</i> discount on your 5th meal plan order within 35days</p>",
     },
   ];
   useEffect(() => {
@@ -120,7 +120,6 @@ export default function Main() {
     }, 5000);
     () => clearInterval(intervalRef.current);
   }, []);
-
 
   return (
     <>
@@ -149,10 +148,6 @@ export default function Main() {
         <Navbar />
         <div className="flex justify-center items-center bg-white w-full  my-32 mb-[5.06rem]">
           <div className="w-[90%]  md:w-[37.4375rem] mx-auto  items-center text-black flex justify-center ">
-            <Icon
-              className="w-6 h-6 cursor-pointer z-50"
-              icon="lsicon:left-filled"
-            />
             {adsWidget.map((ads, index) => (
               <div
                 className="flex items-center gap-1 text-[0.75rem] md:text-sm"
@@ -162,10 +157,6 @@ export default function Main() {
                 <HTMLRenderer html={ads.title} />
               </div>
             ))}
-            <Icon
-              className="w-6 h-6 cursor-pointer z-50"
-              icon="lsicon:right-outline"
-            />
           </div>
         </div>
         <div className="flex flex-col-reverse md:flex-row my-32 mt-2 mb-8 md:mb-32 items-center md:items-start">
