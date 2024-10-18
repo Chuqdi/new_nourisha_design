@@ -102,7 +102,7 @@ function ExtraMealSelectionModal() {
 
         <>
           <div>
-            {!!extraModal?.meal?.expected_swallow?.length && (
+            {!!extraModal?.meal?.expected_swallows?.length && (
               <>
                 <p className="text-black-900 font-inter text-sm mt-3">
                   Select swallow
@@ -114,7 +114,7 @@ function ExtraMealSelectionModal() {
             )}
             {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
               <div className="flex flex-col gap-3 mt-3">
-                {extraModal?.meal?.expected_swallow?.map((extra) => (
+                {extraModal?.meal?.expected_swallows?.map((extra) => (
                   <Option
                     key={extra}
                     extra_id={extra}

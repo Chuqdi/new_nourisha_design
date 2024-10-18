@@ -46,7 +46,7 @@ export const CartManipulator = ({
       c();
       if (
         !!meal?.expected_proteins?.length ||
-        !!meal?.expected_swallow?.length
+        !!meal?.expected_swallows?.length
       ) {
         setTimeout(() => {
           setMealExtraModal({
@@ -214,7 +214,7 @@ export default function SingleCartItemSection({
                   addFoodBox(activeWeek!, meal!);
                   if (
                     !!meal?.expected_proteins?.length ||
-                    !!meal?.expected_swallow?.length
+                    !!meal?.expected_swallows?.length
                   ) {
                     setMealExtraModal({
                       meal,

@@ -36,7 +36,7 @@ export interface IMeal {
   spice_level:string;
   country?: string;
   expected_proteins?:string[];
-  expected_swallow?:string[];
+  expected_swallows?:string[];
   orderType?: string;
   is_available: boolean;
   meals?: string[];
