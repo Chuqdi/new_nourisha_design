@@ -70,12 +70,12 @@ const SingleSubscription = ({
           //@ts-ignore
           (d) => d?.code?.trim() === coupon?.trim()
         );
-        console.log(data?.data?.data?.data)
-        console.log(couponDiscount)
+        console.log(data?.data?.data?.data);
+        console.log(couponDiscount);
         if (couponDiscount) {
           const discountPercentage = couponDiscount?.coupon?.percent_off;
           setDisCountedAmount(
-            Math.round((plan?.amount! * (100 - discountPercentage)) / 100)
+            (plan?.amount! * (100 - discountPercentage)) / 100
           );
         } else {
           setDisCountedAmount(0);
