@@ -71,6 +71,8 @@ const SingleSubscription = ({
           //@ts-ignore
           (d) => d?.code === code
         );
+        console.log(data?.data?.data?.data)
+        console.log(couponDiscount)
         if (couponDiscount) {
           const discountPercentage = couponDiscount?.coupon?.percent_off;
           setDisCountedAmount(
