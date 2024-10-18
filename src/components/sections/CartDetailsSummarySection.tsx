@@ -2,7 +2,7 @@
 import {  useAtomValue, useSetAtom } from "jotai";
 import Button from "../ui/Button";
 import { ATOMS } from "@/store/atoms";
-import { ICartDetail, ICartItem } from "@/config/types";
+import { ICartDetail, ICartItem, IUser } from "@/config/types";
 import DeliveryModal from "./Modals/DeliveryModal";
 import {  useEffect, useState } from "react";
 import useCart from "@/hooks/useCart";
@@ -11,15 +11,20 @@ import useAuth from "@/hooks/useAuth";
 import { toast } from "@/ui/use-toast";
 import Link from "next/link";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useUser from "@/hooks/useUser";
 
 function Main() {
-  const user = useAtomValue(ATOMS.loggedInUser);
+  // const user = useAtomValue(ATOMS.loggedInUser);
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const [loading, setLoading] = useState(false);
   const { getAxiosClient } = useAuth();
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
+  const { getUser } = useUser();
+  const [user, setUser] = useState<undefined | IUser>(undefined);
+
+
 
   const { getCartSessionDetails, emptyCart } = useCart();
   const [session_id, set_session_id] = useState();
@@ -75,6 +80,11 @@ function Main() {
     }
   }, [CartSessionData]);
 
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
   return user?.email ? (
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
       <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
@@ -118,16 +128,11 @@ function Main() {
         </div>
 
         <div className="flex items-center justify-between">
-          <p>Sub total</p>
+          <p>Total</p>
           <p className="font-bold font-inter text-lg">£{cartDetails?.total}</p>
         </div>
 
-        <div className="flex items-center justify-between">
-          <p>Total</p>
-          <p className="font-bold font-inter text-lg">
-            £{parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee)}
-          </p>
-        </div>
+      
       </div>
 
       <Button

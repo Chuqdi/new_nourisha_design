@@ -73,7 +73,6 @@ function CartItem({ item }: { item: ICartItem }) {
 
 function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
-  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const [coupon, setCoupon] = useState("");
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
 
@@ -128,20 +127,13 @@ function CartModal() {
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="font-inter text-sm">Sub total</p>
+              <p className="font-inter text-sm">Total</p>
               <p className="font-bold font-inter text-sm">
                 £{cartDetails?.total}
               </p>
             </div>
 
-            <div className="flex items-center justify-between">
-              <p className="font-inter text-sm">Total</p>
-              <p className="font-bold font-inter text-sm">
-                £
-                {parseInt(cartDetails?.total) +
-                  parseInt(cartDetails?.deliveryFee)}
-              </p>
-            </div>
+         
           </div>
         )}
 

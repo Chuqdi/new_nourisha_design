@@ -4,7 +4,7 @@ import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import PaymentMethodModal from "./PaymentMethodModal";
 import { toast } from "@/ui/use-toast";
@@ -49,12 +49,14 @@ export default function DeliveryModal({
   const { getAxiosClient } = useAuth();
   const [loading, setLoading] = useState(false);
   const { getUser } = useUser();
+  const [todaysDate, setTodaysDate] = useState<string>(null!);
   const [address, setAddress] = useState({
     country: user?.address?.country,
     city: user?.address?.city,
     address_: user?.address?.address_,
     postcode: user?.address?.postcode,
   });
+  const inputRef = useRef<HTMLInputElement>(null!);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!delivery_date && !hidDeliveryDate) {
@@ -83,7 +85,7 @@ export default function DeliveryModal({
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     try {
-      await axiosClient.put(`customers/me`, { address })
+      await axiosClient.put(`customers/me`, { address });
       // .catch((e) => {
       //   router.push("/auth");
       //   toast({
@@ -128,6 +130,14 @@ export default function DeliveryModal({
       postcode: user?.address?.postcode,
     });
   }, [user]);
+
+  useEffect(() => {
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    const minDate = today.toISOString().split("T")[0];
+    setTodaysDate(minDate);
+    inputRef?.current?.setAttribute("min", minDate);
+  }, []);
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
@@ -156,6 +166,8 @@ export default function DeliveryModal({
             <Input
               value={delivery_date}
               type="date"
+              ref={inputRef}
+              min={todaysDate}
               onChange={(e) => set_delivery_date(e.target.value)}
               className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
             />
