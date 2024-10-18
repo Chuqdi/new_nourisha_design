@@ -1,17 +1,20 @@
-import Button from "@/components/ui/Button";
+// import Button from "@/components/ui/Button";
 import { toast } from "@/components/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import {
   Elements,
   PaymentElement,
+  CardElement,
   useElements,
   useStripe,
+  
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname, useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 const Payment = ({
   close,
@@ -24,7 +27,6 @@ const Payment = ({
   const stripe = useStripe();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
-  const { amount } = useAtomValue(ATOMS.paymentModal);
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -71,11 +73,13 @@ const Payment = ({
       <button onClick={close} className="w-full flex justify-end">
         <Icon color="#000" icon="fluent-mdl2:cancel" className="w-6 h-6" />
       </button>
-      <PaymentElement />
+      <PaymentElement 
+      
+      />
       <Button
         variant="primary"
         fullWidth
-        title={`Pay £${amount}`}
+        title={`Pay now`}
         disabled={!stripe || !elements || paymentLoading}
         onClick={handleSubmitPayment}
       />
@@ -97,12 +101,6 @@ const PaymentModal = ({
   const router = useRouter();
   const pathname = usePathname();
   const [options, setOptions] = useState<StripeElementsOptions>({
-    // mode: "subscription",
-    // amount: Math.round(amount),
-    // currency: "gbp",
-    // appearance: {},
-    // setup_future_usage: null,
-    // clientSecret,
   });
   useEffect(() => {
     getClientSecret()
@@ -129,7 +127,6 @@ const PaymentModal = ({
       router.replace(pathname, undefined);
     }
   }, [paymentModal?.show]);
-  const { amount } = useAtomValue(ATOMS.paymentModal);
 
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return loading ? (

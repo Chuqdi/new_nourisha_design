@@ -35,6 +35,8 @@ const SingleSubscription = ({
   const [isSelected, setSelected] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [searchParamQuery, setSearchParamQuery] = useState("");
+  const [loadingDiscount, setLoadingDiscount] = useState(false);
+  const [disCountedAmount, setDisCountedAmount] = useState(0);
 
   const gradientColors = [
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
@@ -55,6 +57,35 @@ const SingleSubscription = ({
     const urlParams = new URLSearchParams(queryString);
     setSearchParamQuery(urlParams.toString());
   }, []);
+
+  const discountEvent = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+    setLoadingDiscount(true);
+
+    await axiosClient
+      .get("discounts/promos")
+      .then((data) => {
+        const couponDiscount = data?.data?.data?.data?.find(
+          //@ts-ignore
+          (d) => d?.code === coupon
+        );
+        if (couponDiscount) {
+          const discountPercentage = couponDiscount?.coupon?.percent_off;
+          setDisCountedAmount(
+            (plan?.amount! * (100 - discountPercentage)) / 100
+          );
+        } else {
+          setDisCountedAmount(0);
+        }
+      })
+      .catch(() => {});
+    setLoadingDiscount(false);
+  };
+
+  useEffect(() => {
+    discountEvent();
+  }, [coupon]);
 
   return (
     <div
@@ -95,6 +126,20 @@ const SingleSubscription = ({
             onChange={(e) => setCoupon(e.target.value)}
             placeholder="Enter coupon code"
           />
+
+          {!!disCountedAmount && (
+            <p className="text-center font-NewSpiritRegular ">
+              You are paying{" "}
+              <span className="text-xl font-NewSpiritMedium">
+                £{disCountedAmount}
+              </span>
+            </p>
+          )}
+          {loadingDiscount &&
+            <p className="text-center text-sm font-NewSpiritRegular">
+              Loading...
+            </p>
+          }
         </div>
 
         <Button
@@ -118,7 +163,7 @@ const SingleSubscription = ({
                   clientSecret = "";
                 let data = {
                   plan_id: plan?._id,
-                  promo_code:coupon,
+                  promo_code: coupon,
                 };
                 const id = localStorage.getItem(DEVICE_ID);
                 const axiosClient = getAxiosClient(id!);
@@ -193,14 +238,6 @@ export default function Subscription() {
     }
 
     return items;
-
-    // const itemIndex = items.findIndex((item) => item._id === id);
-    // if (itemIndex === -1) {
-    //   return items;
-    // }
-
-    // const [selectedItem] = items.splice(itemIndex, 1);
-    // return [selectedItem, ...items];
   }
 
   useEffect(() => {
