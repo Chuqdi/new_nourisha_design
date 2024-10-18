@@ -46,6 +46,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PFSLQZK3');
             `}
         </Script>
+
+        <Script
+          id="cookieyes"
+          type="text/javascript"
+          src="https://cdn-cookieyes.com/client_data/880430a1c94547acd40ed483/script.js"
+        />
       </head>
       <Suspense fallback={<p>Loading...</p>}>
         <JotaiProvider>

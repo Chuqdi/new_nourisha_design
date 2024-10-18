@@ -26,7 +26,7 @@ const useAuth = () => {
     return axiosClient;
   };
 
-  const makeRequest = async (path: string, data: any) => {
+  const makeRequest = async (path: string, data: any, useAlert?: boolean) => {
     let responseData: null | any = null;
     setIsLoading(true);
     const id = localStorage.getItem(DEVICE_ID);
@@ -42,11 +42,16 @@ const useAuth = () => {
         const errorMessage = err?.response?.data?.message
           ? err?.response?.data?.message
           : "Request could not be completed";
-        toast({
-          title: "Error",
-          description: errorMessage,
-          variant: "destructive",
-        });
+
+        if (useAlert) {
+          alert(errorMessage);
+        } else {
+          toast({
+            title: "Error",
+            description: errorMessage,
+            variant: "destructive",
+          });
+        }
       });
     setIsLoading(false);
     return responseData;
