@@ -214,6 +214,7 @@ export default function Main() {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
+  const continueProcess = useRef<boolean>(true);
 
   const getMeals = () => {
     return getData(
@@ -280,6 +281,9 @@ export default function Main() {
   };
 
   const createLineUp = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -290,29 +294,16 @@ export default function Main() {
     }
 
     setLoading(true);
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-    const data = prepareMealForBE();
-    console.log({})
-    const value = {
-      ...Object.values(data),
-      delivery_date: delivery_date ?? "",
-    };
-    // console.log();
-    // setLoading(false);
-    // return;
-    axiosClient
-      .post(`lineups/web`, {
-        ...data,
-        delivery_date: delivery_date ?? "",
-      })
+
+    await axiosClient
+      .get("subscriptions/me")
       .then((data) => {
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "Line-up created successfully.",
-        });
-        // emptyBox();
+        if (data?.data?.data?.used_sub) {
+          setSideModal({ show: true, component: <Subscription /> });
+          setLoading(false);
+          continueProcess.current = false;
+          return;
+        }
       })
       .catch((err) => {
         let msg = err?.response?.data?.message ?? "Line-up was not created.";
@@ -321,14 +312,40 @@ export default function Main() {
           title: "Error",
           description: msg,
         });
-
-        if (msg?.includes("Subscription is required")) {
-          setSideModal({ show: true, component: <Subscription /> });
-        }
-      })
-      .finally(() => {
-        setLoading(false);
       });
+
+    if (continueProcess.current) {
+      const data = prepareMealForBE();
+
+      axiosClient
+        .post(`lineups/web`, {
+          ...data,
+          delivery_date: delivery_date ?? "",
+        })
+        .then((data) => {
+          toast({
+            variant: "default",
+            title: "Success",
+            description: "Line-up created successfully.",
+          });
+          emptyBox();
+        })
+        .catch((err) => {
+          let msg = err?.response?.data?.message ?? "Line-up was not created.";
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: msg,
+          });
+
+          if (msg?.includes("Subscription is required")) {
+            setSideModal({ show: true, component: <Subscription /> });
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
   const goToNextWeek = () => {
     if (activeWeek === weeks[weeks.length - 1]) {

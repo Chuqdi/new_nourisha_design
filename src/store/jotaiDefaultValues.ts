@@ -48,6 +48,7 @@ export const showMealExtraSelection: {
 export const paymentModal: {
   show: boolean;
   amount: number;
+  redirect_url?:string;
   onContinue: () => Promise<{ clientSecret: string; returnUrl: string }>;
 } = {
   show: false,
