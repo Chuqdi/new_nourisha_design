@@ -118,7 +118,7 @@ const SingleSubscription = ({
                   clientSecret = "";
                 let data = {
                   plan_id: plan?._id,
-                  coupon,
+                  promo_code:coupon,
                 };
                 const id = localStorage.getItem(DEVICE_ID);
                 const axiosClient = getAxiosClient(id!);
