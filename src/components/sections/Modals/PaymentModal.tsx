@@ -6,11 +6,10 @@ import {
   PaymentElement,
   useElements,
   useStripe,
-  
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import { useAtom, } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
@@ -26,6 +25,7 @@ const Payment = ({
   const stripe = useStripe();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
+  const { amount } = useAtomValue(ATOMS.paymentModal);
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -69,16 +69,16 @@ const Payment = ({
   };
   return (
     <div className="bg-white p-4 rounded flex flex-col gap-3">
-      <button onClick={close} className="w-full flex justify-end">
-        <Icon color="#000" icon="fluent-mdl2:cancel" className="w-6 h-6" />
-      </button>
-      <PaymentElement 
-      
-      />
+      <div className="w-full flex justify-end">
+        <div onClick={close} className="w-fit flex justify-end">
+          <Icon color="#000" icon="fluent-mdl2:cancel" className="w-6 h-6" />
+        </div>
+      </div>
+      <PaymentElement />
       <Button
         variant="primary"
         fullWidth
-        title={`Pay now`}
+        title={`Pay £${amount}`}
         disabled={!stripe || !elements || paymentLoading}
         onClick={handleSubmitPayment}
       />
@@ -99,8 +99,7 @@ const PaymentModal = ({
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
   const router = useRouter();
   const pathname = usePathname();
-  const [options, setOptions] = useState<StripeElementsOptions>({
-  });
+  const [options, setOptions] = useState<StripeElementsOptions>({});
   useEffect(() => {
     getClientSecret()
       .then(({ clientSecret, returnUrl }) => {
@@ -121,11 +120,11 @@ const PaymentModal = ({
       });
   }, []);
 
-  useEffect(() => {
-    if (!paymentModal?.show) {
-      router.replace(pathname, undefined);
-    }
-  }, [paymentModal?.show]);
+  // useEffect(() => {
+  //   if (!paymentModal?.show) {
+  //     router.replace(pathname, undefined);
+  //   }
+  // }, [paymentModal?.show]);
 
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return loading ? (

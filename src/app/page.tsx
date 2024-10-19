@@ -20,36 +20,12 @@ import { ATOMS } from "@/store/atoms";
 import { useAtomValue } from "jotai";
 import { NextSeo } from "next-seo";
 import Head from "next/head";
+import BannerMarqueeSection from "@/components/sections/BannerMarqueeSection";
 
 export default function Main() {
   const intervalRef = useRef();
   const [loadingMenuImage, setLoadingMenuImage] = useState(true);
-  const bannerOptions = [
-    {
-      image: "chef.svg",
-      title: "Chef crafted meals",
-    },
-    {
-      image: "portion.svg",
-      title: "Portion control",
-    },
-    {
-      image: "halal.svg",
-      title: "100% Halal",
-    },
-    {
-      image: "packed_flavor.svg",
-      title: "Packed with flavor",
-    },
-    {
-      image: "frozen.svg",
-      title: "Frozen to perfection",
-    },
-    {
-      image: "ready.svg",
-      title: "Ready In minutes",
-    },
-  ];
+ 
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const router = useRouter();
 
@@ -82,8 +58,10 @@ export default function Main() {
   const whatOffered = [
     {
       text: "Meal Subscriptions",
-      description:
-        "Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.",
+      description: `Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.
+      <br />
+        Our weekly meal plan food box is delivered once a week and the monthly plan delivered once a week for a month.
+        `,
       onClick: () => router.push("/meal_plans"),
       btnText: "Start Your Subscription",
       image: "subscription.png",
@@ -91,7 +69,10 @@ export default function Main() {
     {
       text: "Single Meal Orders",
       description:
-        "Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.",
+        `Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.
+        <br />
+        Order single meals and get your delivery within 24-48 hours.
+        `,
       onClick: () => router.push("/single_meals"),
       btnText: "Order now",
       image: "single.png",
@@ -181,11 +162,13 @@ export default function Main() {
               />
             </div>
             <div className="text-black-900 font-semibold font-inter text-sm md:text-lg flex gap-4 items-center">
-              Rated Excellent On Trustpilot
+              Rated excellent On Trustpilot
               <Ratings />
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-dark font-inter text-lg">5 star reviews on</p>
+              <p className="text-dark font-inter text-lg">
+                4.7/5 star reviews on
+              </p>
               <img src="/images/trust_pilot.png" className="h-8" />
             </div>
             <div className="flex md:block justify-center md:justify-end  mt-2">
@@ -204,22 +187,7 @@ export default function Main() {
             />
           )}
         </div>
-        <Marquee className="py-[1.5rem]   bg-background2" autoFill>
-          {bannerOptions.map((option, index) => (
-            <div
-              key={`banner_option${index}`}
-              className="flex items-center gap-1 whitespace-nowrap mx-3 "
-            >
-              <img
-                src={`/images/banner/${option.image}`}
-                className="h-[2.725rem] "
-              />
-              <p className="text-black-900 font-inter text-lg tracking-[-0.01688rem] leading-[1.6875rem]">
-                {option.title}
-              </p>
-            </div>
-          ))}
-        </Marquee>
+       <BannerMarqueeSection />
 
         <div className="mt-20" />
         {isMobile ? (
@@ -265,29 +233,31 @@ export default function Main() {
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
           }}
-          className="py-[5rem] px-[1.25rem] md:px-6.25 flex-col flex gap-8  md:h-[46.375rem] items-center justify-center z-0"
+          className="py-[5rem] px-[1.25rem] md:px-6.25 flex-col flex gap-8  md:h-[58.375rem] items-center justify-center z-0"
         >
           <h4 className="text-black-900 font-NewSpiritBold text-[2.75rem] text-center">
             Explore What Nourisha Offers
           </h4>
 
-          <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex flex-col md:flex-row gap-8 justify-between">
             {whatOffered.map((offer, index) => (
               <div
                 key={`what_we_offer_${index}`}
-                className="py-8 px-3 flex flex-col gap-8 flex-1 bg-white rounded-[1rem]"
+                className="py-8 px-3 flex flex-col gap-8 flex-1 bg-white rounded-[1rem] justify-between "
               >
-                <img
-                  src={`/images/whatOffer/${offer.image}`}
-                  className="w-20 h-20"
-                />
-                <div className="flex flex-col gap-4">
-                  <h4 className="text-2xl text-black-900 font-NewSpiritBold">
-                    {offer.text}
-                  </h4>
-                  <p className="font-inter text-lg text-black-900  leading-[1.6875rem] tracking-[-0.01688rem]">
-                    {offer.description}
-                  </p>
+                <div className="flex flex-col gap-8">
+                  <img
+                    src={`/images/whatOffer/${offer.image}`}
+                    className="w-20 h-20"
+                  />
+                  <div className="flex flex-col gap-4 ">
+                    <h4 className="text-2xl text-black-900 font-NewSpiritBold">
+                      {offer.text}
+                    </h4>
+                    <p className="font-inter text-lg text-black-900  leading-[1.6875rem] tracking-[-0.01688rem]">
+                      <HTMLRenderer html={offer.description} />
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -318,15 +288,11 @@ export default function Main() {
           </div>
         </div>
 
-        <div className="md:mx-[0rem] my-[5rem]  flex flex-col gap-0 md:gap-8 px-2.5 md:px-0 mt-8 md:mt-0">
+        <div className="md:mx-[0rem] my-[5rem] mb-20 md:-mb-8  flex flex-col gap-0 md:gap-8 px-2.5 md:px-0 mt-8 md:mt-0">
           <h4 className="text-center text-primary-orange-900 font-NewSpiritBold text-[1.25rem] md:text-[2.75rem] mx-auto md:w-[50rem]">
             So many meals delivered to thousands of satisfied customers
           </h4>
           <TestmoniesSection />
-          <p className="text-center text-lg  md:p-0 font-inter mt-4 md:-mt-4">
-            Rated <span className="font-bold">5</span>/5. Showing our 5 star
-            reviews.
-          </p>
         </div>
 
         <CommonQuestionsSection />

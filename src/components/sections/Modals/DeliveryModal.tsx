@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { IUser } from "@/config/types";
 import useUser from "@/hooks/useUser";
+import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 
 export const Checkbox = ({
   checked,
@@ -23,7 +24,10 @@ export const Checkbox = ({
 }) => {
   return (
     <button
-      onClick={onSelect}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
       className={`w-6 h-6  rounded-[0.5rem] flex justify-center items-center ${
         checked ? "bg-[#04A76C]" : "bg-[#fff] border"
       }`}
@@ -60,7 +64,7 @@ export default function DeliveryModal({
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!delivery_date && !hidDeliveryDate) {
-      alert("Please select a delivery date")
+      alert("Please select a delivery date");
       return;
     }
 
@@ -156,17 +160,25 @@ export default function DeliveryModal({
         meal will be delivered to this address
       </p>
 
-      <form name="delivery_form" onSubmit={onSubmit} className="flex flex-col gap-6">
+      <form
+        name="delivery_form"
+        onSubmit={onSubmit}
+        className="flex flex-col gap-6"
+      >
         {!hidDeliveryDate && (
           <div>
             <label>Delivery date</label>
-            <Input
+            {/* <Input
               value={delivery_date}
               type="date"
               ref={inputRef}
               min={todaysDate}
               onChange={(e) => set_delivery_date(e.target.value)}
               className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+            /> */}
+            <FoodDeliveryDateSelection
+            delivery_date={delivery_date}
+            set_delivery_date={set_delivery_date}
             />
           </div>
         )}

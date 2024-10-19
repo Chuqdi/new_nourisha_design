@@ -22,7 +22,6 @@ const responsive = {
 };
 
 const firstTestmonies = [
-
   {
     name: "Temitope",
     description:
@@ -89,7 +88,7 @@ const secondTestmonies = [
     caption: `Food`,
     date: "12 July 2024",
   },
- 
+
   {
     name: "Priscilla Darko",
     description: `They are good in cooking and also good at their time`,
@@ -170,7 +169,7 @@ I'll be coming back to leave another review once I have tried out the wonderful 
     caption: `Good authentic flavours/dishes, quick delivery and great customer service. For easy and tasty African meals, definitely recommend!`,
     date: "04 June 2024",
   },
-  
+
   {
     name: "Samson Mgbaja",
     description: `Good and Quality meals`,
@@ -207,23 +206,18 @@ I'll be coming back to leave another review once I have tried out the wonderful 
     caption: `Good Good Good.`,
     date: "12 June 2024",
   },
- 
 ];
-
 
 export default function TestmoniesSection() {
   return (
     <Marquee speed={20} className="  w-full py-[1.5rem] px-6.25 bg-white">
-      <div
-        style={{
-          animation: "350s slide infinite linear",
-        }}
-        className="marquee-slide flex items-center "
-      >
-        {firstTestmonies.concat(secondTestmonies).filter(t => t.description.length < 37).map((testmonies, index) => (
+      {firstTestmonies
+        .concat(secondTestmonies)
+        .filter((t) => t.description.length < 37)
+        .map((testmonies, index) => (
           <div
             key={`carousel_item_${index}`}
-            className="w-fit text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2  gap-3 flex flex-col justify-center border"
+            className="w-[20rem] text-wrap h-[11rem] mx-1 bg-[#F2F4F7] rounded-[0.375rem] py-1 px-2  gap-3 flex flex-col justify-center border"
           >
             <div className="flex items-center gap-3">
               <Ratings />
@@ -239,8 +233,6 @@ export default function TestmoniesSection() {
             </div>
           </div>
         ))}
-      </div>
-     
     </Marquee>
   );
 }

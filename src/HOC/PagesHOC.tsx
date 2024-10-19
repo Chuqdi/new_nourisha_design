@@ -25,17 +25,18 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const [showMealExtraModal, setMealExtraModal] = useAtom(
     ATOMS.showMealExtraSelection
   );
-  const [ showMobileCartModal, setShowMobileCartModal ] = useAtom(ATOMS.showMobileCartModal);
+  const [showMobileCartModal, setShowMobileCartModal] = useAtom(
+    ATOMS.showMobileCartModal
+  );
   const f = useFingerPrint();
   const [device_id, set_device_id] = useAtom(ATOMS.device_id);
-  const foodInfoModal = useAtomValue(ATOMS.foodInfoModal);
+  const [foodInfoModal, setFoodInfoModal] = useAtom(ATOMS.foodInfoModal);
   const pathName = useSearchParams();
   const [loadingDeviceId, setLoadingDeviceId] = useState(true);
   const [showPaymentConfirmationModal, setShowPaymentConfirmationModal] =
     useState(false);
-  const couponState = useAtomValue(ATOMS.couponCode);
+  const [couponState, setCouponState] = useAtom(ATOMS.couponCode);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-
 
   const userInfo = useContext(IPInfoContext);
 
@@ -54,27 +55,33 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
     setShowPaymentConfirmationModal(!!p);
   }, []);
 
-
-  useEffect(()=>{
-    if(paymentModal?.show){
-      setShowMobileCartModal({...showMobileCartModal, show: false });
+  useEffect(() => {
+    if (paymentModal?.show) {
+      setShowMobileCartModal({ ...showMobileCartModal, show: false });
     }
-  },[paymentModal?.show])
+  }, [paymentModal?.show]);
 
   return (
     <div>
-      <Modal show={paymentModal.show}>
+      <Modal close={() => {}} show={paymentModal.show}>
         <PaymentModal
           getClientSecret={paymentModal.onContinue}
           close={() => setPaymentModal({ ...paymentModal, show: false })}
+          
         />
       </Modal>
 
-      <Modal show={couponState.show}>
+      <Modal
+        close={() => setCouponState({ ...couponState, show: false })}
+        show={couponState.show}
+      >
         <EnterCouponCodeModal />
       </Modal>
 
-      <Modal show={showPaymentConfirmationModal}>
+      <Modal
+        close={() => setShowPaymentConfirmationModal(false)}
+        show={showPaymentConfirmationModal}
+      >
         <PaymentConfirmationModal
           close={() => setShowPaymentConfirmationModal(false)}
         />
@@ -84,27 +91,33 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         <ExtraMealSelectionModal />
       </SideModal>
 
-      <Modal show={foodInfoModal.show}>
+      <Modal
+        close={() => {
+          setFoodInfoModal({
+            ...foodInfoModal,
+            show: false,
+          });
+        }}
+        show={foodInfoModal.show}
+      >
         <FoodInfoModal />
       </Modal>
-      {
-        !loadingDeviceId &&
-      <AnimatePresence>
-        {showMobileCartModal.show && isMobile && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={`fixed bottom-0  overflow-y-scroll left-0 w-full opacity-75 z-[99999999] flex justify-center bg-[#F2F4F7] `}
-          >
-            <div className="w-full">
-            <CartSideSection />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      }
-
+      {!loadingDeviceId && (
+        <AnimatePresence>
+          {showMobileCartModal.show && isMobile && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={`fixed bottom-0  overflow-y-scroll left-0 w-full opacity-75 z-[99999999] flex justify-center bg-[#F2F4F7] `}
+            >
+              <div className="w-full">
+                <CartSideSection />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
 
       {loadingDeviceId ? (
         <div

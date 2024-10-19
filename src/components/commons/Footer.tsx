@@ -19,10 +19,10 @@ export default function Footer() {
           title: "About us",
           link: "/about_us",
         },
-        {
-          title: "Pricing",
-          link: "/pricing",
-        },
+        // {
+        //   title: "Pricing",
+        //   link: "/pricing",
+        // },
       
         {
           title: "Terms of Service",

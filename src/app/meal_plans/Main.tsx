@@ -2,24 +2,25 @@
 import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
+import { Checkbox } from "@/components/sections/Modals/DeliveryModal";
 import SelectOrdertypeModalSection from "@/components/sections/Modals/SelectordertypeModalSection";
 import Button from "@/components/ui/Button";
-import MessageBtn from "@/components/ui/MessageBtn";
 import Modal from "@/components/ui/Modal";
 import { CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
 import { IPlan, IUser } from "@/config/types";
-import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useUser from "@/hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 const SinglePlan = ({
   activeOptionIndex,
   index,
+  isWeekend,
+  setIsWeekend,
   setActiveOptionIndex,
   option,
   onAfrican,
@@ -28,6 +29,8 @@ const SinglePlan = ({
   index: number;
   setActiveOptionIndex: (value: number) => void;
   option: IPlan;
+  isWeekend: boolean;
+  setIsWeekend: (value: boolean) => void;
   onAfrican?: boolean;
 }) => {
   const selected = activeOptionIndex === index;
@@ -49,10 +52,20 @@ const SinglePlan = ({
     return onAfrican ? option?.amount : "95.09";
   }, [onAfrican]);
 
+  useEffect(()=>{
+    if(!selected){
+      setIsWeekend(false);
+    }
+  }, [ selected])
+
   return (
     <div
-      onClick={() => setActiveOptionIndex(index)}
-      className={`p-4 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer
+      onClick={(e) => {
+        e.stopPropagation();
+        setActiveOptionIndex(index);
+        // setIsWeekend(false);
+      }}
+      className={`p-4 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer justify-between
                 ${!selected ? "bg-[#F2F4F7]" : "bg-[#E1F0D0]"}
               `}
     >
@@ -83,6 +96,16 @@ const SinglePlan = ({
           <span className="font-bold">£{totalPrice}</span>
         </p>
       </div>
+
+      <div className="flex items-center gap-1">
+        <Checkbox
+          checked={isWeekend && selected}
+          onSelect={() => {
+            setIsWeekend(!isWeekend);
+          }}
+        />
+        <p>Weekend delivery (+£8)</p>
+      </div>
     </div>
   );
 };
@@ -95,6 +118,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
   );
+  const [isWeekend, setIsWeekend] = useState(false);
   const { getUser } = useUser();
   const [user, setUser] = useState<undefined | IUser>(undefined);
 
@@ -157,6 +181,8 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                 option={option}
                 onAfrican={onAfrican}
                 index={index}
+                isWeekend={isWeekend}
+                setIsWeekend={setIsWeekend}
                 activeOptionIndex={activeOptionIndex}
                 setActiveOptionIndex={setActiveOptionIndex}
                 key={`meal_selection_${index}`}
@@ -177,15 +203,17 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
-                user?.email
-                  ? router.push(
-                      `/food_box?plan=${
-                        options.find((o, i) => i === activeOptionIndex)?.name
-                      }&plan_id=${
-                        options.find((o, i) => i === activeOptionIndex)?._id
-                      }&search_continent=${activeSearchContinent?.search}`
-                    )
-                  : router.push("/auth");
+                if (user?.email) {
+                  router.push(
+                    `/food_box?plan=${
+                      options.find((o, i) => i === activeOptionIndex)?.name
+                    }&plan_id=${
+                      options.find((o, i) => i === activeOptionIndex)?._id
+                    }&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}`
+                  );
+                } else {
+                  router.push("/auth");
+                }
               }}
               title="Continue"
             />
@@ -207,7 +235,7 @@ export default function MealPlan() {
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
-      <Modal show={orderTypeModal}>
+      <Modal close={() => setShowOrderTypeModal(false)} show={orderTypeModal}>
         <SelectOrdertypeModalSection
           close={() => setShowOrderTypeModal(false)}
         />

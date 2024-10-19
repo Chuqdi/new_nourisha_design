@@ -129,15 +129,6 @@ function CartSideSection() {
               <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
               <div>
                 No item(s) in your cart.
-                {/* <Link
-                onClick={() => {
-                  setSideModal({ ...sideModal, show: false });
-                }}
-                className="text-primary-orange-900"
-                href="/single_meals"
-              >
-                add here...
-              </Link> */}
               </div>
             </div>
           )}
@@ -171,18 +162,9 @@ function CartSideSection() {
               </div>
 
               <div className="flex items-center justify-between">
-                <p className="font-inter text-sm">Sub total</p>
-                <p className="font-bold font-inter text-sm">
-                  £{cartDetails?.total}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between">
                 <p className="font-inter text-sm">Total</p>
                 <p className="font-bold font-inter text-sm">
-                  £
-                  {parseInt(cartDetails?.total) +
-                    parseInt(cartDetails?.deliveryFee)}
+                  £{cartDetails?.total}
                 </p>
               </div>
             </div>

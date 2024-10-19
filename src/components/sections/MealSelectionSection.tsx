@@ -42,6 +42,7 @@ export default function MealSelectionSection({
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
   const pathName = usePathname();
+  const [allMealsLoaded, setAllMealLoaded] = useState(false);
 
   const getMeals = () => {
     return getData(
@@ -80,7 +81,18 @@ export default function MealSelectionSection({
 
   useEffect(() => {
     //@ts-ignore
+    console.log(data?.data?.data?.totalCount);
+    //@ts-ignore
     if (data?.data?.data) {
+      //@ts-ignore
+      const totalCount = data?.data?.data?.totalCount;
+      //@ts-ignore
+      const m = data?.data?.data?.data;
+
+      const c = m?.filter((d: IMeal) => meals?.some((_) => _._id === d?._id));
+
+      setAllMealLoaded(totalCount === c?.length);
+
       //@ts-ignore
       setMeals(data?.data?.data?.data);
     }
@@ -179,7 +191,7 @@ export default function MealSelectionSection({
         } gap-4 mt-4
         `}
             >
-              {((mutation?.isSuccess && !!searchPhrase?.length)
+              {(mutation?.isSuccess && !!searchPhrase?.length
                 ? (mutation?.data?.data.data?.meals as IMeal[])
                 : meals
               ).map((meal, index) => (
@@ -192,16 +204,18 @@ export default function MealSelectionSection({
               ))}
             </div>
 
-            <div className="flex items-center justify-center mt-8">
-              <Button
-                title={isLoading ? "Loading..." : "Load more"}
-                onClick={() =>
-                  setLimit((value) => (parseInt(value) + 10).toString())
-                }
-                variant="primary"
-                className="py-6 font-bold font-inter h-[2.5rem]"
-              />
-            </div>
+            {!allMealsLoaded && (
+              <div className="flex items-center justify-center mt-8">
+                <Button
+                  title={isLoading ? "Loading..." : "Load more"}
+                  onClick={() =>
+                    setLimit((value) => (parseInt(value) + 10).toString())
+                  }
+                  variant="primary"
+                  className="py-6 font-bold font-inter h-[2.5rem]"
+                />
+              </div>
+            )}
           </div>
           {user?.email && !!cartItems.length && (
             <div className="hidden md:block mt-4">

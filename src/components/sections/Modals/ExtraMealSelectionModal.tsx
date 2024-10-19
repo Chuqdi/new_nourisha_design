@@ -112,18 +112,16 @@ function ExtraMealSelectionModal() {
                 </p>
               </>
             )}
-            {extraModal?.meal?.name?.toUpperCase()?.includes("SOUP") && (
-              <div className="flex flex-col gap-3 mt-3">
-                {extraModal?.meal?.expected_swallows?.map((extra) => (
-                  <Option
-                    key={extra}
-                    extra_id={extra}
-                    selectedExtras={selectedExtras}
-                    setSelectedExtras={setSelectedExtras}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="flex flex-col gap-3 mt-3">
+              {extraModal?.meal?.expected_swallows?.map((extra) => (
+                <Option
+                  key={extra}
+                  extra_id={extra}
+                  selectedExtras={selectedExtras}
+                  setSelectedExtras={setSelectedExtras}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="mt-4">

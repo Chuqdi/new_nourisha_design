@@ -67,16 +67,14 @@ const SingleSubscription = ({
       .get(`discounts/promos/code/${coupon.trim()}`)
       .then((data) => {
         const couponDiscount = data?.data?.data;
-        if (couponDiscount) {
+        if (couponDiscount?.coupon) {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
             setDisCountedAmount(
-              (plan?.amount! * (100 - discountPercentage)) / 100
+              plan?.amount! - (plan?.amount! * (100 - discountPercentage)) / 100
             );
           } else if (couponDiscount?.coupon?.amount_off) {
-            setDisCountedAmount(
-              plan?.amount! - couponDiscount?.coupon?.amount_off
-            );
+            setDisCountedAmount(couponDiscount?.coupon?.amount_off);
           }
         } else {
           setDisCountedAmount(0);
@@ -101,7 +99,7 @@ const SingleSubscription = ({
     >
       <div className="bg-white p-3 rounded-[0.75rem]">
         <h3 className="text-black-900 font-inter text-[2.5rem] tracking-[-0.1rem] font-bold">
-          £{plan.amount}
+          £{plan?.amount}
         </h3>
         <div className="flex items-center gap-2 justify-between">
           <p
@@ -110,7 +108,7 @@ const SingleSubscription = ({
               color: textColors[Math.floor(Math.random() * textColors.length)],
             }}
           >
-            {plan.name}
+            {plan?.name}
           </p>
           {isSelected && (
             <div className="bg-[#E6FEF2] rounded-[0.375rem] py-0 px-2 flex justify-center items-center h-8 text-primary-Green-900">
@@ -123,7 +121,7 @@ const SingleSubscription = ({
         </div>
 
         <div className="w-full mt-3">
-          <label>Do you have a coupon code?</label>
+          <label>Discount code</label>
           <Input
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
@@ -131,12 +129,16 @@ const SingleSubscription = ({
           />
 
           {!!disCountedAmount && (
-            <p className="text-center font-NewSpiritRegular ">
-              You are paying{" "}
-              <span className="text-xl font-NewSpiritMedium">
-                £{disCountedAmount}
-              </span>
-            </p>
+            <div className="flex justify-between items-center mt-3 px-1">
+              <p className="text-[#008000] font-inter text-sm">
+                Discount applied
+              </p>
+              <p className="text-center font-NewSpiritRegular ">
+                <span className="text-sm text-black-900 font-inter">
+                  -£{disCountedAmount}
+                </span>
+              </p>
+            </div>
           )}
           {loadingDiscount && (
             <p className="text-center text-sm font-NewSpiritRegular">
@@ -160,7 +162,9 @@ const SingleSubscription = ({
             });
             setPaymentModal({
               show: true,
-              amount: plan?.amount!,
+              amount: !!disCountedAmount
+                ? plan?.amount! - disCountedAmount
+                : plan?.amount!,
               onContinue: async () => {
                 let return_url,
                   clientSecret = "";
@@ -205,7 +209,9 @@ export default function Subscription() {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
-      `plans?continent=${searchContinent === "Asian" ? "Asian" : "African"}`
+      `plans?continent=${
+        searchContinent === "Asian" ? "Asian" : "African"
+      }&weekend=${searchParams.get("isWeekend")?searchParams?.get("isWeekend"):"false"}`
     );
   };
 

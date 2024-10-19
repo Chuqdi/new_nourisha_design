@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import SelectChip from "@/components/ui/SelectChip";
 import { CONTINENTS, DAYS_OF_THE_WEEK } from "@/config";
 import queryKeys from "@/config/queryKeys";
+import { LAST_FOOD_BOX_CONTINENNT } from "@/config/storageKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
@@ -380,7 +381,25 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    // emptyBox();
+    const lastFoodBoxContinent = localStorage.getItem(LAST_FOOD_BOX_CONTINENNT);
+    if (lastFoodBoxContinent) {
+      const selectedContinent = searchParams?.get("search_continent");
+      if (selectedContinent !== lastFoodBoxContinent) {
+        emptyBox();
+      }
+    }
+    document.addEventListener("close", () => {
+      localStorage.setItem(
+        LAST_FOOD_BOX_CONTINENNT,
+        searchParams?.get("search_continent") ?? ""
+      );
+    });
+    return () => {
+      localStorage.setItem(
+        LAST_FOOD_BOX_CONTINENNT,
+        searchParams?.get("search_continent") ?? ""
+      );
+    };
   }, []);
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
+import BannerMarqueeSection from "@/components/sections/BannerMarqueeSection";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import Button from "@/components/ui/Button";
 import MessageBtn from "@/components/ui/MessageBtn";
@@ -159,7 +160,7 @@ export default function Main() {
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
             <p className="font-[500] text-black-900 font-inter ">
-              Rated Excellent On Trustpilot
+              Rated 4.7/5 On Trustpilot
             </p>
             <Ratings />
           </div>
@@ -172,8 +173,8 @@ export default function Main() {
           </div>
         </div>
       </div>
-      <div className="mt-6.25  w-full py-[1.5rem] px-6.25 bg-background2 marquee-wrapper">
-        <div className="marquee-slide flex items-center gap-20 ">
+      <div className="mt-6.25  w-full  bg-background2 marquee-wrapper">
+        {/* <div className="marquee-slide flex items-center gap-20 ">
           {bannerOptions.map((option, index) => (
             <div
               key={`banner_option${index}`}
@@ -188,7 +189,8 @@ export default function Main() {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
+        <BannerMarqueeSection />
       </div>
       <div className="w-full my-6.25 mt-14">
         {isMobile ? (
