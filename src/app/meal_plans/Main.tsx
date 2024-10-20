@@ -148,7 +148,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       }
     });
     return options;
-  },[options])
+  },[options, onAfrican])
 
   useEffect(() => {
     if (data?.data?.data?.data) {
