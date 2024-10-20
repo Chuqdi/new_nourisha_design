@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import { BREAKPOINT } from "@/config";
 import { IExtraItem } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
@@ -8,6 +9,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import { useMediaQuery } from "react-responsive";
 
 const Option = ({
   extra_id,
@@ -70,13 +72,14 @@ const Option = ({
 function ExtraMealSelectionModal() {
   const [extraModal, setExtraModal] = useAtom(ATOMS.showMealExtraSelection);
   const { addExtraItem } = useFoodbox();
+  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT })
 
   const [selectedExtras, setSelectedExtras] = useState<IExtraItem | undefined>(
     undefined
   );
 
   return (
-    <div className="w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll">
+    <div className={`z-[999999999999999999] w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll ${isMobile && 'pb-[20rem]'}`}>
       <div className="h-[30rem] w-full relative">
         <div
           onClick={() =>

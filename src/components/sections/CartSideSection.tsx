@@ -14,11 +14,13 @@ import { BREAKPOINT } from "@/config";
 import useUser from "@/hooks/useUser";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 function CartItem({ item }: { item: ICartItem }) {
   const { removeItemFrommCart } = useCart();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
+  const router = useRouter();
 
   const onUpdateCart = (c: () => void) => {
     if (user?.email) {
@@ -27,6 +29,9 @@ function CartItem({ item }: { item: ICartItem }) {
       toast({
         variant: "destructive",
         title: "Please login to access cart functionality",
+        onClick: () => {
+          router.push("/auth");
+        },
       });
     }
   };
