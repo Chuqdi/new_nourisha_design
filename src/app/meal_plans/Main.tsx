@@ -127,7 +127,9 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-    return axiosClient.get(`plans?continent=${activeSearchContinent?.search}&weekend=${isWeekend}`);
+    return axiosClient.get(
+      `plans?continent=${activeSearchContinent?.search}&weekend=${isWeekend}`
+    );
   };
   //${activeSearchContinent.noun}
   const { data, isLoading } = useQuery(
@@ -144,11 +146,15 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
         return 1;
       } else {
         //@ts-ignore
-        return onAfrican?b.name.localeCompare(a.name):a.name.localeCompare(b.name);
+        return onAfrican
+        //@ts-ignore
+          ? b.name.localeCompare(a.name)
+        //@ts-ignore
+          : a.name.localeCompare(b.name);
       }
     });
     return options;
-  },[options, onAfrican])
+  }, [options, onAfrican]);
 
   useEffect(() => {
     if (data?.data?.data?.data) {
@@ -177,15 +183,17 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           </div>
         )}
 
-        <div className="flex items-center gap-1 justify-center my-3 mt-4">
-          <Checkbox
-            checked={isWeekend}
-            onSelect={() => {
-              setIsWeekend(!isWeekend);
-            }}
-          />
-          <p>Weekend delivery (+£8)</p>
-        </div>
+        {!isLoading && (
+          <div className="flex items-center gap-1 justify-center my-3 mt-4">
+            <Checkbox
+              checked={isWeekend}
+              onSelect={() => {
+                setIsWeekend(!isWeekend);
+              }}
+            />
+            <p>Weekend delivery (+£8)</p>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:flex gap-4">
           {sortPlans.map((option, index) => {
             return (
@@ -203,10 +211,10 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           })}
         </div>
 
-        <p className="text-black-900 text-xl text-center font-inter my-4">
+        {/* <p className="text-black-900 text-xl text-center font-inter my-4">
           <span className="text-base">Free weekday delivery</span> and £8 for
           weekend delivery
-        </p>
+        </p> */}
 
         {!isLoading && (
           <div className="flex justify-center items-center mt-4 ">
