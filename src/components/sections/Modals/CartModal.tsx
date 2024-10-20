@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
 import useUser from "@/hooks/useUser";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useAuth from "@/hooks/useAuth";
 
 function CartItem({ item }: { item: ICartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -75,6 +77,43 @@ function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const [coupon, setCoupon] = useState("");
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
+  const [disCountedAmount, setDisCountedAmount] = useState(0);
+  const [loadingDiscount, setLoadingDiscount] = useState(false);
+  const { getAxiosClient } = useAuth();
+
+  const discountEvent = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+    setLoadingDiscount(true);
+
+    await axiosClient
+      .get(`discounts/promos/code/${coupon.trim()}`)
+      .then((data) => {
+        const couponDiscount = data?.data?.data;
+        if (couponDiscount?.coupon) {
+          if (couponDiscount?.coupon?.percent_off) {
+            const discountPercentage = couponDiscount?.coupon?.percent_off;
+            const discountedAmount =
+              //@ts-ignore
+              cartDetails?.subtotal! -
+              //@ts-ignore
+              (cartDetails?.subtotal! * (100 - discountPercentage)) / 100;
+            setDisCountedAmount(discountedAmount);
+          } else if (couponDiscount?.coupon?.amount_off) {
+            const discountedAmount = couponDiscount?.coupon?.amount_off;
+            setDisCountedAmount(discountedAmount);
+          }
+        } else {
+          setDisCountedAmount(0);
+        }
+      })
+      .catch(() => {});
+    setLoadingDiscount(false);
+  };
+
+  useEffect(() => {
+    discountEvent();
+  }, [coupon]);
 
   return (
     <SidebarHOC title="Cart">
@@ -117,6 +156,24 @@ function CartModal() {
           </div>
         )}
 
+        {!!disCountedAmount && (
+          <div className="flex justify-between items-center mt-3 px-1">
+            <p className="text-[#008000] font-inter text-sm">
+              Discount applied
+            </p>
+            <p className="text-center font-NewSpiritRegular ">
+              <span className="text-sm text-black-900 font-inter">
+                -£{disCountedAmount}
+              </span>
+            </p>
+          </div>
+        )}
+        {loadingDiscount && (
+          <p className="text-center text-sm font-NewSpiritRegular">
+            Loading...
+          </p>
+        )}
+
         {!!cartItems.length && (
           <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
             <div className="flex items-center justify-between">
@@ -132,8 +189,6 @@ function CartModal() {
                 £{cartDetails?.total}
               </p>
             </div>
-
-         
           </div>
         )}
 
