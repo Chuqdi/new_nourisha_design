@@ -239,7 +239,7 @@ const OrderSummary = ({
       </p>
       <div className="flex justify-between items-center">
         <p className="font-inter text-black-900 text-sm font-bold">
-          {weeks?.length}-day plan
+          {weeks?.length}-days meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
           +£{amount}
@@ -468,7 +468,7 @@ export default function Main() {
       toast({
         variant: "default",
         title: "Error",
-        description: "You must select meal for all week days.",
+        description: "You must select meal for all weekdays.",
       });
       return;
     }
@@ -768,7 +768,7 @@ export default function Main() {
                           <p className="text-sm font-inter">
                             {searchParams?.get("isWeekend") === "true"
                               ? "Weekend"
-                              : "Week day"}
+                              : "Weekday"}
                           </p>
                         </div>
                       </div>

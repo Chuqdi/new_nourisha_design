@@ -34,7 +34,7 @@ const FoodDeliveryDateSelection = ({
     const value = e.target.value;
     if (!value) return;
     if (isMonday(new Date(value))) {
-      alert("You cannot choose Monday as a delivery date. Please choose another day.");
+      alert("You cannot choose Monday as a delivery day. Please choose another day.");
       return;
     }
     if (isWeekendDelivery && !isWeekend(new Date(value))) {
@@ -43,7 +43,7 @@ const FoodDeliveryDateSelection = ({
     }
 
     if (!isWeekendDelivery && !isWeekDay(new Date(value))) {
-      alert("Please select a valid week day (Tuesday - Friday) ");
+      alert("Please select a valid weekday (Tuesday - Friday) ");
       return;
     }
 

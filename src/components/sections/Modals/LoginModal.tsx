@@ -67,7 +67,7 @@ export default function LoginModal({
   return (
     <div
       id="login_modal"
-      className="flex flex-col md:flex-row h-[90vh] overflow-y-scroll  bg-white  rounded-[1rem] overflow-hidden w-[85%] md:w-full mx-auto relative"
+      className="flex flex-col md:flex-row h-[80vh] md:h-[90vh] overflow-y-scroll  bg-white  rounded-[1rem] overflow-hidden w-[85%] md:w-full mx-auto relative"
     >
       <button
         onClick={close}

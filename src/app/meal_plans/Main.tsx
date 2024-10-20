@@ -2,7 +2,6 @@
 import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
-import { Checkbox } from "@/components/sections/Modals/DeliveryModal";
 import SelectOrdertypeModalSection from "@/components/sections/Modals/SelectordertypeModalSection";
 import ReactSwitch from "react-switch";
 import Button from "@/components/ui/Button";
@@ -20,7 +19,6 @@ import { useQuery } from "react-query";
 const SinglePlan = ({
   activeOptionIndex,
   index,
-  isWeekend,
   setIsWeekend,
   setActiveOptionIndex,
   option,

@@ -42,10 +42,12 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
+        alert(clientSecret);
         const { error } = await stripe.confirmPayment({
           elements,
           clientSecret,
           confirmParams: {
+            
             return_url:
               returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
           },
