@@ -40,6 +40,7 @@
     "react-responsive": "^10.0.0",
     "react-responsive-carousel": "^3.2.23",
     "react-stripe-elements": "^6.1.2",
+    "react-switch": "^7.0.0",
     "stripe": "^16.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

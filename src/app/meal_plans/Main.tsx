@@ -4,6 +4,7 @@ import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import { Checkbox } from "@/components/sections/Modals/DeliveryModal";
 import SelectOrdertypeModalSection from "@/components/sections/Modals/SelectordertypeModalSection";
+import ReactSwitch from "react-switch";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { CONTINENTS } from "@/config";
@@ -41,15 +42,6 @@ const SinglePlan = ({
       return onAfrican ? "7.14" : "6.85";
     }
     return onAfrican ? "7.14" : "6.85";
-  }, [onAfrican]);
-
-  const totalPrice = useMemo(() => {
-    if (option?.name?.includes("5")) {
-      return onAfrican ? option?.amount : "71";
-    } else if (option.name?.includes("MONTHLY")) {
-      return onAfrican ? option?.amount : "383.06";
-    }
-    return onAfrican ? option?.amount : "95.09";
   }, [onAfrican]);
 
   useEffect(() => {
@@ -91,10 +83,12 @@ const SinglePlan = ({
           {/* £{perMealPrice}/meal £{option?.amount}/meal */}
           {option?.description}
         </p>
+
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
-          {/* <span>Total: </span> */}
+          <span>Total: </span>
           <span className="font-bold">
-            £{option?.amount}
+            {/* @ts-ignore */}
+            £{option?.amount + option?.delivery_fee}
           </span>
         </p>
       </div>
@@ -147,10 +141,10 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       } else {
         //@ts-ignore
         return onAfrican
-        //@ts-ignore
-          ? b.name.localeCompare(a.name)
-        //@ts-ignore
-          : a.name.localeCompare(b.name);
+          ? //@ts-ignore
+            b.name.localeCompare(a.name)
+          : //@ts-ignore
+            a.name.localeCompare(b.name);
       }
     });
     return options;
@@ -165,6 +159,10 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   useEffect(() => {
     setUser(getUser());
   }, []);
+
+  useEffect(() => {
+    if (!onAfrican) setIsWeekend(false);
+  }, [onAfrican]);
 
   return (
     <>
@@ -182,16 +180,17 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             <p className="text-center font-inter text-sm">Loading...</p>
           </div>
         )}
-
-        {!isLoading && (
+        {onAfrican && (
           <div className="flex items-center gap-1 justify-center my-3 mt-4">
-            <Checkbox
-              checked={isWeekend}
-              onSelect={() => {
-                setIsWeekend(!isWeekend);
-              }}
-            />
             <p>Weekend delivery (+£8)</p>
+
+            <ReactSwitch
+              checkedIcon={<></>}
+              uncheckedIcon={<></>}
+              id="switch"
+              checked={isWeekend}
+              onChange={setIsWeekend}
+            />
           </div>
         )}
         <div className="grid grid-cols-1 md:flex gap-4">
@@ -232,7 +231,11 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                       activeSearchContinent?.search
                     }&isWeekend=${isWeekend}&plan_amount=${
                       options.find((o, i) => i === activeOptionIndex)?.amount
-                    }`
+                    }&deliveryFee=${
+                      options.find((o, i) => i === activeOptionIndex)
+                        ?.delivery_fee
+                    }
+                    `
                   );
                 } else {
                   router.push("/auth");

@@ -91,7 +91,6 @@ const SingleWeekendBreakDown = ({
                         </p>
                       )}
                     </div>
-                    {/* {week === activeWeek && ( */}
                     <button
                       onClick={() => {
                         removeFoodBox(
@@ -167,19 +166,35 @@ const WeeksBreakDown = ({
   );
 };
 
-const OrderSummary = ({ weeks }:{weeks:typeof DAYS_OF_THE_WEEK}) => {
+const OrderSummary = ({
+  weeks,
+  coupon,
+  disCountedAmount,
+  setDisCountedAmount,
+  setCoupon,
+  loadingDiscount,
+  setLoadingDiscount,
+}: {
+  weeks: typeof DAYS_OF_THE_WEEK;
+  coupon?: string;
+  setCoupon: (value: string) => void;
+  setDisCountedAmount: (value: number) => void;
+  loadingDiscount: boolean;
+  setLoadingDiscount: (value: boolean) => void;
+  disCountedAmount: number;
+}) => {
   const searchParams = useSearchParams();
-  const [coupon, setCoupon] = useState("");
-  const [loadingDiscount, setLoadingDiscount] = useState(false);
-  const [disCountedAmount, setDisCountedAmount] = useState(0);
+
   const { getAxiosClient } = useAuth();
   const amount = parseInt(searchParams?.get("plan_amount")!);
   const isWeekend = searchParams?.get("isWeekend") === "true";
-
+  const deliveryFree = searchParams?.get("deliveryFee");
   const total = useMemo(() => {
     let t = amount;
     if (isWeekend) {
-      t = t + 8;
+      t =
+        t +
+        (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
     }
     if (!!disCountedAmount) {
       t = t - disCountedAmount;
@@ -193,7 +208,7 @@ const OrderSummary = ({ weeks }:{weeks:typeof DAYS_OF_THE_WEEK}) => {
     setLoadingDiscount(true);
 
     await axiosClient
-      .get(`discounts/promos/code/${coupon.trim()}`)
+      .get(`discounts/promos/code/${coupon?.trim()}`)
       .then((data) => {
         const couponDiscount = data?.data?.data;
         if (couponDiscount?.coupon) {
@@ -226,7 +241,9 @@ const OrderSummary = ({ weeks }:{weeks:typeof DAYS_OF_THE_WEEK}) => {
         <p className="font-inter text-black-900 text-sm font-bold">
           {weeks?.length}-day plan
         </p>
-        <p className="font-inter text-black-900 text-sm font-bold">+£{amount}</p>
+        <p className="font-inter text-black-900 text-sm font-bold">
+          +£{amount}
+        </p>
       </div>
 
       <div className="flex justify-between items-center">
@@ -234,7 +251,9 @@ const OrderSummary = ({ weeks }:{weeks:typeof DAYS_OF_THE_WEEK}) => {
           Delivery fee
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
-          {searchParams?.get("isWeekend") === "true" ? "£8" : "Free"}
+          {deliveryFree && !!parseInt(deliveryFree)
+            ? `£${deliveryFree}`
+            : "Free"}
         </p>
       </div>
       <div className="w-full bg-[#D9D9D9] h-[0.1rem]" />
@@ -281,6 +300,11 @@ export default function Main() {
   const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
   const mealsRef = useRef<HTMLDivElement>(null!);
+  const [coupon, setCoupon] = useState("");
+  const [loadingDiscount, setLoadingDiscount] = useState(false);
+  const [disCountedAmount, setDisCountedAmount] = useState(0);
+  const amount = parseInt(searchParams?.get("plan_amount")!);
+  const plan_id = searchParams?.get("plan_id");
 
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const isWeekly = useMemo(
@@ -326,6 +350,23 @@ export default function Main() {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
   const continueProcess = useRef<boolean>(true);
+  const setPaymentModal = useSetAtom(ATOMS.paymentModal);
+  const [searchParamQuery, setSearchParamQuery] = useState("");
+
+  const isWeekend = searchParams?.get("isWeekend") === "true";
+  const deliveryFree = searchParams?.get("deliveryFee");
+  const total = useMemo(() => {
+    let t = amount;
+    if (isWeekend) {
+      t =
+        t +
+        (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
+    }
+    if (!!disCountedAmount) {
+      t = t - disCountedAmount;
+    }
+    return t;
+  }, [disCountedAmount, loadingDiscount, amount]);
 
   const getMeals = () => {
     return getData(
@@ -391,6 +432,34 @@ export default function Main() {
     });
   };
 
+  const initializePayment = () => {
+    setPaymentModal({
+      show: true,
+      amount: total,
+      onContinue: async () => {
+        let return_url,
+          clientSecret = "";
+        let data = {
+          plan_id,
+          promo_code: coupon,
+        };
+        const id = localStorage.getItem(DEVICE_ID);
+        const axiosClient = getAxiosClient(id!);
+        await axiosClient
+          .post("billings/subscribe", data)
+          .then(async (response) => {
+            return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}`;
+            clientSecret = response?.data?.data?.client_secret;
+          });
+
+        return {
+          clientSecret,
+          returnUrl: `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`,
+        };
+      },
+    });
+  };
+
   const createLineUp = async () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
@@ -410,7 +479,10 @@ export default function Main() {
       .get("subscriptions/me")
       .then((data) => {
         if (data?.data?.data?.used_sub) {
-          setSideModal({ show: true, component: <Subscription /> });
+          // setSideModal({ show: true, component: <Subscription /> });
+
+          initializePayment();
+
           setLoading(false);
           continueProcess.current = false;
           return;
@@ -444,14 +516,14 @@ export default function Main() {
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: msg,
-          });
+          // toast({
+          //   variant: "destructive",
+          //   title: "Error",
+          //   description: msg,
+          // });
 
           if (msg?.includes("Subscription is required")) {
-            setSideModal({ show: true, component: <Subscription /> });
+            initializePayment();
           }
         })
         .finally(() => {
@@ -511,6 +583,12 @@ export default function Main() {
         searchParams?.get("search_continent") ?? ""
       );
     };
+  }, []);
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    setSearchParamQuery(urlParams.toString());
   }, []);
 
   return (
@@ -697,7 +775,16 @@ export default function Main() {
                     </div>
 
                     <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
-                    <OrderSummary weeks={weeks} />
+
+                    <OrderSummary
+                      coupon={coupon}
+                      setCoupon={setCoupon}
+                      loadingDiscount={loadingDiscount}
+                      setLoadingDiscount={setLoadingDiscount}
+                      disCountedAmount={disCountedAmount}
+                      setDisCountedAmount={setDisCountedAmount}
+                      weeks={weeks}
+                    />
 
                     <Button
                       onClick={() =>
