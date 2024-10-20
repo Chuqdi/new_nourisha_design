@@ -135,20 +135,20 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     getPlans
   );
 
-  const sortPlans = (plans: IPlan[]) => {
+  const sortPlans = useMemo(() => {
     const containsNumber = (str?: string): boolean => /\d/.test(str ?? "");
-    plans.sort((a, b) => {
+    options.sort((a, b) => {
       if (containsNumber(a?.name) && !containsNumber(b?.name)) {
         return -1;
       } else if (!containsNumber(a?.name) && containsNumber(b?.name)) {
         return 1;
       } else {
         //@ts-ignore
-        return b.name.localeCompare(a.name);
+        return onAfrican?b.name.localeCompare(a.name):a.name.localeCompare(b.name);
       }
     });
-    return plans;
-  };
+    return options;
+  },[options])
 
   useEffect(() => {
     if (data?.data?.data?.data) {
@@ -187,7 +187,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           <p>Weekend delivery (+£8)</p>
         </div>
         <div className="grid grid-cols-1 md:flex gap-4">
-          {sortPlans(options).map((option, index) => {
+          {sortPlans.map((option, index) => {
             return (
               <SinglePlan
                 option={option}
