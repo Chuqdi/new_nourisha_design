@@ -94,7 +94,7 @@ const SinglePlan = ({
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           {/* <span>Total: </span> */}
           <span className="font-bold">
-            £{option?.amount! + (isWeekend && selected ? 8 : 0)}
+            £{option?.amount}
           </span>
         </p>
       </div>
