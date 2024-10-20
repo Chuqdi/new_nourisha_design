@@ -4,6 +4,7 @@ import Subscription from "@/components/sections/Modals/AccountModals/Subscriptio
 import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 import SelectChip from "@/components/ui/SelectChip";
 import { CONTINENTS, DAYS_OF_THE_WEEK } from "@/config";
 import queryKeys from "@/config/queryKeys";
@@ -162,6 +163,115 @@ const WeeksBreakDown = ({
           key={`weeek_break_down_${index}`}
         />
       ))}
+    </div>
+  );
+};
+
+const OrderSummary = ({ weeks }:{weeks:typeof DAYS_OF_THE_WEEK}) => {
+  const searchParams = useSearchParams();
+  const [coupon, setCoupon] = useState("");
+  const [loadingDiscount, setLoadingDiscount] = useState(false);
+  const [disCountedAmount, setDisCountedAmount] = useState(0);
+  const { getAxiosClient } = useAuth();
+  const amount = parseInt(searchParams?.get("plan_amount")!);
+  const isWeekend = searchParams?.get("isWeekend") === "true";
+
+  const total = useMemo(() => {
+    let t = amount;
+    if (isWeekend) {
+      t = t + 8;
+    }
+    if (!!disCountedAmount) {
+      t = t - disCountedAmount;
+    }
+    return t;
+  }, [disCountedAmount, loadingDiscount, amount]);
+
+  const discountEvent = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+    setLoadingDiscount(true);
+
+    await axiosClient
+      .get(`discounts/promos/code/${coupon.trim()}`)
+      .then((data) => {
+        const couponDiscount = data?.data?.data;
+        if (couponDiscount?.coupon) {
+          if (couponDiscount?.coupon?.percent_off) {
+            const discountPercentage = couponDiscount?.coupon?.percent_off;
+            setDisCountedAmount(
+              amount! - (amount! * (100 - discountPercentage)) / 100
+            );
+          } else if (couponDiscount?.coupon?.amount_off) {
+            setDisCountedAmount(couponDiscount?.coupon?.amount_off);
+          }
+        } else {
+          setDisCountedAmount(0);
+        }
+      })
+      .catch(() => {});
+    setLoadingDiscount(false);
+  };
+
+  useEffect(() => {
+    discountEvent();
+  }, [coupon]);
+
+  return (
+    <div className="flex flex-col gap-[0.75rem] bg-white p-3 rounded-[0.5rem]">
+      <p className="text-black-900 text-sm font-bold font-inter">
+        Order summary
+      </p>
+      <div className="flex justify-between items-center">
+        <p className="font-inter text-black-900 text-sm font-bold">
+          {weeks?.length}-day plan
+        </p>
+        <p className="font-inter text-black-900 text-sm font-bold">+£{amount}</p>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <p className="font-inter text-black-900 text-sm font-bold">
+          Delivery fee
+        </p>
+        <p className="font-inter text-black-900 text-sm font-bold">
+          {searchParams?.get("isWeekend") === "true" ? "£8" : "Free"}
+        </p>
+      </div>
+      <div className="w-full bg-[#D9D9D9] h-[0.1rem]" />
+
+      <div>
+        <label>Discount code</label>
+        <Input
+          value={coupon}
+          onChange={(e) => setCoupon(e.target.value)}
+          placeholder="Enter coupon code"
+        />
+      </div>
+
+      <div>
+        {!!disCountedAmount && (
+          <div className="flex justify-between items-center mt-3 px-1">
+            <p className="text-[#008000] font-inter text-sm">
+              Discount applied
+            </p>
+            <p className="text-center font-NewSpiritRegular ">
+              <span className="text-sm text-black-900 font-inter font-extrabold">
+                -£{disCountedAmount}
+              </span>
+            </p>
+          </div>
+        )}
+        {loadingDiscount && (
+          <p className="text-center text-sm font-NewSpiritRegular">
+            Loading...
+          </p>
+        )}
+      </div>
+      <div className="w-full bg-[#D9D9D9] h-[0.1rem]" />
+      <div className="flex justify-between items-center">
+        <p className="font-inter text-black-900 text-sm font-bold">Total</p>
+        <p className="font-inter text-black-900 text-sm font-bold">£{total}</p>
+      </div>
     </div>
   );
 };
@@ -329,6 +439,7 @@ export default function Main() {
             title: "Success",
             description: "Line-up created successfully.",
           });
+          alert(JSON.stringify(data?.data));
           emptyBox();
         })
         .catch((err) => {
@@ -511,63 +622,106 @@ export default function Main() {
                     />
                   </div>
                 </div>
-                <div className="w-full md:w-[30%] rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
-                  <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
-                    Plan summary
-                  </h4>
-
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 h-[0.375rem] bg-[#D9D9D9]">
-                        <div
-                          className="h-full bg-[#04A76C]"
-                          style={{
-                            width: `${
-                              (numberOfMealsSelected / weeks.length) * 100
-                            }%`,
-                          }}
-                        />
-                      </div>
-                      <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem]">
-                        {numberOfMealsSelected}/{weeks.length}
+                <div className="w-full md:w-[30%] flex flex-col gap-2">
+                  <div className="w-full rounded-[0.75rem] mt-4 bg-[#F2F4F7] flex gap-2 py-4 px-3">
+                    <p className=" text-[1.5rem] ">🎁</p>
+                    <div className="flex flex-col">
+                      <p className="text-black-900 font-NewSpiritBold text-[0.75rem]">
+                        Loyalty reward
+                      </p>
+                      <p className="text-black-900 text-[0.75rem]">
+                        Free 5th order within 30 days.
                       </p>
                     </div>
-                    {!!(weeks.length - numberOfMealsSelected) ? (
-                      <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                        Add {weeks.length - numberOfMealsSelected} more days to
-                        complete your plan
-                      </p>
-                    ) : (
-                      <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
-                        Completed
-                      </p>
-                    )}
+                    <div className="text-[#FE7E00] text-[0.75rem] text-center bg-[#FFF3E6] p-1 rounded-[0.25rem]">
+                      3 orders to go
+                    </div>
                   </div>
+                  <div className="w-full rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">
+                    <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
+                      Plan summary
+                    </h4>
 
-                  <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
-
-                  <Button
-                    onClick={() =>
-                      setSideModal({
-                        component: (
-                          <DeliveryModal
-                            setDeliveryDate={set_delivery_date}
-                            proceed={createLineUp}
-                            hidDeliveryDate={searchParams
-                              .get("search_continent")
-                              ?.toUpperCase()
-                              ?.includes("Asian".toUpperCase())}
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-[0.375rem] bg-[#D9D9D9]">
+                          <div
+                            className="h-full bg-[#04A76C]"
+                            style={{
+                              width: `${
+                                (numberOfMealsSelected / weeks.length) * 100
+                              }%`,
+                            }}
                           />
-                        ),
-                        show: true,
-                      })
-                    }
-                    fullWidth
-                    disabled={loading}
-                    title="Proceed"
-                    variant="primary"
-                    className="py-6 h-[2.7rem]"
-                  />
+                        </div>
+                        <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem]">
+                          {numberOfMealsSelected}/{weeks.length}
+                        </p>
+                      </div>
+                      {!!(weeks.length - numberOfMealsSelected) ? (
+                        <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
+                          Add {weeks.length - numberOfMealsSelected} more days
+                          to complete your plan
+                        </p>
+                      ) : (
+                        <p className="text-black-900 text-sm font-inter tracking-[-0.0131313rem] leading-[1.3125rem]">
+                          Completed
+                        </p>
+                      )}
+
+                      <div className="py-3 flex flex-col gap-3">
+                        <div className="flex items-center gap-1">
+                          <img src="/images/icons/plate_frame.svg" />
+                          <p className="font-bold text-sm font-inter">
+                            {weeks.length} Days meal plan
+                          </p>
+                          <p>-</p>
+                          <p className="text-sm font-inter">
+                            ({weeks?.length * 2} meals)
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          <img src="/images/icons/van.svg" />
+                          <p className="font-bold text-sm font-inter">
+                            DELIVERY DAY
+                          </p>
+                          <p>-</p>
+                          <p className="text-sm font-inter">
+                            {searchParams?.get("isWeekend") === "true"
+                              ? "Weekend"
+                              : "Week day"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
+                    <OrderSummary weeks={weeks} />
+
+                    <Button
+                      onClick={() =>
+                        setSideModal({
+                          component: (
+                            <DeliveryModal
+                              setDeliveryDate={set_delivery_date}
+                              proceed={createLineUp}
+                              hidDeliveryDate={searchParams
+                                .get("search_continent")
+                                ?.toUpperCase()
+                                ?.includes("Asian".toUpperCase())}
+                            />
+                          ),
+                          show: true,
+                        })
+                      }
+                      fullWidth
+                      disabled={loading}
+                      title="Go to Checkout"
+                      variant="primary"
+                      className="py-6 h-[2.7rem]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -12,6 +12,8 @@ import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
 import useUser from "@/hooks/useUser";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useAuth from "@/hooks/useAuth";
 
 function CartItem({ item }: { item: ICartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -81,6 +83,43 @@ function CartSideSection() {
   const [showCartSideModal, setShowCartSideModal] = useAtom(
     ATOMS.showMobileCartModal
   );
+  const { getAxiosClient } = useAuth();
+  const [disCountedAmount, setDisCountedAmount] = useState(0);
+  const [loadingDiscount, setLoadingDiscount] = useState(false);
+
+  const discountEvent = async () => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+    setLoadingDiscount(true);
+
+    await axiosClient
+      .get(`discounts/promos/code/${coupon.trim()}`)
+      .then((data) => {
+        const couponDiscount = data?.data?.data;
+        if (couponDiscount?.coupon) {
+          if (couponDiscount?.coupon?.percent_off) {
+            const discountPercentage = couponDiscount?.coupon?.percent_off;
+            const discountedAmount =
+              //@ts-ignore
+              cartDetails?.subtotal! -
+              //@ts-ignore
+              (cartDetails?.subtotal! * (100 - discountPercentage)) / 100;
+            setDisCountedAmount(discountedAmount);
+          } else if (couponDiscount?.coupon?.amount_off) {
+            const discountedAmount = couponDiscount?.coupon?.amount_off;
+            setDisCountedAmount(discountedAmount);
+          }
+        } else {
+          setDisCountedAmount(0);
+        }
+      })
+      .catch(() => {});
+    setLoadingDiscount(false);
+  };
+
+  useEffect(() => {
+    discountEvent();
+  }, [coupon]);
 
   return (
     <div className="bg-[#F2F4F7] p-2  w-full md:w-[19.5rem] rounded-none md:rounded-[0.75rem]  flex flex-col justify-between gap-4 max-h-[80vh] md:max-h-fit overflow-y-scroll md:overflow-y-auto  md:max-h-auto">
@@ -127,9 +166,7 @@ function CartSideSection() {
           {!cartItems.length && (
             <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
               <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
-              <div>
-                No item(s) in your cart.
-              </div>
+              <div>No item(s) in your cart.</div>
             </div>
           )}
           <div className="flex flex-col gap-3">
@@ -150,6 +187,24 @@ function CartSideSection() {
                 className="bg-white"
               />
             </div>
+          )}
+
+          {!!disCountedAmount && (
+            <div className="flex justify-between items-center mt-3 px-1">
+              <p className="text-[#008000] font-inter text-sm">
+                Discount applied
+              </p>
+              <p className="text-center font-NewSpiritRegular ">
+                <span className="text-sm text-black-900 font-inter font-extrabold">
+                  -£{disCountedAmount}
+                </span>
+              </p>
+            </div>
+          )}
+          {loadingDiscount && (
+            <p className="text-center text-sm font-NewSpiritRegular">
+              Loading...
+            </p>
           )}
 
           {!!cartItems.length && (

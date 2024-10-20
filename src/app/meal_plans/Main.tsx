@@ -52,11 +52,11 @@ const SinglePlan = ({
     return onAfrican ? option?.amount : "95.09";
   }, [onAfrican]);
 
-  useEffect(()=>{
-    if(!selected){
+  useEffect(() => {
+    if (!selected) {
       setIsWeekend(false);
     }
-  }, [ selected])
+  }, [selected]);
 
   return (
     <div
@@ -93,11 +93,13 @@ const SinglePlan = ({
         </p>
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           {/* <span>Total: </span> */}
-          <span className="font-bold">£{totalPrice}</span>
+          <span className="font-bold">
+            £{option?.amount! + (isWeekend && selected ? 8 : 0)}
+          </span>
         </p>
       </div>
 
-      <div className="flex items-center gap-1">
+      {/* <div className="flex items-center gap-1">
         <Checkbox
           checked={isWeekend && selected}
           onSelect={() => {
@@ -105,7 +107,7 @@ const SinglePlan = ({
           }}
         />
         <p>Weekend delivery (+£8)</p>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -125,11 +127,11 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-    return axiosClient.get(`plans?continent=${activeSearchContinent?.search}`);
+    return axiosClient.get(`plans?continent=${activeSearchContinent?.search}&weekend=${isWeekend}`);
   };
   //${activeSearchContinent.noun}
   const { data, isLoading } = useQuery(
-    [queryKeys.GET_PLANS, activeSearchContinent?.search],
+    [queryKeys.GET_PLANS, activeSearchContinent?.search, isWeekend],
     getPlans
   );
 
@@ -174,6 +176,16 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             <p className="text-center font-inter text-sm">Loading...</p>
           </div>
         )}
+
+        <div className="flex items-center gap-1 justify-center my-3 mt-4">
+          <Checkbox
+            checked={isWeekend}
+            onSelect={() => {
+              setIsWeekend(!isWeekend);
+            }}
+          />
+          <p>Weekend delivery (+£8)</p>
+        </div>
         <div className="grid grid-cols-1 md:flex gap-4">
           {sortPlans(options).map((option, index) => {
             return (
@@ -200,7 +212,6 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           <div className="flex justify-center items-center mt-4 ">
             <Button
               variant="primary"
-              // onClick={()=>router.push(`/food_box?plan?${options.find(o:IPlan,i)=> o.}`)}
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
                 if (user?.email) {
@@ -209,7 +220,11 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                       options.find((o, i) => i === activeOptionIndex)?.name
                     }&plan_id=${
                       options.find((o, i) => i === activeOptionIndex)?._id
-                    }&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}`
+                    }&search_continent=${
+                      activeSearchContinent?.search
+                    }&isWeekend=${isWeekend}&plan_amount=${
+                      options.find((o, i) => i === activeOptionIndex)?.amount
+                    }`
                   );
                 } else {
                   router.push("/auth");

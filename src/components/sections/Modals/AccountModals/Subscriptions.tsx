@@ -134,7 +134,7 @@ const SingleSubscription = ({
                 Discount applied
               </p>
               <p className="text-center font-NewSpiritRegular ">
-                <span className="text-sm text-black-900 font-inter">
+                <span className="text-sm text-black-900 font-inter font-extrabold">
                   -£{disCountedAmount}
                 </span>
               </p>
