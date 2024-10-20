@@ -106,9 +106,9 @@ function CartSideSection() {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
             const discountedAmount =
               //@ts-ignore
-              cartDetails?.subtotal! -
+              cartDetails?.total! -
               //@ts-ignore
-              (cartDetails?.subtotal! * (100 - discountPercentage)) / 100;
+              (cartDetails?.total! * (100 - discountPercentage)) / 100;
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
             const discountedAmount = couponDiscount?.coupon?.amount_off;
