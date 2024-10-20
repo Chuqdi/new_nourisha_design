@@ -60,6 +60,9 @@ export const CartManipulator = ({
       toast({
         variant: "destructive",
         title: "Please login to continue",
+        onClick:()=>{
+          router.push("/auth");
+        }
       });
     }
   };

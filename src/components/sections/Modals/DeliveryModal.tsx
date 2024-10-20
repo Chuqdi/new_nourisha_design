@@ -73,6 +73,9 @@ export default function DeliveryModal({
         variant: "default",
         title: "Error",
         description: "Please login to proceed",
+        onClick: () => {
+          router.push("/auth");
+        },
       });
       setSideModal({
         ...sideModal,
@@ -166,16 +169,8 @@ export default function DeliveryModal({
         className="flex flex-col gap-6"
       >
         {!hidDeliveryDate && (
-          <div>
+          <div className="w-full">
             <label>Delivery date</label>
-            {/* <Input
-              value={delivery_date}
-              type="date"
-              ref={inputRef}
-              min={todaysDate}
-              onChange={(e) => set_delivery_date(e.target.value)}
-              className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
-            /> */}
             <FoodDeliveryDateSelection
             delivery_date={delivery_date}
             set_delivery_date={set_delivery_date}
