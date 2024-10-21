@@ -244,7 +244,7 @@ const OrderSummary = ({
       </p>
       <div className="flex justify-between items-center">
         <p className="font-inter text-black-900 text-sm font-bold">
-          {isMonthly?"Monthly":weeks?.length}-days meal plan
+          {isMonthly?"Monthly":`${weeks?.length}-days`} meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
           +£{amount}
