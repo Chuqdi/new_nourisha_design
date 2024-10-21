@@ -4,7 +4,7 @@ import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { CartManipulator } from "./SingleCartItemSection";
 import { UserContext } from "@/HOC/UserContext";
 import CheckoutSection from "./CheckoutSection";
@@ -91,6 +91,16 @@ function CartSideSection() {
   const { getAxiosClient } = useAuth();
   const [disCountedAmount, setDisCountedAmount] = useState(0);
   const [loadingDiscount, setLoadingDiscount] = useState(false);
+
+
+  const total = useMemo(() => {
+    let t = parseInt(cartDetails?.total!);
+   
+    if (!!disCountedAmount) {
+      t = t - disCountedAmount;
+    }
+    return t;
+  }, [disCountedAmount, loadingDiscount, cartDetails?.total]);
 
   const discountEvent = async () => {
     const id = localStorage.getItem(DEVICE_ID);
@@ -224,7 +234,7 @@ function CartSideSection() {
               <div className="flex items-center justify-between">
                 <p className="font-inter text-sm">Total</p>
                 <p className="font-bold font-inter text-sm">
-                  £{cartDetails?.total}
+                  £{total}
                 </p>
               </div>
             </div>
@@ -234,7 +244,7 @@ function CartSideSection() {
       <div
         className={`w-full ${showCartSideModal?.showDetails ? "pb-8" : "pb-2"}`}
       >
-        {!!cartItems.length && <CheckoutSection coupon={coupon} />}
+        {!!cartItems.length && <CheckoutSection total={total} coupon={coupon} />}
       </div>
     </div>
   );

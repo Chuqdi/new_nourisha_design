@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
 import useUser from "@/hooks/useUser";
@@ -33,6 +33,8 @@ function CartItem({ item }: { item: ICartItem }) {
       });
     }
   };
+
+
 
   useEffect(() => {
     setUser(getUser());
@@ -116,6 +118,17 @@ function CartModal() {
     setLoadingDiscount(false);
   };
 
+  const total = useMemo(() => {
+    let t = parseInt(cartDetails?.total!);
+   
+    if (!!disCountedAmount) {
+      console.log(disCountedAmount)
+      t = t - disCountedAmount;
+    }
+    return t;
+  }, [disCountedAmount, loadingDiscount, cartDetails?.total]);
+
+
   useEffect(() => {
     discountEvent();
   }, [coupon]);
@@ -191,13 +204,13 @@ function CartModal() {
             <div className="flex items-center justify-between">
               <p className="font-inter text-sm">Total</p>
               <p className="font-bold font-inter text-sm">
-                £{cartDetails?.total}
+                £{total}
               </p>
             </div>
           </div>
         )}
 
-        {!!cartItems.length && <CheckoutSection coupon={coupon} />}
+        {!!cartItems.length && <CheckoutSection total={total} coupon={coupon} />}
       </div>
     </SidebarHOC>
   );

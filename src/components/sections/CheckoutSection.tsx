@@ -11,7 +11,7 @@ import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useUser from "@/hooks/useUser";
 
-export default ({ coupon }: { coupon: string }) => {
+export default ({ coupon, total, }: { coupon: string,total:number }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const [user, setUser] = useState<IUser | undefined>(undefined);
@@ -28,7 +28,7 @@ export default ({ coupon }: { coupon: string }) => {
   return (
     <Button
       title={`Checkout £${
-        parseInt(cartDetails?.total)
+        total
       }`}
       variant="primary"
       className="py-6 h-[2.7rem] w-full"
@@ -41,9 +41,7 @@ export default ({ coupon }: { coupon: string }) => {
                 proceed={async () => {
                   setPaymentModal({
                     show: true,
-                    amount:
-                      parseInt(cartDetails?.total) +
-                      parseInt(cartDetails?.deliveryFee),
+                    amount:total,
                     onContinue: async () => {
                       const id = localStorage.getItem(DEVICE_ID);
                       const axiosClient = getAxiosClient(id!);
