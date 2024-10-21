@@ -108,7 +108,7 @@ export default function LoginModal({
             {PROMO_CODE}
           </button>
           <p className="font-NewSpiritBold text-center text-xl">
-            Or Subscribe and save 99% on your 5th meal plan order within 35
+            Or Subscribe and save 99% on your 5th meal plan order within 30
             days.
           </p>
         </div>

@@ -91,7 +91,7 @@ export default function Main() {
     {
       icon: "🎁",
       title:
-        "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b> <i class='text-[#FE7E00]'>99%</i> discount on your 5th meal plan order within 35 days</p>",
+        "<p class='text-[#030517] font-NewSpiritRegular'><b>Loyalty reward:</b> <i class='text-[#FE7E00]'>99%</i> discount on your 5th meal plan order within 30 days</p>",
     },
   ];
   useEffect(() => {
