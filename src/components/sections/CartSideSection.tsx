@@ -1,12 +1,11 @@
-import { ICartDetail, ICartItem, IUser } from "@/config/types";
+import { ICartDetail, ICartItem, ILocalCartItem, IUser } from "@/config/types";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useAtom, useAtomValue, } from "jotai";
+import { useEffect, useMemo,  useState } from "react";
 import { CartManipulator } from "./SingleCartItemSection";
-import { UserContext } from "@/HOC/UserContext";
 import CheckoutSection from "./CheckoutSection";
 import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
@@ -15,12 +14,15 @@ import useUser from "@/hooks/useUser";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import useLocalCart from "@/hooks/useLocalCart";
 
-function CartItem({ item }: { item: ICartItem }) {
+function CartItem({ item }: { item: ICartItem |ILocalCartItem}) {
   const { removeItemFrommCart } = useCart();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
   const router = useRouter();
+  const {  clearItemFromCart } = useLocalCart();
+
 
   const onUpdateCart = (c: () => void) => {
     if (user?.email) {
@@ -35,6 +37,8 @@ function CartItem({ item }: { item: ICartItem }) {
       });
     }
   };
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
+
 
   useEffect(() => {
     setUser(getUser());
@@ -60,12 +64,14 @@ function CartItem({ item }: { item: ICartItem }) {
       </div>
       <div className="flex justify-between items-center">
         <CartManipulator small meal={item?.item} item={item} />
-
         <button
           onClick={() =>
+            isLoggedIn?
             onUpdateCart(() =>
               removeItemFrommCart(item?.item?._id!, item?.quantity)
             )
+            :
+            clearItemFromCart(item?.item)
           }
           className="text-[#FF4159] text-sm font-inter flex items-center"
         >
@@ -82,25 +88,40 @@ function CartItem({ item }: { item: ICartItem }) {
 
 function CartSideSection() {
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
+  const localCartItems = useAtomValue(ATOMS.localCartItems) as ILocalCartItem[];
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const [coupon, setCoupon] = useState("");
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
   const [showCartSideModal, setShowCartSideModal] = useAtom(
     ATOMS.showMobileCartModal
   );
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
+
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
+
   const { getAxiosClient } = useAuth();
   const [disCountedAmount, setDisCountedAmount] = useState(0);
   const [loadingDiscount, setLoadingDiscount] = useState(false);
-
+  const { getCartTotal} = useLocalCart();
 
   const total = useMemo(() => {
-    let t = parseInt(cartDetails?.total!);
-   
-    if (!!disCountedAmount) {
-      t = t - disCountedAmount;
+    if(isLoggedIn){
+
+      let t = parseInt(cartDetails?.total!);
+  
+      if (!!disCountedAmount) {
+        t = t - disCountedAmount;
+      }
+      return t;
+    }else{
+      return getCartTotal()?.total
     }
-    return t;
-  }, [disCountedAmount, loadingDiscount, cartDetails?.total]);
+  }, [disCountedAmount, loadingDiscount, cartDetails?.total, localCartItems, isLoggedIn]);
 
   const discountEvent = async () => {
     const id = localStorage.getItem(DEVICE_ID);
@@ -154,7 +175,7 @@ function CartSideSection() {
             </button>
           )}
           <h4 className="text-[#323546] text-[1.5rem] font-NewSpiritBold">
-            Cart({cartItems?.length})
+            Cart({!isLoggedIn ? localCartItems?.length : cartItems?.length})
           </h4>
         </div>
         {isMobile && (
@@ -178,16 +199,18 @@ function CartSideSection() {
 
       {(!isMobile || (isMobile && showCartSideModal.showDetails)) && (
         <div className="w-full flex flex-col gap-4">
-          {!cartItems.length && (
+          {!(isLoggedIn?cartItems:localCartItems).length && (
             <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
               <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
               <div>No item(s) in your cart.</div>
             </div>
           )}
           <div className="flex flex-col gap-3">
-            {cartItems?.map((item, index) => (
-              <CartItem key={`cart_item_${index}`} item={item} />
-            ))}
+            {(!isLoggedIn
+              ? localCartItems
+              : cartItems)?.map((item, index) => (
+                  <CartItem key={`cart_item_${index}`} item={item} />
+                ))}
           </div>
 
           <div className="bg-[#D9D9D9] w-full h-[0.0625rem]" />
@@ -197,7 +220,13 @@ function CartSideSection() {
               <label>Coupon Code</label>
               <Input
                 value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
+                onChange={(e) =>{
+                  if(isLoggedIn){
+                    setCoupon(e.target.value)
+                  }else{
+                    alert("Please login/register to use coupon code")
+                  }
+                }}
                 placeholder="Enter coupon code here..."
                 className="bg-white"
               />
@@ -222,20 +251,18 @@ function CartSideSection() {
             </p>
           )}
 
-          {!!cartItems.length && (
+          {!!(isLoggedIn?cartItems:localCartItems).length && (
             <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
               <div className="flex items-center justify-between">
                 <p className="font-inter text-sm">Delivery fee</p>
                 <p className="font-bold font-inter text-sm">
-                  £{cartDetails?.deliveryFee}
+                  £{isLoggedIn?cartDetails?.deliveryFee:"10"}
                 </p>
               </div>
 
               <div className="flex items-center justify-between">
                 <p className="font-inter text-sm">Total</p>
-                <p className="font-bold font-inter text-sm">
-                  £{total}
-                </p>
+                <p className="font-bold font-inter text-sm">£{total}</p>
               </div>
             </div>
           )}
@@ -244,7 +271,9 @@ function CartSideSection() {
       <div
         className={`w-full ${showCartSideModal?.showDetails ? "pb-8" : "pb-2"}`}
       >
-        {!!cartItems.length && <CheckoutSection total={total} coupon={coupon} />}
+        {!!(isLoggedIn?cartItems:localCartItems).length && (
+          <CheckoutSection total={total} coupon={coupon} />
+        )}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import {
   ICartItem,
   IFoodBox,
   IFoodBoxDayType,
+  ILocalCartItem,
   IMeal,
   IStoredExtraType,
   IUser,
@@ -18,6 +19,7 @@ export const cartItems = [] as ICartItem[];
 export const cartDetails = {} as ICartDetail;
 export const cartIsLoading = false;
 export const device_id = "";
+export const localCartItems = [] as ILocalCartItem[];
 export const showMobileCartModal = {
   show:false,
   showDetails:false,

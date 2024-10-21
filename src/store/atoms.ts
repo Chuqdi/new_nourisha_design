@@ -7,13 +7,15 @@ import {
   device_id,
   FOOD_BOX,
   foodInfoModal,
+  localCartItems,
   mealExtraSelection,
   paymentModal,
   SHOW_SIDE_MODAL,
   showMealExtraSelection,
   showMobileCartModal,
 } from "./jotaiDefaultValues";
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage } from "jotai/utils";
+import { ILocalCartItem } from "@/config/types";
 
 export const ATOMS = {
   showSideModal: atom(SHOW_SIDE_MODAL),
@@ -22,10 +24,14 @@ export const ATOMS = {
   cartDetails: atom(cartDetails),
   cartIsLoading: atom(cartIsLoading),
   foodInfoModal: atom(foodInfoModal),
-  device_id:atomWithStorage(device_id,""),
+  device_id: atomWithStorage(device_id, ""),
+  localCartItems: atomWithStorage(
+    "localCartItem",
+    localCartItems as ILocalCartItem[]
+  ),
   paymentModal: atom(paymentModal),
   mealExtraSelection: atom(mealExtraSelection),
   showMealExtraSelection: atom(showMealExtraSelection),
-  couponCode:atom(couponCode),
-  showMobileCartModal:atom(showMobileCartModal)
+  couponCode: atom(couponCode),
+  showMobileCartModal: atom(showMobileCartModal),
 };

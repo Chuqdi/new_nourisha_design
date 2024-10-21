@@ -43,6 +43,8 @@ export default function MealSelectionSection({
   const { getUser } = useUser();
   const pathName = usePathname();
   const [allMealsLoaded, setAllMealLoaded] = useState(false);
+  const localCartItem = useAtomValue(ATOMS?.localCartItems);
+
 
   const getMeals = () => {
     return getData(
@@ -61,6 +63,9 @@ export default function MealSelectionSection({
       pathName?.toUpperCase() === "/bulk_meals".toUpperCase()
     );
   }, [activeContinent, pathName]);
+
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
+
 
   const { data, isLoading } = useFetch(
     getMeals,
@@ -217,7 +222,7 @@ export default function MealSelectionSection({
               </div>
             )}
           </div>
-          {user?.email && !!cartItems.length && (
+          { !!(isLoggedIn?cartItems:localCartItem).length && (
             <div className="hidden md:block mt-4">
               <CartSideSection />
             </div>

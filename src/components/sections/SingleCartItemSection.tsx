@@ -3,11 +3,13 @@ import {
   ICartItem,
   IFoodBox,
   IFoodBoxDayType,
+  ILocalCartItem,
   IMeal,
   IUser,
 } from "@/config/types";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
+import useLocalCart from "@/hooks/useLocalCart";
 import useUser from "@/hooks/useUser";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
@@ -22,7 +24,7 @@ export const CartManipulator = ({
   small,
   activeCountry,
 }: {
-  item: ICartItem;
+  item: ICartItem | ILocalCartItem;
   meal: IMeal;
   small?: boolean;
   activeCountry?: string;
@@ -33,6 +35,9 @@ export const CartManipulator = ({
   const router = useRouter();
   const pathName = usePathname();
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
+  const { addItem, removeItem } = useLocalCart();
+
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
   const onUpdateCart = (c: () => void) => {
     if (
@@ -60,9 +65,9 @@ export const CartManipulator = ({
       toast({
         variant: "destructive",
         title: "Please login to continue",
-        onClick:()=>{
+        onClick: () => {
           router.push("/auth");
-        }
+        },
       });
     }
   };
@@ -78,7 +83,9 @@ export const CartManipulator = ({
     >
       <button
         onClick={() => {
-          onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1));
+          isLoggedIn
+            ? onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1))
+            : removeItem(meal, 1);
         }}
         className={`bg-white justify-center items-center ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
@@ -95,7 +102,9 @@ export const CartManipulator = ({
       </p>
       <button
         onClick={() => {
-          onUpdateCart(() => addItemToCart(meal, 1));
+          isLoggedIn
+            ? onUpdateCart(() => addItemToCart(meal, 1))
+            : addItem(meal, 1);
         }}
         className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
@@ -131,6 +140,10 @@ export default function SingleCartItemSection({
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
   const pathName = usePathname();
+  const { getCartItem} = useLocalCart();
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
+  const localCartItem = useAtomValue(ATOMS?.localCartItems);
 
   const activeDayBox = useMemo(() => {
     if (boxStore) {
@@ -144,6 +157,10 @@ export default function SingleCartItemSection({
   const activeDayMeal = useMemo(() => activeDayBox?.meals, [activeDayBox]) as {
     meals: { first_meal: IMeal; last_meal: IMeal };
   };
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
+
+
+
   const isMealSelected = useMemo(() => {
     return {
       //@ts-ignore
@@ -153,17 +170,14 @@ export default function SingleCartItemSection({
     };
   }, [activeDayMeal]);
   const cartItemMeal = useMemo(
-    () => cartItems.find((i) => i?.item?._id === meal?._id),
+    () => isLoggedIn?cartItems.find((i) => i?.item?._id === meal?._id):getCartItem(meal),
 
-    [cartItems]
+    [cartItems, localCartItem]
   );
 
-  // useEffect(() => {
-
-  //   if (bothSelected) {
-  //     goToNextWeek && goToNextWeek();
-  //   }
-  // }, [activeDayMeal]);
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">

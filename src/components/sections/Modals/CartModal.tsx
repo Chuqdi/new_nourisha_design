@@ -1,4 +1,4 @@
-import { ICartDetail, ICartItem, IUser } from "@/config/types";
+import { ICartDetail, ICartItem, ILocalCartItem, IUser } from "@/config/types";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
@@ -13,12 +13,15 @@ import useUser from "@/hooks/useUser";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import useLocalCart from "@/hooks/useLocalCart";
 
-function CartItem({ item }: { item: ICartItem }) {
+function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
   const router = useRouter();
+  const { clearItemFromCart } = useLocalCart();
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
   const onUpdateCart = (c: () => void) => {
     if (user?.email) {
@@ -27,14 +30,12 @@ function CartItem({ item }: { item: ICartItem }) {
       toast({
         variant: "destructive",
         title: "Please login to access cart functionality",
-        onClick:()=>{
-          router.push("/auth")
-        }
+        onClick: () => {
+          router.push("/auth");
+        },
       });
     }
   };
-
-
 
   useEffect(() => {
     setUser(getUser());
@@ -61,9 +62,11 @@ function CartItem({ item }: { item: ICartItem }) {
       <div className="flex justify-between items-center">
         <button
           onClick={() =>
-            onUpdateCart(() =>
-              removeItemFrommCart(item?.item?._id!, item?.quantity)
-            )
+            isLoggedIn
+              ? onUpdateCart(() =>
+                  removeItemFrommCart(item?.item?._id!, item?.quantity)
+                )
+              : clearItemFromCart(item?.item)
           }
           className="text-[#FF4159] text-sm font-inter flex items-center"
         >
@@ -87,6 +90,10 @@ function CartModal() {
   const [disCountedAmount, setDisCountedAmount] = useState(0);
   const [loadingDiscount, setLoadingDiscount] = useState(false);
   const { getAxiosClient } = useAuth();
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const { getUser } = useUser();
+  const localCartItems = useAtomValue(ATOMS.localCartItems);
+  const { getCartTotal } = useLocalCart();
 
   const discountEvent = async () => {
     const id = localStorage.getItem(DEVICE_ID);
@@ -118,28 +125,42 @@ function CartModal() {
     setLoadingDiscount(false);
   };
 
-  const total = useMemo(() => {
-    let t = parseInt(cartDetails?.total!);
-   
-    if (!!disCountedAmount) {
-      console.log(disCountedAmount)
-      t = t - disCountedAmount;
-    }
-    return t;
-  }, [disCountedAmount, loadingDiscount, cartDetails?.total]);
+  const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
+  const total = useMemo(() => {
+    if (isLoggedIn) {
+      let t = parseInt(cartDetails?.total!);
+
+      if (!!disCountedAmount) {
+        t = t - disCountedAmount;
+      }
+      return t;
+    } else {
+      return getCartTotal()?.total;
+    }
+  }, [
+    disCountedAmount,
+    loadingDiscount,
+    cartDetails?.total,
+    localCartItems,
+    isLoggedIn,
+  ]);
 
   useEffect(() => {
     discountEvent();
   }, [coupon]);
 
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
   return (
     <SidebarHOC title="Cart">
       <div className="flex flex-col gap-3">
-        {!cartItems.length && (
+        {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <p className="text-black-900 text-sm font-inter">Cart Summary</p>
         )}
-        {!cartItems.length && (
+        {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
             <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
             <div>
@@ -158,17 +179,23 @@ function CartModal() {
         )}
 
         <div className="flex flex-col gap-3">
-          {cartItems?.map((item, index) => (
+          {(isLoggedIn ? cartItems : localCartItems)?.map((item, index) => (
             <CartItem key={`cart_item_${index}`} item={item} />
           ))}
         </div>
 
-        {!!cartItems.length && (
+        {!!(isLoggedIn ? cartItems : localCartItems).length && (
           <div>
             <label>Coupon Code</label>
             <Input
               value={coupon}
-              onChange={(e) => setCoupon(e.target.value)}
+              onChange={(e) => {
+                if (isLoggedIn) {
+                  setCoupon(e.target.value);
+                } else {
+                  alert("Please login/register to use coupon code");
+                }
+              }}
               placeholder="Enter coupon code here..."
             />
           </div>
@@ -192,25 +219,25 @@ function CartModal() {
           </p>
         )}
 
-        {!!cartItems.length && (
+        {!!(isLoggedIn ? cartItems : localCartItems).length && (
           <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
             <div className="flex items-center justify-between">
               <p className="font-inter text-sm">Delivery fee</p>
               <p className="font-bold font-inter text-sm">
-                £{cartDetails?.deliveryFee}
+                £{isLoggedIn ? cartDetails?.deliveryFee : "10"}
               </p>
             </div>
 
             <div className="flex items-center justify-between">
               <p className="font-inter text-sm">Total</p>
-              <p className="font-bold font-inter text-sm">
-                £{total}
-              </p>
+              <p className="font-bold font-inter text-sm">£{total}</p>
             </div>
           </div>
         )}
 
-        {!!cartItems.length && <CheckoutSection total={total} coupon={coupon} />}
+        {!!cartItems.length && (
+          <CheckoutSection total={total} coupon={coupon} />
+        )}
       </div>
     </SidebarHOC>
   );

@@ -9,6 +9,7 @@ import Modal from "@/components/ui/Modal";
 import SideModal from "@/components/ui/SideModal";
 import { BREAKPOINT } from "@/config";
 import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
+import useLocalCart from "@/hooks/useLocalCart";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,7 +38,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
     useState(false);
   const [couponState, setCouponState] = useAtom(ATOMS.couponCode);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-
+  const { initializeCart } = useLocalCart();
   const userInfo = useContext(IPInfoContext);
 
   useEffect(() => {
@@ -60,6 +61,9 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
       setShowMobileCartModal({ ...showMobileCartModal, show: false });
     }
   }, [paymentModal?.show]);
+  useEffect(()=>{
+    initializeCart();
+  },[]);
 
   return (
     <div>
@@ -67,7 +71,6 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         <PaymentModal
           getClientSecret={paymentModal.onContinue}
           close={() => setPaymentModal({ ...paymentModal, show: false })}
-          
         />
       </Modal>
 

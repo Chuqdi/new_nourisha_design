@@ -32,15 +32,15 @@ export interface IUser {
 export interface IMeal {
   available_quantity?: string;
   category?: string;
-  description?:string;
-  spice_level:string;
+  description?: string;
+  spice_level: string;
   country?: string;
-  expected_proteins?:string[];
-  expected_swallows?:string[];
+  expected_proteins?: string[];
+  expected_swallows?: string[];
   orderType?: string;
   is_available: boolean;
   meals?: string[];
-  calories?:string;
+  calories?: string;
   name?: string;
   slug?: string;
   createdAt?: string;
@@ -49,16 +49,16 @@ export interface IMeal {
   images?: string[];
   _id?: string;
   price: { amount: number; deliveryFee: number; previousAmount: number };
-  mealInfo?:{
-    ingredient?:string;
-    heating?:string;
-    allergy?:string,
-    nutrition?:{
-      protein?:string;
-      fat?:string;
-      carbs?:string;
-    }
-  },
+  mealInfo?: {
+    ingredient?: string;
+    heating?: string;
+    allergy?: string;
+    nutrition?: {
+      protein?: string;
+      fat?: string;
+      carbs?: string;
+    };
+  };
 }
 
 export interface ICartItem {
@@ -68,11 +68,9 @@ export interface ICartItem {
   _id: string;
 }
 
-
-
 export interface IExtraItem {
   _id?: string;
-  name?:string;
+  name?: string;
 }
 export interface IOrder {
   _id: string;
@@ -158,11 +156,17 @@ export type IFoodBoxDayType =
 export interface IFoodBox {
   day: IFoodBoxDayType;
   meals: IFoodBoxItem;
-  extra?:IExtraItem
+  extra?: IExtraItem;
 }
 
 export interface IStoredExtraType {
-  meal?:IMeal,
-  extra?:IExtraItem,
-  day?:IFoodBoxDayType,
-};
+  meal?: IMeal;
+  extra?: IExtraItem;
+  day?: IFoodBoxDayType;
+}
+
+export interface ILocalCartItem {
+  item: IMeal;
+  quantity: number;
+  extra: IExtraItem;
+}
