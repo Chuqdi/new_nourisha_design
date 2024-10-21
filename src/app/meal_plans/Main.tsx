@@ -42,11 +42,11 @@ const SinglePlan = ({
     return onAfrican ? "7.14" : "6.85";
   }, [onAfrican]);
 
-  useEffect(() => {
-    if (!selected) {
-      setIsWeekend(false);
-    }
-  }, [selected]);
+  // useEffect(() => {
+  //   if (!selected) {
+  //     setIsWeekend(false);
+  //   }
+  // }, [selected]);
 
   return (
     <div
