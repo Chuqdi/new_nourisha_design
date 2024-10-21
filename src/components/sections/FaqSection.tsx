@@ -66,7 +66,7 @@ export default function FaqSection() {
         "Yes, we deliver anywhere in the UK, including Northern Ireland. Please note deliveries to Northern Ireland may attract additional fees.",
     },
     {
-      answer: `Yes, you can select your choice of meals from the available menu`,
+      answer: `Yes, you can select your choice of meals from the available menu.`,
       question:
         "Do I get to select my preferred meals for the weekly subscription plan or there's already a selected meal that comes with the package?",
     },
@@ -111,7 +111,7 @@ export default function FaqSection() {
 
     {
       question: "Do you cater for events?",
-      answer: `Yes, we do. <a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>`,
+      answer: `Yes, we do. <a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>.`,
     },
   ];
   const mainQuestions = useMemo(() => {
