@@ -88,7 +88,7 @@ export default function FaqSection() {
     },
     {
       question:
-        "What happens if I have auto renewal turned on or if I subscribed to a monthly plan?",
+        "What happens if I have auto renewal turned on?",
       answer:
         "If you have turned on auto renewal, you will be debited weekly and you will get an in-app notifications to plan your meal for the week and select your preffered delivery date. You can always select your meals from what is available on our menu and you are not restricted to the meals you had the previous week.",
     },
