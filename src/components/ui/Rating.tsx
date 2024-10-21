@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Ratings() {
   return (
     <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((rate, index) => (
+      {/* {[1, 2, 3, 4, 5].map((rate, index) => (
         <Link
           href="https://uk.trustpilot.com/review/eatnourisha.com"
           target="__blank"
@@ -21,7 +21,8 @@ export default function Ratings() {
             />
           </div>
         </Link>
-      ))}
+      ))} */}
+      <img src="/images/rating.png" className="w-[10.71431rem] h-8" />
     </div>
   );
 }
