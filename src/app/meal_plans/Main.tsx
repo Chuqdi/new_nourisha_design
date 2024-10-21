@@ -42,11 +42,6 @@ const SinglePlan = ({
     return onAfrican ? "7.14" : "6.85";
   }, [onAfrican]);
 
-  // useEffect(() => {
-  //   if (!selected) {
-  //     setIsWeekend(false);
-  //   }
-  // }, [selected]);
 
   return (
     <div
@@ -180,7 +175,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             <p className="text-center font-inter text-sm">Loading...</p>
           </div>
         )}
-        {onAfrican && (
+        {!isLoading &&onAfrican && (
           <div className="flex items-center gap-1 justify-center my-3 mt-4">
             <p>Weekend delivery (+£8)</p>
 
