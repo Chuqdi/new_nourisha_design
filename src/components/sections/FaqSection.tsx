@@ -2,6 +2,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import Button from "../ui/Button";
+//@ts-ignore
+import HTMLRenderer from "react-html-renderer";
 
 const SingleQuestion = ({
   question,
@@ -35,7 +37,7 @@ const SingleQuestion = ({
               animate={{ y: 10 }}
               className="text-black-900 font-inter text-[1.175rem] leading-[1.875rem] tracking-[-0.01875rem]"
             >
-              {question.answer}
+              <HTMLRenderer html={question.answer} />
             </motion.p>
           </AnimatePresence>
         )}
@@ -59,49 +61,42 @@ export default function FaqSection() {
         "Delivery takes between 24 hours to 48 hours depending on location.Your order needs to be placed before 12:00 pm of the previous day to be received within 24 hours.",
     },
     {
-      question:
-        "Can I choose to subscribe for the weekly or monthly plan this week and decide not to pay for a subscription plan the following week?",
-      answer:
-        "Most certainly. The subscription plan is not a compulsory Auto-renewal. However, if you choose to be on Auto-renewal, just click on the auto-renewal button displayed on the app.",
-    },
-    {
       question: "Do you deliver across all UK cities?",
-      answer: "Yes, we deliver anywhere within the UK.",
+      answer:
+        "Yes, we deliver anywhere in the UK, including Northern Ireland. Please note deliveries to Northern Ireland may attract additional fees.",
     },
     {
-      answer: `Yes, you can select your choice of meal selections from the available menu.
-    The best part is you are not restricted to the available menu.`,
+      answer: `Yes, you can select your choice of meals from the available menu`,
       question:
         "Do I get to select my preferred meals for the weekly subscription plan or there's already a selected meal that comes with the package?",
     },
     {
       question:
         "How does the weekly subscription plan work. Do you deliver each meal daily?",
-      answer: "No, we do not.\n All 14 meals are delivered at once ",
+      answer:
+        "No, we don't deliver daily, your meals are prepped and delivered once on your preferred delivery day.",
     },
     {
       question:
-        "How long should my weekly plan last in my fridge after receiving? ",
-      answer: "Ideally 7-10 days.",
+        "How long should my meals last in my fridge after receiving it? ",
+      answer: "Ideally 7 days. To last longer, keep them frozen.",
     },
     {
       question:
-        "Can I select Nigerian and Ghanaian menus in my weekly subscription? ",
-      answer: `No, you can’t make that selection with the weekly plan.\n
-      You can either select a Nigerian or Ghanaian menu but not both. `,
+        "Can I select African and Asian/European dishes when planning my meal plan?",
+      answer: `No. You can either select from the African or Asian/European menu when planning your meal but not both.`,
     },
     {
       question:
-        "I do not want to include swallows in my meal, just Soups and Jollof Rice. What can I get?",
-      answer: "We have a Litres box available, 1.5LTR, 5LTR and 10LTR.",
+        "What happens if I have auto renewal turned on or if I subscribed to a monthly plan?",
+      answer:
+        "If you have turned on auto renewal, you will be debited weekly and you will get an in-app notifications to plan your meal for the week and select your preffered delivery date. You can always select your meals from what is available on our menu and you are not restricted to the meals you had the previous week.",
     },
     {
-      question:
-        "Can I order just soups without the swallows and then replace the swallows with more soups?",
-      answer: `The swallow is a complete package with the soups, and an exemption can be requested, however it can not be replaced with another meal.
-      However, we also have bulk orders available where you can order for soup litres.`,
+      question: "What if I subscribed to a monthly plan?",
+      answer:
+        "If you have subscribed to a monthly plan, you will get an in-app notification reminder every weekend to plan your meal for the week ahead and chose a preferred delivery date. You can always select your meals from what is available on our menu and you are not restricted to the meals you had the previous week.",
     },
-
     {
       question: "What days can I receive my order and are weekends inclusive? ",
       answer:
@@ -109,8 +104,14 @@ export default function FaqSection() {
     },
 
     {
+      question: `I can't find what I'm looking for.`,
+      answer:
+        "If you still need help, please contact our customer care team for help.",
+    },
+
+    {
       question: "Do you cater for events?",
-      answer: "Yes, we do.",
+      answer: `Yes, we do.<a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>`,
     },
   ];
   const mainQuestions = useMemo(() => {
@@ -118,7 +119,7 @@ export default function FaqSection() {
     return questions.slice(0, 4);
   }, [moreLoaded]);
   return (
-    <div  className="flex gap-6 flex-col w-full bg-white mx-auto  rounded-[2rem] ">
+    <div className="flex gap-6 flex-col w-full bg-white mx-auto  rounded-[2rem] ">
       {mainQuestions.map((question, index) => (
         <SingleQuestion
           index={index}
