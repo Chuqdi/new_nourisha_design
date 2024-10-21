@@ -202,6 +202,11 @@ const OrderSummary = ({
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
 
+  const isMonthly = useMemo(()=>{
+    const plan = searchParams?.get("plan");
+    return plan?.toUpperCase()?.includes("Monthly".toUpperCase());
+  }, [])
+
   const discountEvent = async () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
@@ -239,7 +244,7 @@ const OrderSummary = ({
       </p>
       <div className="flex justify-between items-center">
         <p className="font-inter text-black-900 text-sm font-bold">
-          {weeks?.length}-days meal plan
+          {isMonthly?"Monthly":weeks?.length}-days meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
           +£{amount}
