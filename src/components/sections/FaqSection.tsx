@@ -111,7 +111,7 @@ export default function FaqSection() {
 
     {
       question: "Do you cater for events?",
-      answer: `Yes, we do.<a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>`,
+      answer: `Yes, we do. <a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>`,
     },
   ];
   const mainQuestions = useMemo(() => {
