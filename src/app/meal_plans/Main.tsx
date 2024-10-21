@@ -138,11 +138,13 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
         return 1;
       } else {
         //@ts-ignore
-        return onAfrican
-          ? //@ts-ignore
-            b.name.localeCompare(a.name)
-          : //@ts-ignore
-            a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name);
+        // //@ts-ignore
+        // return onAfrican
+        //   ? //@ts-ignore
+        //     b.name.localeCompare(a.name)
+        //   : //@ts-ignore
+        //     a.name.localeCompare(b.name);
       }
     });
     return options;
