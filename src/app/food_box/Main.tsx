@@ -368,6 +368,11 @@ export default function Main() {
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
 
+  const isMonthly = useMemo(()=>{
+    const plan = searchParams?.get("plan");
+    return plan?.toUpperCase()?.includes("Monthly".toUpperCase());
+  }, [])
+
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&continent=${activeCountry?.search}&searchPhrase=${searchPhrase}`
@@ -753,11 +758,11 @@ export default function Main() {
                         <div className="flex items-center gap-1">
                           <img src="/images/icons/plate_frame.svg" />
                           <p className="font-bold text-sm font-inter">
-                            {weeks.length} Days meal plan
+                            {isMonthly?"Monthly":`${weeks.length} Days`} meal plan
                           </p>
                           <p>-</p>
                           <p className="text-sm font-inter">
-                            ({weeks?.length * 2} meals)
+                            ({isMonthly?"56":weeks?.length * 2} meals)
                           </p>
                         </div>
 
