@@ -28,7 +28,7 @@ export default ({ coupon }: { coupon: string }) => {
   return (
     <Button
       title={`Checkout £${
-        parseInt(cartDetails?.total) + parseInt(cartDetails?.deliveryFee)
+        parseInt(cartDetails?.total)
       }`}
       variant="primary"
       className="py-6 h-[2.7rem] w-full"
