@@ -701,15 +701,17 @@ export default function Main() {
                   </div>
                 </div>
                 <div className="w-full md:w-[30%] flex flex-col gap-2">
-                  <div className="w-full rounded-[0.75rem] mt-4 bg-[#F2F4F7] flex gap-2 py-4 px-3">
-                    <p className=" text-[1.5rem] ">🎁</p>
-                    <div className="flex flex-col">
-                      <p className="text-black-900 font-NewSpiritBold text-[0.75rem]">
-                        Loyalty reward
-                      </p>
-                      <p className="text-black-900 text-[0.75rem]">
-                        Free 5th order within 30 days.
-                      </p>
+                  <div className="w-full rounded-[0.75rem] mt-4 bg-[#F2F4F7] flex gap-2 py-4 px-3 items-center justify-between">
+                    <div className="flex gap-2 items-center">
+                      <p className=" text-[1.5rem] ">🎁</p>
+                      <div className="flex flex-col">
+                        <p className="text-black-900 font-NewSpiritBold text-[0.75rem]">
+                          Loyalty reward
+                        </p>
+                        <p className="text-black-900 text-[0.75rem]">
+                          Free 5th order within 30 days.
+                        </p>
+                      </div>
                     </div>
                     <div className="text-[#FE7E00] text-[0.75rem] text-center bg-[#FFF3E6] p-1 rounded-[0.25rem]">
                       3 orders to go
