@@ -207,7 +207,7 @@ function CartModal() {
           </div>
         )}
 
-        {!!cartItems.length && (
+        {!!(isLoggedIn?cartItems.length:localCartItems.length) && (
           <CheckoutSection total={total} coupon={coupon} />
         )}
       </div>

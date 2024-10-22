@@ -150,7 +150,7 @@ export default function Main() {
             </div>
           </div>
         </form>
-        <div className="flex-1">
+        <div className="flex-1 hidden md:block">
           <img src="/images/auth_banner.png" />
         </div>
       </div>
