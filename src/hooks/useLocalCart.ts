@@ -47,7 +47,6 @@ export default () => {
   };
 
   const removeItem = (meal: IMeal, quantity: number) => {
-
     const mealExistInCart = localCartItems.find(
       (item) => item?.item?._id === meal?._id
     );
@@ -86,7 +85,7 @@ export default () => {
     return mealExistInCart;
   };
 
-  const clearCart = () => {
+  const emptyCart = () => {
     localStorage.removeItem(LOCAL_CART_ITEMS);
     setLocalCartItems([]);
     localStorage.setItem(LOCAL_CART_ITEMS, JSON.stringify([]));
@@ -100,10 +99,26 @@ export default () => {
     return { total: total + 10 };
   };
 
+  const prepareCartForAuth = () => {
+    //@ts-ignore
+    let value = [];
+    localCartItems?.map((acc) => {
+      value.push({
+        itemId: acc?.item?._id,
+        quantity: acc?.quantity,
+        proteinId: null,
+        swallowId: null,
+      });
+    });
+    //@ts-ignore
+    return value;
+  };
+
   return {
     addItem,
     removeItem,
-    clearCart,
+    prepareCartForAuth,
+    emptyCart,
     getCartTotal,
     initializeCart,
     clearItemFromCart,

@@ -3,7 +3,7 @@ import Navbar from "@/components/commons/Navbar";
 import Button from "@/components/ui/Button";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
-import  { DEVICE_ID } from "@/hooks/useFingerPrint";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
@@ -13,13 +13,14 @@ import { useContext, useEffect, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
-import {  LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
+import useLocalCart from "@/hooks/useLocalCart";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
-  const { makeRequest, isLoading ,} = useAuth();
+  const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
-  const user = useContext(UserContext);
+  const { prepareCartForAuth, emptyCart } = useLocalCart();
 
   const options = [
     {
@@ -37,33 +38,32 @@ export default function Main() {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const temp_id = localStorage.getItem(CART_TEMP_ID);
-    const data = onLogin
-      ? {
-          ...loginFormik?.values,
-        }
-      : signUpForm?.values;
+    const cartItem = prepareCartForAuth();
+    const body = {
+      ...(onLogin ? loginFormik?.values : signUpForm?.values),
+      ILocalCartItem: cartItem,
+    };
 
     const createdUser = await makeRequest(
       onLogin ? "auth/login" : "auth/register",
-      data
+      body
     );
 
-    
     if (createdUser) {
       setToken(createdUser.token);
-      localStorage.setItem(LOGGED_IN_USER,JSON.stringify(createdUser?.payload))
-      localStorage.setItem("AUTH_USER_EMAIL", data.email);
+      localStorage.setItem(
+        LOGGED_IN_USER,
+        JSON.stringify(createdUser?.payload)
+      );
+      localStorage.setItem("AUTH_USER_EMAIL", body.email);
 
       toast({
         variant: "default",
         title: !onLogin ? "Registeration was successful" : "Login successful",
       });
       window.location.replace("/");
-   
-      // onLogin
-      // ?
-      // :
-      // router.push(`/auth/enter_otp?email=${data.email}`);
+
+      emptyCart();
       (onLogin ? loginFormik : signUpForm).resetForm();
     }
   };
@@ -94,7 +94,11 @@ export default function Main() {
     <div className="w-full h-full relative pt-6">
       <Navbar />
       <div className="m-1.25 mt-[8rem] md:m-6.25 flex flex-col-reverse md:flex-row items-stretch md:items-center gap-20">
-        <form name="auth_user" onSubmit={onSubmit} className="flex-1 flex flex-col gap-16">
+        <form
+          name="auth_user"
+          onSubmit={onSubmit}
+          className="flex-1 flex flex-col gap-16"
+        >
           <div className="flex items-center gap-6 justify-center">
             {options.map((option, index) => (
               <button
