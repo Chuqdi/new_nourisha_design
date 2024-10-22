@@ -23,9 +23,10 @@ export default () => {
         if (couponDiscount?.coupon) {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
+            alert(discountPercentage)
             const discountedAmount =
-              expectedAmount -
-              (expectedAmount * (100 - discountPercentage)) / 100;
+              Math.round(expectedAmount -
+                (expectedAmount * (100 - discountPercentage)) / 100);
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
             const discountedAmount = Math.round(
