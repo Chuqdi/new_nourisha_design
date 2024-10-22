@@ -3,17 +3,15 @@ import Navbar from "@/components/commons/Navbar";
 import Button from "@/components/ui/Button";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
-import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import {  useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
-import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
+import { LOGGED_IN_USER,  } from "@/HOC/UserContext";
 import useLocalCart from "@/hooks/useLocalCart";
 
 export default function Main() {
