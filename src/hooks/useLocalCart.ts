@@ -86,7 +86,6 @@ export default () => {
   };
 
   const emptyCart = () => {
-    localStorage.removeItem(LOCAL_CART_ITEMS);
     setLocalCartItems([]);
     localStorage.setItem(LOCAL_CART_ITEMS, JSON.stringify([]));
   };
