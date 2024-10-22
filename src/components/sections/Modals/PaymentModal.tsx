@@ -69,7 +69,7 @@ const Payment = ({
     setPaymentLoadng(false);
   };
   return (
-    <div className="bg-white p-4 rounded flex flex-col gap-3">
+    <div className="bg-white p-4 rounded flex flex-col gap-3 max-h-[80vh] overflow-y-scroll">
       <div className="w-full flex justify-end">
         <div onClick={close} className="w-fit flex justify-end">
           <Icon color="#000" icon="fluent-mdl2:cancel" className="w-6 h-6" />
