@@ -19,6 +19,8 @@ export default function Main() {
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
   const { prepareCartForAuth, emptyCart } = useLocalCart();
+  const { getAxiosClient } = useAuth();
+
 
   const options = [
     {
@@ -35,7 +37,6 @@ export default function Main() {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    const temp_id = localStorage.getItem(CART_TEMP_ID);
     const cartItem = prepareCartForAuth();
     const body = {
       ...(onLogin ? loginFormik?.values : signUpForm?.values),
