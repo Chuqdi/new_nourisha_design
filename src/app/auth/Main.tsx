@@ -13,13 +13,20 @@ import SignUp from "./SignUp";
 import { CART_TEMP_ID } from "@/hooks/useCart";
 import { LOGGED_IN_USER,  } from "@/HOC/UserContext";
 import useLocalCart from "@/hooks/useLocalCart";
+import { useAtomValue } from "jotai";
+import { ATOMS } from "@/store/atoms";
+import { useMediaQuery } from "react-responsive";
+import { BREAKPOINT } from "@/config";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
   const { prepareCartForAuth, emptyCart } = useLocalCart();
-  const { getAxiosClient } = useAuth();
+  const showMobileCartModal = useAtomValue(
+    ATOMS.showMobileCartModal
+  );
+  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT });
 
 
   const options = [
@@ -96,7 +103,7 @@ export default function Main() {
         <form
           name="auth_user"
           onSubmit={onSubmit}
-          className="flex-1 flex flex-col gap-16"
+          className={`flex-1 flex flex-col gap-16 ${(showMobileCartModal?.show  && isMobile)&&"pb-48"}`}
         >
           <div className="flex items-center gap-6 justify-center">
             {options.map((option, index) => (
