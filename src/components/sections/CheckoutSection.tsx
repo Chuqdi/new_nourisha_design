@@ -73,7 +73,7 @@ export default ({ coupon, total, }: { coupon: string,total:number }) => {
             show: false,
           });
           toast({
-            variant: "default",
+            variant: "destructive",
             title: "Error",
             description: "Please login/register to continue",
           });
