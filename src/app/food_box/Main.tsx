@@ -280,7 +280,7 @@ export default function Main() {
   const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
   const mealsRef = useRef<HTMLDivElement>(null!);
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount, setDisCountedAmount,setLoadingDiscount, } =
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent, setDisCountedAmount,setLoadingDiscount, } =
   usePromotionCode();
   const amount = parseInt(searchParams?.get("plan_amount")!);
   const plan_id = searchParams?.get("plan_id");
@@ -574,6 +574,11 @@ export default function Main() {
     const urlParams = new URLSearchParams(queryString);
     setSearchParamQuery(urlParams.toString());
   }, []);
+
+
+  useEffect(() => {
+    !!coupon.length && discountEvent(total);
+  }, [coupon]);
 
   return (
     <div className="w-full h-full relative pt-6">

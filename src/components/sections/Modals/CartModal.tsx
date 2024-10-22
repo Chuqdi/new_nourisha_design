@@ -89,7 +89,7 @@ function CartModal() {
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount,  } =
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent  } =
   usePromotionCode();
   const localCartItems = useAtomValue(ATOMS.localCartItems);
   const { getCartTotal } = useLocalCart();
@@ -121,6 +121,10 @@ function CartModal() {
   useEffect(() => {
     setUser(getUser());
   }, []);
+
+  useEffect(() => {
+    discountEvent(total);
+ }, [coupon]);
 
   return (
     <SidebarHOC title="Cart">

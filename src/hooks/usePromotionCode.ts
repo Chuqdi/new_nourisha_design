@@ -8,7 +8,9 @@ export default () => {
   const [loadingDiscount, setLoadingDiscount] = useState(false);
   const { getAxiosClient } = useAuth();
 
-  const discountEvent = async () => {
+  const discountEvent = async (expectedAmount: number) => {
+
+    
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     setLoadingDiscount(true);
@@ -17,14 +19,13 @@ export default () => {
       .get(`discounts/promos/code/${coupon.trim()}`)
       .then((data) => {
         const couponDiscount = data?.data?.data;
+
         if (couponDiscount?.coupon) {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
             const discountedAmount =
-              //@ts-ignore
-              cartDetails?.total! -
-              //@ts-ignore
-              (cartDetails?.total! * (100 - discountPercentage)) / 100;
+              expectedAmount -
+              (expectedAmount * (100 - discountPercentage)) / 100;
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
             const discountedAmount = Math.round(
@@ -40,14 +41,19 @@ export default () => {
         const errorMessage = err?.response?.data?.message
           ? err?.response?.data?.message
           : "Discount code could not be applied";
-        !!coupon.length && alert(errorMessage);
+        if (!!coupon.length) {
+          alert(errorMessage);
+        }
       });
     setLoadingDiscount(false);
   };
 
-  useEffect(() => {
-    discountEvent();
-  }, [coupon]);
+  useEffect(()=>{
+    if (!coupon.trim()) {
+      setDisCountedAmount(0);
+      return;
+    }
+  }, [coupon])
 
   return {
     coupon,
@@ -56,5 +62,6 @@ export default () => {
     setDisCountedAmount,
     loadingDiscount,
     setLoadingDiscount,
+    discountEvent,
   };
 };

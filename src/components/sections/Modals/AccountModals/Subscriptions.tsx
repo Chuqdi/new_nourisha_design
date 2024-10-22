@@ -36,7 +36,7 @@ const SingleSubscription = ({
   const [isSelected, setSelected] = useState(false);
   const [searchParamQuery, setSearchParamQuery] = useState("");
 
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount,  } =
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent  } =
   usePromotionCode();
 
   const gradientColors = [
@@ -58,6 +58,10 @@ const SingleSubscription = ({
     const urlParams = new URLSearchParams(queryString);
     setSearchParamQuery(urlParams.toString());
   }, []);
+
+  useEffect(() => {
+    discountEvent(plan?.amount!);
+ }, [coupon]);
 
 
 
