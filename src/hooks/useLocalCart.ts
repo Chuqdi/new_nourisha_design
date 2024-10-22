@@ -5,7 +5,9 @@ import { useAtom } from "jotai";
 
 export default () => {
   const [localCartItems, setLocalCartItems] = useAtom(ATOMS.localCartItems);
-
+  const [showCartSideModal, setShowCartSideModal] = useAtom(
+    ATOMS.showMobileCartModal
+  );
   const initializeCart = () => {
     const localCart = localStorage.getItem(LOCAL_CART_ITEMS);
     if (localCart) {
@@ -44,6 +46,11 @@ export default () => {
       setLocalCartItems(v);
       localStorage.setItem(LOCAL_CART_ITEMS, JSON.stringify(v));
     }
+
+    setShowCartSideModal({
+      ...showCartSideModal,
+      show: true,
+    });
   };
 
   const removeItem = (meal: IMeal, quantity: number) => {

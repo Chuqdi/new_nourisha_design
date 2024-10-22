@@ -75,7 +75,7 @@ const useCart = () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
 
-    const res = axiosClient
+    axiosClient
       .put("cart", {
         itemId,
         quantity,
