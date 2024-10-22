@@ -7,13 +7,12 @@ import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
-import { CART_TEMP_ID } from "@/hooks/useCart";
-import { LOGGED_IN_USER,  } from "@/HOC/UserContext";
+import { LOGGED_IN_USER } from "@/HOC/UserContext";
 import useLocalCart from "@/hooks/useLocalCart";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
@@ -23,11 +22,10 @@ export default function Main() {
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
   const { prepareCartForAuth, emptyCart } = useLocalCart();
-  const showMobileCartModal = useAtomValue(
+  const [showMobileCartModal, setShowMobileCatModal] = useAtom(
     ATOMS.showMobileCartModal
   );
-  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT });
-
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
 
   const options = [
     {
@@ -96,6 +94,13 @@ export default function Main() {
     onSubmit,
   });
 
+  useEffect(() => {
+    setShowMobileCatModal({
+      ...showMobileCartModal,
+      show: false,
+    });
+  }, []);
+
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />
@@ -103,7 +108,9 @@ export default function Main() {
         <form
           name="auth_user"
           onSubmit={onSubmit}
-          className={`flex-1 flex flex-col gap-16 ${(showMobileCartModal?.show  && isMobile)&&"pb-48"}`}
+          className={`flex-1 flex flex-col gap-16 ${
+            showMobileCartModal?.show && isMobile && "pb-48"
+          }`}
         >
           <div className="flex items-center gap-6 justify-center">
             {options.map((option, index) => (
