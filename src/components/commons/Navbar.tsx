@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import {  useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import CartModal from "../sections/Modals/CartModal";
@@ -26,35 +26,22 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
-  const sideBarOptions = [
-    {
-      image: "cart.svg",
-      onClick: () => setSideModal({ show: true, component: <CartModal /> }),
-      count: cartItems?.length,
-    },
-    // {
-    //   image: "apple.svg",
-    //   isOnlyDesktop: true,
-    //   onClick: () =>
-    //     router.push(
-    //       "https://apps.apple.com/gb/app/nourisha-budget-meal-planner/id6451458690"
-    //     ),
-    // },
-    // {
-    //   image: "play_store.svg",
-    //   isOnlyDesktop: true,
-    //   onClick: () =>
-    //     router.push(
-    //       "https://play.google.com/store/apps/details?id=com.eatnourisha.app&hl=en&gl=US"
-    //     ),
-    // },
-    // {
-    //   image: "uk.svg",
-    //   options: [],
-    // },
-  ];
   const { getUser } = useUser();
   const [user, setUser] = useState<undefined | IUser>(undefined);
+  const localCartItems = useAtomValue(ATOMS.localCartItems);
+
+
+  const isLoggedIn = useMemo(() =>!!user?.email, [user]);
+  const sideBarOptions = useMemo(()=>(
+    [
+      {
+        image: "cart.svg",
+        onClick: () => setSideModal({ show: true, component: <CartModal /> }),
+        count: isLoggedIn?cartItems?.length:localCartItems?.length,
+      },
+      
+    ]
+  ), [user]);
 
   useEffect(() => {
     setUser(getUser());
