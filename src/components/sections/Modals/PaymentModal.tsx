@@ -42,7 +42,6 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
-        alert(clientSecret);
         const { error } = await stripe.confirmPayment({
           elements,
           clientSecret,

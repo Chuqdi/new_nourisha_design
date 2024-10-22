@@ -521,7 +521,7 @@ export default function Main() {
             title: "Success",
             description: "Line-up created successfully.",
           });
-          alert(JSON.stringify(data?.data));
+          // alert(JSON.stringify(data?.data));
           emptyBox();
         })
         .catch((err) => {
