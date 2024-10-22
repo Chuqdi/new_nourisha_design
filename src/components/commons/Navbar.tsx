@@ -31,6 +31,9 @@ export default function Navbar() {
   const localCartItems = useAtomValue(ATOMS.localCartItems);
 
 
+
+
+  
   const isLoggedIn = useMemo(() =>!!user?.email, [user]);
   const sideBarOptions = useMemo(()=>(
     [
