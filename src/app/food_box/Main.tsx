@@ -14,6 +14,7 @@ import useAuth from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
+import usePromotionCode from "@/hooks/usePromotionCode";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
@@ -202,40 +203,14 @@ const OrderSummary = ({
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
 
+
+
   const isMonthly = useMemo(()=>{
     const plan = searchParams?.get("plan");
     return plan?.toUpperCase()?.includes("Monthly".toUpperCase());
   }, [])
 
-  const discountEvent = async () => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-    setLoadingDiscount(true);
 
-    await axiosClient
-      .get(`discounts/promos/code/${coupon?.trim()}`)
-      .then((data) => {
-        const couponDiscount = data?.data?.data;
-        if (couponDiscount?.coupon) {
-          if (couponDiscount?.coupon?.percent_off) {
-            const discountPercentage = couponDiscount?.coupon?.percent_off;
-            setDisCountedAmount(
-              amount! - (amount! * (100 - discountPercentage)) / 100
-            );
-          } else if (couponDiscount?.coupon?.amount_off) {
-            setDisCountedAmount(couponDiscount?.coupon?.amount_off);
-          }
-        } else {
-          setDisCountedAmount(0);
-        }
-      })
-      .catch(() => {});
-    setLoadingDiscount(false);
-  };
-
-  useEffect(() => {
-    discountEvent();
-  }, [coupon]);
 
   return (
     <div className="flex flex-col gap-[0.75rem] bg-white p-3 rounded-[0.5rem]">
@@ -305,9 +280,8 @@ export default function Main() {
   const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
   const mealsRef = useRef<HTMLDivElement>(null!);
-  const [coupon, setCoupon] = useState("");
-  const [loadingDiscount, setLoadingDiscount] = useState(false);
-  const [disCountedAmount, setDisCountedAmount] = useState(0);
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount, setDisCountedAmount,setLoadingDiscount, } =
+  usePromotionCode();
   const amount = parseInt(searchParams?.get("plan_amount")!);
   const plan_id = searchParams?.get("plan_id");
 

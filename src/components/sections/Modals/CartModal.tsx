@@ -14,6 +14,7 @@ import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
+import usePromotionCode from "@/hooks/usePromotionCode";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -85,45 +86,14 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
 
 function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
-  const [coupon, setCoupon] = useState("");
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
-  const [disCountedAmount, setDisCountedAmount] = useState(0);
-  const [loadingDiscount, setLoadingDiscount] = useState(false);
-  const { getAxiosClient } = useAuth();
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount,  } =
+  usePromotionCode();
   const localCartItems = useAtomValue(ATOMS.localCartItems);
   const { getCartTotal } = useLocalCart();
 
-  const discountEvent = async () => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-    setLoadingDiscount(true);
-
-    await axiosClient
-      .get(`discounts/promos/code/${coupon.trim()}`)
-      .then((data) => {
-        const couponDiscount = data?.data?.data;
-        if (couponDiscount?.coupon) {
-          if (couponDiscount?.coupon?.percent_off) {
-            const discountPercentage = couponDiscount?.coupon?.percent_off;
-            const discountedAmount =
-              //@ts-ignore
-              cartDetails?.total! -
-              //@ts-ignore
-              (cartDetails?.total! * (100 - discountPercentage)) / 100;
-            setDisCountedAmount(discountedAmount);
-          } else if (couponDiscount?.coupon?.amount_off) {
-            const discountedAmount = couponDiscount?.coupon?.amount_off;
-            setDisCountedAmount(discountedAmount);
-          }
-        } else {
-          setDisCountedAmount(0);
-        }
-      })
-      .catch(() => {});
-    setLoadingDiscount(false);
-  };
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
@@ -146,9 +116,7 @@ function CartModal() {
     isLoggedIn,
   ]);
 
-  useEffect(() => {
-    discountEvent();
-  }, [coupon]);
+
 
   useEffect(() => {
     setUser(getUser());

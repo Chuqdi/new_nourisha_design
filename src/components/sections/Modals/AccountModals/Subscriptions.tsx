@@ -19,6 +19,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
+import usePromotionCode from "@/hooks/usePromotionCode";
 
 const SingleSubscription = ({
   plan,
@@ -33,10 +34,10 @@ const SingleSubscription = ({
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement>(null!);
   const [isSelected, setSelected] = useState(false);
-  const [coupon, setCoupon] = useState("");
   const [searchParamQuery, setSearchParamQuery] = useState("");
-  const [loadingDiscount, setLoadingDiscount] = useState(false);
-  const [disCountedAmount, setDisCountedAmount] = useState(0);
+
+  const { coupon, setCoupon, disCountedAmount, loadingDiscount,  } =
+  usePromotionCode();
 
   const gradientColors = [
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
@@ -58,35 +59,7 @@ const SingleSubscription = ({
     setSearchParamQuery(urlParams.toString());
   }, []);
 
-  const discountEvent = async () => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-    setLoadingDiscount(true);
 
-    await axiosClient
-      .get(`discounts/promos/code/${coupon.trim()}`)
-      .then((data) => {
-        const couponDiscount = data?.data?.data;
-        if (couponDiscount?.coupon) {
-          if (couponDiscount?.coupon?.percent_off) {
-            const discountPercentage = couponDiscount?.coupon?.percent_off;
-            setDisCountedAmount(
-              plan?.amount! - (plan?.amount! * (100 - discountPercentage)) / 100
-            );
-          } else if (couponDiscount?.coupon?.amount_off) {
-            setDisCountedAmount(couponDiscount?.coupon?.amount_off);
-          }
-        } else {
-          setDisCountedAmount(0);
-        }
-      })
-      .catch(() => {});
-    setLoadingDiscount(false);
-  };
-
-  useEffect(() => {
-    discountEvent();
-  }, [coupon]);
 
   return (
     <div
