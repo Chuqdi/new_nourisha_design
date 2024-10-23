@@ -46,7 +46,6 @@ const Payment = ({
           elements,
           clientSecret,
           confirmParams: {
-            
             return_url:
               returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
           },

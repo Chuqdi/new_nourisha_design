@@ -432,7 +432,7 @@ export default function Main() {
         await axiosClient
           .post("billings/subscribe", data)
           .then(async (response) => {
-            return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}`;
+            return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`;
             clientSecret = response?.data?.data?.client_secret;
           });
 
