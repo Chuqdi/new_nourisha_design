@@ -41,7 +41,6 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
     setUser(getUser());
   }, []);
 
-
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
       <div className="flex items-start gap-3">
@@ -89,7 +88,7 @@ function CartModal() {
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
-  const sideModal = useAtomValue(ATOMS.showSideModal);
+  const cartIsLoading = useAtomValue(ATOMS.cartIsLoading);
   const {
     coupon,
     setCoupon,
@@ -129,20 +128,15 @@ function CartModal() {
     discountEvent(total);
   }, [coupon]);
 
-
-  useEffect(() => {
-    if (!sideModal?.show) {
-      localStorage.setItem(CART_MODAL_OPEN, "0");
-    }
-  }, [sideModal]);
-
   return (
     <SidebarHOC title="Cart">
       <div className="flex flex-col gap-3">
         {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <p className="text-black-900 text-sm font-inter">Cart Summary</p>
         )}
-        {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
+        {(!cartIsLoading && isLoggedIn
+          ? !cartItems.length
+          : !localCartItems.length) && (
           <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
             <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
             <div>
@@ -158,6 +152,9 @@ function CartModal() {
               </Link> */}
             </div>
           </div>
+        )}
+        {cartIsLoading && (
+          <div className="text-center font-NewSpiritMedium text-sm">Loading ...</div>
         )}
 
         <div className="flex flex-col gap-3">

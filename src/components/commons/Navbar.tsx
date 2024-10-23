@@ -30,19 +30,14 @@ export default function Navbar() {
   const { getUser } = useUser();
   const [user, setUser] = useState<undefined | IUser>(undefined);
   const localCartItems = useAtomValue(ATOMS.localCartItems);
-
-
-
-
-  
   const isLoggedIn = useMemo(() =>!!user?.email, [user]);
   const sideBarOptions = useMemo(()=>(
     [
       {
         image: "cart.svg",
         onClick: () => {
+          localStorage.setItem(CART_MODAL_OPEN, "1");
           setSideModal({ show: true, component: <CartModal /> });
-          localStorage.setItem(CART_MODAL_OPEN, "1")
         },
         count: isLoggedIn?cartItems?.length:localCartItems?.length,
       },

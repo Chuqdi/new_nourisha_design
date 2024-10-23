@@ -1,4 +1,5 @@
 import MainAccount from "@/components/sections/Modals/AccountModals/Main";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSetAtom } from "jotai";
@@ -22,13 +23,25 @@ export default function SidebarHOC({
     >
       <div className="flex justify-between items-center">
         <div className="flex  items-center gap-3">
-          {isBack && <Icon onClick={()=> setSideModal({show:true, component:<MainAccount />})} color="#030517" className="w-7 h-7 cursor-pointer" icon="fluent-mdl2:back" />}
+          {isBack && (
+            <Icon
+              onClick={() =>
+                setSideModal({ show: true, component: <MainAccount /> })
+              }
+              color="#030517"
+              className="w-7 h-7 cursor-pointer"
+              icon="fluent-mdl2:back"
+            />
+          )}
           <h4 className="text-black-900 text-2xl font-NewSpiritBold">
             {title}
           </h4>
         </div>
         <button
-          onClick={() => setSideModal({ show: false, component: undefined })}
+          onClick={() => {
+            localStorage.setItem(CART_MODAL_OPEN, "0");
+            setSideModal({ show: false, component: undefined });
+          }}
           className="bg-[#EDEDF3] p-3 rounded-full"
         >
           <Icon color="#030517" className="w-6 h-6" icon="fluent-mdl2:cancel" />
