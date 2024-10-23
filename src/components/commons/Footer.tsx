@@ -75,7 +75,7 @@ export default function Footer() {
     <div className="w-full flex flex-col md:flex-row gap-6 items-stretch h-auto relative overflow-y-hidden mb-4">
       <img
         src="/images/footer_red_bg.png"
-        className="w-[39.5rem] h-[39.5rem] absolute right-[40%] -bottom-[5rem] z-0"
+        className="w-[39.5rem] h-[45.5rem] absolute right-[40%] top-[10rem] z-0 object-cover"
       />
       <div
         style={{

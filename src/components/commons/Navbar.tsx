@@ -43,7 +43,7 @@ export default function Navbar() {
       },
       
     ]
-  ), [user, localCartItems]);
+  ), [user, localCartItems, cartItems]);
 
   useEffect(() => {
     setUser(getUser());
