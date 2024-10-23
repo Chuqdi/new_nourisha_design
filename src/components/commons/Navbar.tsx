@@ -17,6 +17,7 @@ import Logo from "../ui/Logo";
 import MobileNavbar from "./MobileNavbar";
 import useUser from "@/hooks/useUser";
 import { IUser } from "@/config/types";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -39,7 +40,10 @@ export default function Navbar() {
     [
       {
         image: "cart.svg",
-        onClick: () => setSideModal({ show: true, component: <CartModal /> }),
+        onClick: () => {
+          setSideModal({ show: true, component: <CartModal /> });
+          localStorage.setItem(CART_MODAL_OPEN, "1")
+        },
         count: isLoggedIn?cartItems?.length:localCartItems?.length,
       },
       

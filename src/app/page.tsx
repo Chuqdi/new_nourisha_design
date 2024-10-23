@@ -17,19 +17,22 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { ATOMS } from "@/store/atoms";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { NextSeo } from "next-seo";
 import Head from "next/head";
 import BannerMarqueeSection from "@/components/sections/BannerMarqueeSection";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
+import CartModal from "@/components/sections/Modals/CartModal";
 
 export default function Main() {
   const intervalRef = useRef();
   const [loadingMenuImage, setLoadingMenuImage] = useState(true);
- 
+
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const router = useRouter();
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+  const setSideModal = useSetAtom(ATOMS.showSideModal);
 
   const howItWorks = [
     {
@@ -68,8 +71,7 @@ export default function Main() {
     },
     {
       text: "Single Meal Orders",
-      description:
-        `Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.
+      description: `Craving something specific? Order single meals for instant delivery and satisfy your hunger right away.
         <br />
         Order single meals and get your delivery within 24-48 hours.
         `,
@@ -100,6 +102,13 @@ export default function Main() {
       setLoadingMenuImage(false);
     }, 5000);
     () => clearInterval(intervalRef.current);
+  }, []);
+
+  useEffect(() => {
+    const cartWasOpen = localStorage.getItem(CART_MODAL_OPEN);
+    if (cartWasOpen && cartWasOpen === "1") {
+      setSideModal({ show: true, component: <CartModal /> });
+    }
   }, []);
 
   return (
@@ -187,7 +196,7 @@ export default function Main() {
             />
           )}
         </div>
-       <BannerMarqueeSection />
+        <BannerMarqueeSection />
 
         <div className="mt-20" />
         {isMobile ? (

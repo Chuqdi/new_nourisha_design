@@ -3,18 +3,17 @@ import SidebarHOC from "@/HOC/SidebarHOC";
 import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
 import useUser from "@/hooks/useUser";
-import { DEVICE_ID } from "@/hooks/useFingerPrint";
-import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
 import usePromotionCode from "@/hooks/usePromotionCode";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -41,6 +40,7 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   useEffect(() => {
     setUser(getUser());
   }, []);
+
 
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
@@ -89,11 +89,16 @@ function CartModal() {
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getUser } = useUser();
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent  } =
-  usePromotionCode();
+  const sideModal = useAtomValue(ATOMS.showSideModal);
+  const {
+    coupon,
+    setCoupon,
+    disCountedAmount,
+    loadingDiscount,
+    discountEvent,
+  } = usePromotionCode();
   const localCartItems = useAtomValue(ATOMS.localCartItems);
   const { getCartTotal } = useLocalCart();
-
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
@@ -116,15 +121,20 @@ function CartModal() {
     isLoggedIn,
   ]);
 
-
-
   useEffect(() => {
     setUser(getUser());
   }, []);
 
   useEffect(() => {
     discountEvent(total);
- }, [coupon]);
+  }, [coupon]);
+
+
+  useEffect(() => {
+    if (!sideModal?.show) {
+      localStorage.setItem(CART_MODAL_OPEN, "0");
+    }
+  }, [sideModal]);
 
   return (
     <SidebarHOC title="Cart">
@@ -207,7 +217,7 @@ function CartModal() {
           </div>
         )}
 
-        {!!(isLoggedIn?cartItems.length:localCartItems.length) && (
+        {!!(isLoggedIn ? cartItems.length : localCartItems.length) && (
           <CheckoutSection total={total} coupon={coupon} />
         )}
       </div>

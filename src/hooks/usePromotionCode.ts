@@ -9,8 +9,6 @@ export default () => {
   const { getAxiosClient } = useAuth();
 
   const discountEvent = async (expectedAmount: number) => {
-
-    
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     setLoadingDiscount(true);
@@ -23,9 +21,9 @@ export default () => {
         if (couponDiscount?.coupon) {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
-            const discountedAmount =
-              Math.round(expectedAmount -
-                (expectedAmount * (100 - discountPercentage)) / 100);
+            const discountedAmount = Math.round(
+              (discountPercentage / 100) * expectedAmount
+            );
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
             const discountedAmount = Math.round(
@@ -48,12 +46,12 @@ export default () => {
     setLoadingDiscount(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!coupon.trim()) {
       setDisCountedAmount(0);
       return;
     }
-  }, [coupon])
+  }, [coupon]);
 
   return {
     coupon,

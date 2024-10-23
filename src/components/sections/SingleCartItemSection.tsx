@@ -39,7 +39,7 @@ export const CartManipulator = ({
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
-  const onUpdateCart = (c: () => void) => {
+  const onUpdateCart = (c: () => void, isExceededQuantity?:boolean) => {
     if (
       activeCountry?.toUpperCase() === "Asia".toUpperCase() &&
       pathName !== "/food_box"
@@ -52,14 +52,15 @@ export const CartManipulator = ({
       if (
         !!meal?.expected_proteins?.length ||
         !!meal?.expected_swallows?.length
+
       ) {
-        setTimeout(() => {
-          setMealExtraModal({
-            meal,
-            day: undefined,
-            show: true,
-          });
-        }, 4000);
+       !isExceededQuantity && setTimeout(() => {
+        setMealExtraModal({
+          meal,
+          day: undefined,
+          show: true,
+        });
+      }, 4000);
       }
     } else {
       toast({
@@ -103,7 +104,7 @@ export const CartManipulator = ({
       <button
         onClick={() => {
           isLoggedIn
-            ? onUpdateCart(() => addItemToCart(meal, 1))
+            ? onUpdateCart(() => addItemToCart(meal, 1, item?.quantity), item?.quantity + 1 > parseInt(item?.item?.available_quantity!))
             : addItem(meal, 1);
         }}
         className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${

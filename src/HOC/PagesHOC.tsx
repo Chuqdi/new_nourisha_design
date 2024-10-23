@@ -41,6 +41,7 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const { initializeCart } = useLocalCart();
   const userInfo = useContext(IPInfoContext);
 
+
   useEffect(() => {
     if (userInfo?.ip) {
       set_device_id(userInfo?.ip);

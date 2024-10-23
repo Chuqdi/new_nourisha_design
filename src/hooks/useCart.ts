@@ -118,7 +118,12 @@ const useCart = () => {
 
   };
 
-  const addItemToCart = async (item: IMeal, quantity: number) => {
+  const addItemToCart = async (item: IMeal, quantity: number, currentQuantity:number) => {
+
+    if((currentQuantity+quantity) > parseInt(item?.available_quantity!)){
+      alert("Item available quantity exceeded");
+      return;
+    }
     const data = {
       itemId: item?._id,
       quantity,
