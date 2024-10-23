@@ -1,9 +1,14 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 function PaymentConfirmationModal({ close }: { close: () => void }) {
+  const searchParams = useSearchParams();
   const onClose = () => {
-    // window.location.href = "/";
+    const reloadWindow = searchParams?.get("reloadWindow");
+    if (reloadWindow && reloadWindow === "1") {
+      window.location.href = "/";
+    }
     close();
   };
   return (

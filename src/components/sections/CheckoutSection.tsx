@@ -58,7 +58,7 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
 
                       return {
                         clientSecret: response?.data?.data?.client_secret,
-                        returnUrl: "https://jobofa.com/text",
+                        returnUrl: `https://www.eatnourisha.com?show_payment_modal=1&reloadWindow=1`,
                       };
                     },
                   });
