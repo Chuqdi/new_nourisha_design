@@ -90,7 +90,14 @@ export default function PaymentMethodModal() {
         </div>
       </div>
 
-      <Button onClick={()=> setSideModal({ show:true, component:<SelectDeliveryDayModal />})}  title="Make payment" variant="primary" />
+      <Button
+        className="h-[3rem]"
+        onClick={() =>
+          setSideModal({ show: true, component: <SelectDeliveryDayModal /> })
+        }
+        title="Make payment"
+        variant="primary"
+      />
     </div>
   );
 }
