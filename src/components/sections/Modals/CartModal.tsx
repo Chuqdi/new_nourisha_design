@@ -134,7 +134,7 @@ function CartModal() {
         {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <p className="text-black-900 text-sm font-inter">Cart Summary</p>
         )}
-        {(!cartIsLoading && isLoggedIn
+        {( isLoggedIn
           ? !cartItems.length
           : !localCartItems.length) && (
           <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
@@ -153,9 +153,7 @@ function CartModal() {
             </div>
           </div>
         )}
-        {cartIsLoading && (
-          <div className="text-center font-NewSpiritMedium text-sm">Loading ...</div>
-        )}
+       
 
         <div className="flex flex-col gap-3">
           {(isLoggedIn ? cartItems : localCartItems)?.map((item, index) => (
