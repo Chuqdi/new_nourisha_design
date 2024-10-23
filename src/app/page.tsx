@@ -106,7 +106,6 @@ export default function Main() {
 
   useEffect(() => {
     const cartWasOpen = localStorage.getItem(CART_MODAL_OPEN);
-    alert("Test");
     if (cartWasOpen && cartWasOpen === "1") {
       setSideModal({ show: true, component: <CartModal /> });
     }
@@ -114,6 +113,7 @@ export default function Main() {
 
   return (
     <>
+    
       <title>
         Nourisha: UK's No.1 African Meal Prep, Meal Plans & Delivery services
       </title>

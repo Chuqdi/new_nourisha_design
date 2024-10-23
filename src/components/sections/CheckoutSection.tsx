@@ -10,8 +10,9 @@ import Button from "../ui/Button";
 import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useUser from "@/hooks/useUser";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
-export default ({ coupon, total, }: { coupon: string,total:number }) => {
+export default ({ coupon, total }: { coupon: string; total: number }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const [user, setUser] = useState<IUser | undefined>(undefined);
@@ -27,12 +28,11 @@ export default ({ coupon, total, }: { coupon: string,total:number }) => {
 
   return (
     <Button
-      title={`Checkout £${
-        total
-      }`}
+      title={`Checkout £${total}`}
       variant="primary"
       className="py-6 h-[2.7rem] w-full"
       onClick={() => {
+        localStorage.setItem(CART_MODAL_OPEN, "1");
         if (user?.email) {
           setSideModal({
             component: (
@@ -41,7 +41,7 @@ export default ({ coupon, total, }: { coupon: string,total:number }) => {
                 proceed={async () => {
                   setPaymentModal({
                     show: true,
-                    amount:total,
+                    amount: total,
                     onContinue: async () => {
                       const id = localStorage.getItem(DEVICE_ID);
                       const axiosClient = getAxiosClient(id!);
