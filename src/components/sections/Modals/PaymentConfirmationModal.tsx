@@ -22,11 +22,11 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
           <Icon className="w-4 h-4" color="#000" icon="iconoir:cancel" />
         </button>
       </div>
-      <p className="font-inter text-[0.75rem] text-center text-black-900 mt-4">
+      <p className="font-inter text-sm text-center text-black-900 mt-4">
         You can access your order and any additional information through your
         account on our website.
       </p>
-      <p className="font-inter text-[0.75rem] text-black-900 text-center">
+      <p className="font-inter text-sm text-black-900 text-center">
         If you have any questions or need further assistance, please don’t
         hesitate to reach out.
       </p>

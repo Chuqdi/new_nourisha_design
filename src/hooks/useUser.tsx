@@ -7,11 +7,11 @@ export default () => {
     return u ? JSON.parse(u) : undefined;
   };
 
-  const setUser = (user:IUser) => {
+  const setUser = (user: IUser) => {
     localStorage.setItem(LOGGED_IN_USER, JSON.stringify(user));
   };
   return {
     getUser,
-    setUser
+    setUser,
   };
 };

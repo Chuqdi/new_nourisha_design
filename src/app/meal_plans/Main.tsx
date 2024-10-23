@@ -205,17 +205,13 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           })}
         </div>
 
-        {/* <p className="text-black-900 text-xl text-center font-inter my-4">
-          <span className="text-base">Free weekday delivery</span> and £8 for
-          weekend delivery
-        </p> */}
-
         {!isLoading && (
           <div className="flex justify-center items-center mt-4 ">
             <Button
               variant="primary"
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
+                alert(user?.email)
                 if (user?.email) {
                   router.push(
                     `/food_box?plan=${
