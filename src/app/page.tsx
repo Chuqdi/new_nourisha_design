@@ -108,6 +108,8 @@ export default function Main() {
     const cartWasOpen = localStorage.getItem(CART_MODAL_OPEN);
     if (cartWasOpen && cartWasOpen === "1") {
       setSideModal({ show: true, component: <CartModal /> });
+
+      
     }
   }, []);
 
