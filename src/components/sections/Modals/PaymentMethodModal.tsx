@@ -2,8 +2,9 @@ import Button from "@/components/ui/Button";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectDeliveryDayModal from "./SelectDeliveryDayModal";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
 export default function PaymentMethodModal() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -25,6 +26,9 @@ export default function PaymentMethodModal() {
       onClick: () => {},
     },
   ]);
+  useEffect(() => {
+    localStorage.setItem(CART_MODAL_OPEN, "0");
+  }, []);
 
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
