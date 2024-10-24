@@ -28,6 +28,7 @@ export default function Login({ formikObj }: {formikObj:any} ) {
           value={values.password}
           onChange={handleChange("password")}
           placeholder="Enter your password"
+          isPassword
         />
         {errors.password && (
           <p className="error_text">{errors.password}</p>

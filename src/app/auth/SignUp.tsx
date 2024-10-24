@@ -48,6 +48,7 @@ export default function SignUp({ formikObj }:{formikObj:any}) {
           value={values.password}
           onChange={handleChange("password")}
           className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
+          isPassword
         />
         {errors.password && (
           <p className="error_text">{errors.password}</p>
@@ -61,6 +62,7 @@ export default function SignUp({ formikObj }:{formikObj:any}) {
           value={values.confirm_password}
           onChange={handleChange("confirm_password")}
           className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
+          isPassword
         />
         {errors.confirm_password && (
           <p className="error_text">{errors.confirm_password}</p>
