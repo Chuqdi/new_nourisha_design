@@ -56,7 +56,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isError) {
-      localStorage.setItem(LOGGED_IN_USER, "");
+      // localStorage.setItem(LOGGED_IN_USER, "");
       setTimeout(() => {
         if (
           !localStorage.getItem(VIEWED_LOGOUT_MODAL) ||
