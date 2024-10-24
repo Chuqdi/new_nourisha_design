@@ -79,6 +79,7 @@ const Payment = ({
         variant="primary"
         fullWidth
         title={`Pay £${amount}`}
+        className="py-6 h-[2.7rem] w-full"
         disabled={!stripe || !elements || paymentLoading}
         onClick={handleSubmitPayment}
       />
