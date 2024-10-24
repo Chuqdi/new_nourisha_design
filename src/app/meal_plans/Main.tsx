@@ -211,7 +211,6 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               variant="primary"
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
-                alert(user?.email)
                 if (user?.email) {
                   router.push(
                     `/food_box?plan=${
