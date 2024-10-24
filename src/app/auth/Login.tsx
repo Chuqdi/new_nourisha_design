@@ -23,7 +23,6 @@ export default function Login({ formikObj }: {formikObj:any} ) {
       <div>
         <label>Password</label>
         <Input
-          type="password"
           className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
           value={values.password}
           onChange={handleChange("password")}

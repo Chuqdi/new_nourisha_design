@@ -58,7 +58,6 @@ export default function SignUp({ formikObj }:{formikObj:any}) {
       <div>
         <label>Confirm Password</label>
         <Input
-          type="password"
           value={values.confirm_password}
           onChange={handleChange("confirm_password")}
           className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
