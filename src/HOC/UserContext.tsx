@@ -50,7 +50,6 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (data?.data?.data) {
-      alert(data?.data?.data)
       localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
     }
   }, [data]);
