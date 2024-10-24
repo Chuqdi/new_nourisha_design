@@ -41,6 +41,7 @@ export default () => {
           : "Discount code could not be applied";
         if (!!coupon.length) {
           alert(errorMessage);
+          setDisCountedAmount(0);
         }
       });
     setLoadingDiscount(false);
