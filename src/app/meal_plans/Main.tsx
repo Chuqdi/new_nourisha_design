@@ -234,7 +234,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           </div>
         )}
 
-        {onAfrican && (
+        {!onAfrican && (
           <div className="w-full flex flex-col  justify-center ">
             <p className="text-center font-inter text-sm mt-2">DELIVERY DATE</p>
             <div className="rounded-[0.75rem]  mx-auto bg-[#DEF54C] rounded-[0.5rem]text-center justify-center items-center p-4 text-center font-NewSpiritBold text-2xl ">
