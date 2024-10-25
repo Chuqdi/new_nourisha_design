@@ -8,23 +8,18 @@ import Button from "../ui/Button";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import { useSetAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import { useRouter } from "next/navigation";
-import { IUser } from "@/config/types";
-import useUser from "@/hooks/useUser";
 
 export default function MobileNavbar({ close }: { close: () => void }) {
   const navbarOptions = useNavbar();
   const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
   const router = useRouter();
+  const { user } = useContext(UserContext);
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return (
     <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 max-h-[100vh] overflow-y-scroll ">

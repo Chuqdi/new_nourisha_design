@@ -1,18 +1,14 @@
 import { IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
-import useUser from "@/hooks/useUser";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useState } from "react";
 
 function ReferalInput() {
   const [copied, setCopied] = useState(false);
+  const { user } = useContext(UserContext);
 
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return (
     <div className="w-full flex gap-3 mt-4">

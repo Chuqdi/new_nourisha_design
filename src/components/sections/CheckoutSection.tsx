@@ -9,22 +9,16 @@ import DeliveryModal from "./Modals/DeliveryModal";
 import Button from "../ui/Button";
 import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
-import useUser from "@/hooks/useUser";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
 export default ({ coupon, total }: { coupon: string; total: number }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const { getAxiosClient } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
 
   return (
     <Button

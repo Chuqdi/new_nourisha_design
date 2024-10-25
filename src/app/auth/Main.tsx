@@ -7,20 +7,23 @@ import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
-import { LOGGED_IN_USER } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useLocalCart from "@/hooks/useLocalCart";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
+import { useRouter } from "next/navigation";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
   const { makeRequest, isLoading } = useAuth();
   const { setToken } = useAuthToken();
+  const { setUser } = useContext(UserContext);
+  const router = useRouter();
   const { prepareCartForAuth, emptyCart } = useLocalCart();
   const [showMobileCartModal, setShowMobileCatModal] = useAtom(
     ATOMS.showMobileCartModal
@@ -60,12 +63,14 @@ export default function Main() {
         JSON.stringify(createdUser?.payload)
       );
       localStorage.setItem("AUTH_USER_EMAIL", body.email);
+      setUser(createdUser?.payload)
 
       toast({
         variant: "default",
         title: !onLogin ? "Registeration was successful" : "Login successful",
       });
-      window.location.replace("/");
+      // window.location.replace("/");
+      router.push("/")
 
       emptyCart();
       (onLogin ? loginFormik : signUpForm).resetForm();

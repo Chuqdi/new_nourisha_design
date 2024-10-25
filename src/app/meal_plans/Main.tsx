@@ -8,13 +8,13 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
-import { IPlan, IUser } from "@/config/types";
+import { IPlan } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
-import useUser from "@/hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import { UserContext } from "@/HOC/UserContext";
 
 const SinglePlan = ({
   activeOptionIndex,
@@ -103,13 +103,12 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const { getAxiosClient } = useAuth();
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
+  const { user } = useContext(UserContext);
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
   );
   const [isWeekend, setIsWeekend] = useState(false);
-  const { getUser } = useUser();
-  const [user, setUser] = useState<undefined | IUser>(undefined);
 
   const getPlans = () => {
     const id = localStorage.getItem(DEVICE_ID);
@@ -151,10 +150,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     }
   }, [data]);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
-
+ 
   useEffect(() => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);

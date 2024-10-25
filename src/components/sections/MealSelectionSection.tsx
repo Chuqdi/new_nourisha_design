@@ -7,18 +7,18 @@ import { ICartItem, IMeal, IUser } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Button from "../ui/Button";
 import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "use-debounce";
 import CartSideSection from "./CartSideSection";
-import useUser from "@/hooks/useUser";
 import { useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname } from "next/navigation";
 import ComingSoonSection from "./ComingSoonSection";
 import { useMutation } from "react-query";
 import axios from "axios";
+import { UserContext } from "@/HOC/UserContext";
 
 export default function MealSelectionSection({
   isSingle,
@@ -39,8 +39,6 @@ export default function MealSelectionSection({
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
   const [limit, setLimit] = useState("6");
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
   const pathName = usePathname();
   const [allMealsLoaded, setAllMealLoaded] = useState(false);
   const localCartItem = useAtomValue(ATOMS?.localCartItems);
@@ -63,6 +61,7 @@ export default function MealSelectionSection({
       pathName?.toUpperCase() === "/bulk_meals".toUpperCase()
     );
   }, [activeContinent, pathName]);
+  const { user } = useContext(UserContext);
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
@@ -103,9 +102,6 @@ export default function MealSelectionSection({
     }
   }, [data]);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
 
   useEffect(() => {
     if (phrase) {

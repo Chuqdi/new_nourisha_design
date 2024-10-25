@@ -4,14 +4,14 @@ import Button from "../ui/Button";
 import { ATOMS } from "@/store/atoms";
 import { ICartDetail, ICartItem, IUser } from "@/config/types";
 import DeliveryModal from "./Modals/DeliveryModal";
-import {  useEffect, useState } from "react";
+import {  useContext, useEffect, useState } from "react";
 import useCart from "@/hooks/useCart";
 import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "@/ui/use-toast";
 import Link from "next/link";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
-import useUser from "@/hooks/useUser";
+import { UserContext } from "@/HOC/UserContext";
 
 function Main() {
   // const user = useAtomValue(ATOMS.loggedInUser);
@@ -20,9 +20,8 @@ function Main() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
   const [loading, setLoading] = useState(false);
   const { getAxiosClient } = useAuth();
+  const { user } = useContext(UserContext);
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
-  const { getUser } = useUser();
-  const [user, setUser] = useState<undefined | IUser>(undefined);
 
 
 
@@ -81,9 +80,7 @@ function Main() {
   }, [CartSessionData]);
 
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return user?.email ? (
     <div className="w-full  rounded-[0.75rem] mt-4 bg-[#F2F4F7] py-4 px-3 flex flex-col gap-3 mb-8">

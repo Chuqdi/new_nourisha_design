@@ -5,12 +5,12 @@ import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSetAtom } from "jotai";
 import ChangePassword from "./ChangePassword";
-import { FormEvent,  useEffect,  useState } from "react";
+import { FormEvent,  useContext,  useEffect,  useState } from "react";
 import useAuthToken from "@/hooks/useAuthToken";
 import axios from "axios";
 import { toast } from "@/ui/use-toast";
 import { IUser } from "@/config/types";
-import useUser from "@/hooks/useUser";
+import { UserContext } from "@/HOC/UserContext";
 
 
 export default function MyProfile() {
@@ -18,8 +18,8 @@ export default function MyProfile() {
   const [isLoading, setIsLoading] = useState(false);
   const { getToken } = useAuthToken();
   const token = getToken();
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser,setUser:setMainUser } = useUser();
+  const { user, setUser } = useContext(UserContext);
+
   const [formData, setFormData] = useState({
     address_: user?.address?.address_,
     city: user?.address?.city,
@@ -52,7 +52,6 @@ export default function MyProfile() {
         }
       )
       .then((data) => {
-        setMainUser(data?.data?.data);
         setUser(data?.data?.data);
         toast({
           title: "Profile Updated",
@@ -70,9 +69,7 @@ export default function MyProfile() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   useEffect(()=>{
     setFormData({

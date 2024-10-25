@@ -11,13 +11,11 @@ import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";
 export const LOGGED_IN_USER = "logged_in_user";
-export const UserContext = createContext<
-  | {
-      setUser: (user: IUser) => void;
-      isLoading: boolean;
-    }
-  | undefined
->(
+export const UserContext = createContext<{
+  setUser: (user: IUser) => void;
+  isLoading: boolean;
+  user: IUser | undefined;
+}>(
   {} as {
     user: IUser;
     setUser: (user: IUser) => void;
@@ -51,6 +49,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (data?.data?.data) {
       localStorage.setItem(LOGGED_IN_USER, JSON.stringify(data?.data?.data));
+      setUser(data?.data?.data);
     }
   }, [data]);
 
@@ -70,7 +69,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   }, [isError]);
 
   return (
-    <UserContext.Provider value={{ setUser, isLoading }}>
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
       <div className="flex-1 w-full">
         <Modal
           close={() => setShowLoginModal(false)}

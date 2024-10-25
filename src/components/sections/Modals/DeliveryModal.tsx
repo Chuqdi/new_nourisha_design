@@ -3,16 +3,13 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom,} from "jotai";
 import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
-import PaymentMethodModal from "./PaymentMethodModal";
 import { toast } from "@/ui/use-toast";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
-import { IUser } from "@/config/types";
-import useUser from "@/hooks/useUser";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 
 export const Checkbox = ({
@@ -49,10 +46,9 @@ export default function DeliveryModal({
   const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
-  const [user, setUser] = useState<IUser | undefined>(undefined);
   const { getAxiosClient } = useAuth();
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const { getUser } = useUser();
   const [todaysDate, setTodaysDate] = useState<string>(null!);
   const [address, setAddress] = useState({
     country: user?.address?.country,
@@ -122,9 +118,7 @@ export default function DeliveryModal({
     setDeliveryDate(delivery_date);
   }, [delivery_date]);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   useEffect(() => {
     setAddress({

@@ -4,22 +4,21 @@ import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue } from "jotai";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { CartManipulator } from "./SingleCartItemSection";
 import CheckoutSection from "./CheckoutSection";
 import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
-import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
 import usePromotionCode from "@/hooks/usePromotionCode";
+import { UserContext } from "@/HOC/UserContext";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
   const router = useRouter();
+  const { user } = useContext(UserContext);
   const { clearItemFromCart } = useLocalCart();
 
   const onUpdateCart = (c: () => void) => {
@@ -36,12 +35,6 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
     }
   };
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
-
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
-
-
 
   return (
     <div className="p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5 bg-white">
@@ -89,16 +82,17 @@ function CartSideSection() {
   const localCartItems = useAtomValue(ATOMS.localCartItems) as ILocalCartItem[];
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
   const [showCartSideModal, setShowCartSideModal] = useAtom(
     ATOMS.showMobileCartModal
   );
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount, discountEvent } =
-    usePromotionCode();
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+  const {
+    coupon,
+    setCoupon,
+    disCountedAmount,
+    loadingDiscount,
+    discountEvent,
+  } = usePromotionCode();
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
@@ -123,11 +117,9 @@ function CartSideSection() {
     isLoggedIn,
   ]);
 
-
-  
   useEffect(() => {
     discountEvent(total);
- }, [coupon]);
+  }, [coupon]);
   return (
     <div className="bg-[#F2F4F7] p-2  w-full md:w-[19.5rem] rounded-none md:rounded-[0.75rem]  flex flex-col justify-between gap-4 max-h-[80vh] md:max-h-fit overflow-y-scroll md:overflow-y-auto  md:max-h-auto">
       <div className="flex justify-between items-center">

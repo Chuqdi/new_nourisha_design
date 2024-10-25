@@ -6,19 +6,19 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
-import { useEffect, useMemo, useState } from "react";
+import {  useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
-import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
 import usePromotionCode from "@/hooks/usePromotionCode";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
+import { UserContext } from "@/HOC/UserContext";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
+
   const router = useRouter();
   const { clearItemFromCart } = useLocalCart();
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
@@ -37,9 +37,7 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
     }
   };
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
@@ -86,8 +84,7 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
 function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
   const cartIsLoading = useAtomValue(ATOMS.cartIsLoading);
   const {
     coupon,
@@ -120,9 +117,7 @@ function CartModal() {
     isLoggedIn,
   ]);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   useEffect(() => {
     discountEvent(total);

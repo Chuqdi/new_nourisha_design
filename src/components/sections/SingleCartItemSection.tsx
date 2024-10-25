@@ -7,16 +7,16 @@ import {
   IMeal,
   IUser,
 } from "@/config/types";
+import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
 import useFoodbox from "@/hooks/useFoodbox";
 import useLocalCart from "@/hooks/useLocalCart";
-import useUser from "@/hooks/useUser";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import {  useContext, useEffect, useMemo, useState } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -30,8 +30,7 @@ export const CartManipulator = ({
   activeCountry?: string;
 }) => {
   const { addItemToCart, removeItemFrommCart } = useCart();
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
   const router = useRouter();
   const pathName = usePathname();
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
@@ -72,9 +71,7 @@ export const CartManipulator = ({
       });
     }
   };
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return (
     <div
@@ -142,8 +139,7 @@ export default function SingleCartItemSection({
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
   const pathName = usePathname();
   const { getCartItem} = useLocalCart();
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
   const localCartItem = useAtomValue(ATOMS?.localCartItems);
 
   const activeDayBox = useMemo(() => {
@@ -176,9 +172,7 @@ export default function SingleCartItemSection({
     [cartItems, localCartItem]
   );
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">

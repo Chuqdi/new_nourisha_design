@@ -8,16 +8,16 @@ import { AnimatePresence } from "framer-motion";
 import {  useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MainAccount from "../sections/Modals/AccountModals/Main";
 import CartModal from "../sections/Modals/CartModal";
 import Button from "../ui/Button";
 import Logo from "../ui/Logo";
 import MobileNavbar from "./MobileNavbar";
-import useUser from "@/hooks/useUser";
 import { IUser } from "@/config/types";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
+import { UserContext } from "@/HOC/UserContext";
 
 export default function Navbar() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -27,8 +27,7 @@ export default function Navbar() {
   const cartLoading = useAtomValue(ATOMS.cartIsLoading);
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const cartItems = useAtomValue(ATOMS.cartItems);
-  const { getUser } = useUser();
-  const [user, setUser] = useState<undefined | IUser>(undefined);
+  const { user } = useContext(UserContext)
   const localCartItems = useAtomValue(ATOMS.localCartItems);
   const isLoggedIn = useMemo(() =>!!user?.email, [user]);
   const sideBarOptions = useMemo(()=>(
@@ -45,9 +44,9 @@ export default function Navbar() {
     ]
   ), [user, localCartItems, cartItems]);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+  // useEffect(() => {
+  //   setUser(getUser());
+  // }, []);
 
   return (
     !cartLoading && (

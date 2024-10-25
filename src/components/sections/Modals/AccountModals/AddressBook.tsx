@@ -1,20 +1,14 @@
-import Button from "@/components/ui/Button";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import { ATOMS } from "@/store/atoms";
 import { useSetAtom } from "jotai";
 import AddAddressBook from "./AddAddressBook";
-import {  useEffect, useState } from "react";
-import { IUser } from "@/config/types";
-import useUser from "@/hooks/useUser";
+import {  useContext,} from "react";
+import { UserContext } from "@/HOC/UserContext";
 
 export default function AddressBook() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const { getUser } = useUser();
+  const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
 
   return (
     <SidebarHOC isBack title="Address">
