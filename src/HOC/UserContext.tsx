@@ -17,7 +17,7 @@ export const UserContext = createContext<{
   user: IUser | undefined;
 }>(
   {} as {
-    user: IUser;
+    user: IUser|undefined;
     setUser: (user: IUser) => void;
     refreshUser: () => void;
     isLoading: boolean;

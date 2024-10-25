@@ -9,17 +9,21 @@ import AddressBook from "./AddressBook";
 import Order from "./Orders";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useRouter } from "next/navigation";
-import { LOGGED_IN_USER } from "@/HOC/UserContext";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
+import { useContext } from "react";
 
 export default function MainAccount() {
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const { deleteToken } = useAuthToken();
+  const { setUser } = useContext(UserContext);
   const router = useRouter();
   const onLogout = () => {
     deleteToken();
     localStorage.removeItem(LOGGED_IN_USER);
     setSideModal({ ...sideModal, show: false });
-    window.location.href = "/auth";
+    //@ts-ignore
+    setUser(undefined);
+    router.push("/auth");
   };
 
   const options = [
