@@ -15,6 +15,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { UserContext } from "@/HOC/UserContext";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import moment from "moment";
+import useDeliveryDate from "@/hooks/useDeliveryDate";
 
 const SinglePlan = ({
   activeOptionIndex,
@@ -41,7 +44,6 @@ const SinglePlan = ({
     }
     return onAfrican ? "7.14" : "6.85";
   }, [onAfrican]);
-
 
   return (
     <div
@@ -104,6 +106,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
   const { user } = useContext(UserContext);
+  const { data: deliveryData, isLoading: deliveryLoading } = useDeliveryDate();
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
@@ -150,7 +153,6 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     }
   }, [data]);
 
- 
   useEffect(() => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);
@@ -171,7 +173,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             <p className="text-center font-inter text-sm">Loading...</p>
           </div>
         )}
-        {!isLoading &&onAfrican && (
+        {!isLoading && onAfrican && (
           <div className="flex items-center gap-1 justify-center my-3 mt-4">
             <p>Weekend delivery (+£8)</p>
 
@@ -229,6 +231,23 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               }}
               title="Continue"
             />
+          </div>
+        )}
+
+        {onAfrican && (
+          <div className="w-full flex flex-col  justify-center ">
+            <p className="text-center font-inter text-sm mt-2">DELIVERY DATE</p>
+            <div className="rounded-[0.75rem]  mx-auto bg-[#DEF54C] rounded-[0.5rem]text-center justify-center items-center p-4 text-center font-NewSpiritBold text-2xl ">
+              {deliveryLoading ? (
+                <Icon
+                  color="#000"
+                  icon="eos-icons:loading"
+                  className="w-6 h-6 mx-auto"
+                />
+              ) : (
+                moment(deliveryData?.data?.data).format("d/MM/YYYY")
+              )}
+            </div>
           </div>
         )}
       </div>

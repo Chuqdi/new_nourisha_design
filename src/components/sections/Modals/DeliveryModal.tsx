@@ -13,6 +13,7 @@ import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 import { useQuery } from "react-query";
 import moment from "moment";
+import useDeliveryDate from "@/hooks/useDeliveryDate";
 
 export const Checkbox = ({
   checked,
@@ -49,7 +50,9 @@ export default function DeliveryModal({
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
   const { getAxiosClient } = useAuth();
+  const { data, isLoading } = useDeliveryDate();
   const { user } = useContext(UserContext);
+  const [id, setId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [todaysDate, setTodaysDate] = useState<string>(null!);
   const [address, setAddress] = useState({
@@ -59,7 +62,6 @@ export default function DeliveryModal({
     postcode: user?.address?.postcode,
   });
   const inputRef = useRef<HTMLInputElement>(null!);
-  const [id, setId] = useState<string | null>(null);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!delivery_date && !hidDeliveryDate) {
@@ -116,13 +118,7 @@ export default function DeliveryModal({
     setLoading(false);
   };
 
-  const getOrders = () => {
-    //@ts-ignore
-    const axiosClient = getAxiosClient(id);
-    return axiosClient.get(`lineups/asian/delivery/dates`);
-  };
-  const { data, isLoading } = useQuery(["GET_DELIVERY_DATE", id], getOrders);
-
+ 
   useEffect(() => {
     setDeliveryDate(delivery_date);
   }, [delivery_date]);
@@ -143,10 +139,12 @@ export default function DeliveryModal({
     setTodaysDate(minDate);
     inputRef?.current?.setAttribute("min", minDate);
   }, []);
+
   useEffect(() => {
     const ID = localStorage.getItem(DEVICE_ID);
     setId(ID);
   }, []);
+
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
       <div className="flex justify-between items-center">
