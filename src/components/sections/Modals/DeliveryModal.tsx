@@ -3,7 +3,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom,} from "jotai";
+import { useAtom } from "jotai";
 import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
@@ -11,6 +11,8 @@ import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
+import { useQuery } from "react-query";
+import moment from "moment";
 
 export const Checkbox = ({
   checked,
@@ -57,6 +59,7 @@ export default function DeliveryModal({
     postcode: user?.address?.postcode,
   });
   const inputRef = useRef<HTMLInputElement>(null!);
+  const [id, setId] = useState<string | null>(null);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!delivery_date && !hidDeliveryDate) {
@@ -82,7 +85,6 @@ export default function DeliveryModal({
       return;
     }
     setLoading(true);
-    const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     try {
       await axiosClient.put(`customers/me`, { address });
@@ -114,11 +116,16 @@ export default function DeliveryModal({
     setLoading(false);
   };
 
+  const getOrders = () => {
+    //@ts-ignore
+    const axiosClient = getAxiosClient(id);
+    return axiosClient.get(`lineups/asian/delivery/dates`);
+  };
+  const { data, isLoading } = useQuery(["GET_DELIVERY_DATE", id], getOrders);
+
   useEffect(() => {
     setDeliveryDate(delivery_date);
   }, [delivery_date]);
-
-
 
   useEffect(() => {
     setAddress({
@@ -135,6 +142,10 @@ export default function DeliveryModal({
     const minDate = today.toISOString().split("T")[0];
     setTodaysDate(minDate);
     inputRef?.current?.setAttribute("min", minDate);
+  }, []);
+  useEffect(() => {
+    const ID = localStorage.getItem(DEVICE_ID);
+    setId(ID);
   }, []);
   return (
     <div className="w-full bg-white h-[100vh] flex flex-col gap-6 py-8 px-3 max-h-[80vh] md:max-h-[100vh] overflow-y-scroll">
@@ -162,13 +173,29 @@ export default function DeliveryModal({
         onSubmit={onSubmit}
         className="flex flex-col gap-6"
       >
-        {!hidDeliveryDate && (
+        {!hidDeliveryDate ? (
           <div className="w-full">
             <label>Delivery date</label>
             <FoodDeliveryDateSelection
-            delivery_date={delivery_date}
-            set_delivery_date={set_delivery_date}
+              delivery_date={delivery_date}
+              set_delivery_date={set_delivery_date}
             />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col  justify-center ">
+            <p  className="text-[#5C556C] font-inter text-base">Thank you for your order! Your meal will be freshly prepared and delivered. Please keep an eye on your notifications for real-time updates, and get ready to enjoy a delicious, home-cooked meal straight to your doorstep</p>
+            <p className="text-center font-inter text-sm mt-2">DELIVERY DATE</p>
+            <div className="rounded-[0.75rem]  mx-auto bg-[#DEF54C] rounded-[0.5rem]text-center justify-center items-center p-4 text-center font-NewSpiritBold text-2xl ">
+              {isLoading ? (
+                <Icon
+                  color="#000"
+                  icon="eos-icons:loading"
+                  className="w-6 h-6 mx-auto"
+                />
+              ) : (
+                moment(data?.data?.data).format("d/MM/YYYY")
+              )}
+            </div>
           </div>
         )}
 
@@ -236,7 +263,7 @@ export default function DeliveryModal({
           variant="primary"
           className="h-[3rem] mt-8"
           title="Proceed"
-          disabled={loading}
+          disabled={loading || isLoading}
         />
       </form>
     </div>

@@ -2,6 +2,7 @@ import queryKeys from "@/config/queryKeys";
 import { IOrder } from "@/config/types";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import moment from "moment";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
@@ -50,10 +51,13 @@ export default function Order() {
   const [activeCategory, setActiveCategory] = useState<"OPEN" | "CLOSED">(
     "OPEN"
   );
-  const { axiosClient } = useAuth();
+  const { getAxiosClient } = useAuth();
+
   // const { apiClient, useQuery } = useContext(ApiClientContext);
 
   const getOrders = () => {
+    const deviceID = localStorage.get(DEVICE_ID);
+    const axiosClient = getAxiosClient(deviceID);
     return axiosClient.get(
       activeCategory === "CLOSED"
         ? "orders/closed/orders"

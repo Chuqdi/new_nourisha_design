@@ -53,6 +53,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     }
   }, [data]);
 
+
   useEffect(() => {
     if (isError) {
       // localStorage.setItem(LOGGED_IN_USER, "");
