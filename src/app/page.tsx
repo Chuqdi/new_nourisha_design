@@ -105,6 +105,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
+    alert("Updated")
     const cartWasOpen = localStorage.getItem(CART_MODAL_OPEN);
     if (cartWasOpen && cartWasOpen === "1") {
       setSideModal({ show: true, component: <CartModal /> });
