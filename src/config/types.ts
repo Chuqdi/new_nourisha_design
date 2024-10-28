@@ -40,9 +40,11 @@ export interface IMeal {
   orderType?: string;
   is_available: boolean;
   meals?: string[];
+  isSwallow: boolean;
   calories?: string;
   name?: string;
   slug?: string;
+  isProtein:boolean;
   createdAt?: string;
   updatedAt?: string;
   image_url?: string;

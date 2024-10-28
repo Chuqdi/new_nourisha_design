@@ -105,7 +105,7 @@ function ExtraMealSelectionModal() {
 
         <>
           <div>
-            {!!extraModal?.meal?.expected_swallows?.length && (
+            {!!extraModal?.meal?.isSwallow && (
               <>
                 <p className="text-black-900 font-inter text-sm mt-3">
                   Select swallow
@@ -128,7 +128,7 @@ function ExtraMealSelectionModal() {
           </div>
 
           <div className="mt-4">
-            {!!extraModal?.meal?.expected_proteins?.length && (
+            {!!extraModal?.meal?.isProtein && (
               <>
                 <p className="text-black-900 font-inter text-sm mt-3">
                   Select protein
