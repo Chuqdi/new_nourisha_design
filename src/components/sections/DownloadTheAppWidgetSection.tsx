@@ -5,10 +5,10 @@ import Link from "next/link";
 export default function DownloadTheAppWidgetSection() {
   return (
     <div className="gap-2  md:gap-[3rem] flex-col-reverse md:flex-row flex  w-full  items-center justify-center  ">
-      <div className="flex-1">
+      <div className="flex-1 ">
         <img
           src="/images/start_subscription.png"
-          className="mt-5 md:mt-0 h-auto md:h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto "
+          className="mt-5 md:mt-0 max-h-[30rem] md:h-fit w-[80%] md:w-[20.03931rem]  flex justify-center items-center mx-auto "
         />
       </div>
       <div className=" flex flex-col gap-4 flex-1">

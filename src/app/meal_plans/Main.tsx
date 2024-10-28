@@ -87,16 +87,6 @@ const SinglePlan = ({
           </span>
         </p>
       </div>
-
-      {/* <div className="flex items-center gap-1">
-        <Checkbox
-          checked={isWeekend && selected}
-          onSelect={() => {
-            setIsWeekend(!isWeekend);
-          }}
-        />
-        <p>Weekend delivery (+£8)</p>
-      </div> */}
     </div>
   );
 };
