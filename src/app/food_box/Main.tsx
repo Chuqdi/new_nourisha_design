@@ -11,6 +11,8 @@ import queryKeys from "@/config/queryKeys";
 import { LAST_FOOD_BOX_CONTINENNT } from "@/config/storageKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
+import { sendGAEvent } from "@next/third-parties/google";
+
 import useFetch from "@/hooks/useFetch";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
@@ -22,8 +24,9 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { UserContext } from "@/HOC/UserContext";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -203,14 +206,10 @@ const OrderSummary = ({
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
 
-
-
-  const isMonthly = useMemo(()=>{
+  const isMonthly = useMemo(() => {
     const plan = searchParams?.get("plan");
     return plan?.toUpperCase()?.includes("Monthly".toUpperCase());
-  }, [])
-
-
+  }, []);
 
   return (
     <div className="flex flex-col gap-[0.75rem] bg-white p-3 rounded-[0.5rem]">
@@ -219,7 +218,7 @@ const OrderSummary = ({
       </p>
       <div className="flex justify-between items-center">
         <p className="font-inter text-black-900 text-sm font-bold">
-          {isMonthly?"Monthly":`${weeks?.length}-days`} meal plan
+          {isMonthly ? "Monthly" : `${weeks?.length}-days`} meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
           +£{amount}
@@ -280,8 +279,15 @@ export default function Main() {
   const [activeCountry, setActiveCountry] = useState(CONTINENTS[0]);
   const searchParams = useSearchParams();
   const mealsRef = useRef<HTMLDivElement>(null!);
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent, setDisCountedAmount,setLoadingDiscount, } =
-  usePromotionCode();
+  const {
+    coupon,
+    setCoupon,
+    disCountedAmount,
+    loadingDiscount,
+    discountEvent,
+    setDisCountedAmount,
+    setLoadingDiscount,
+  } = usePromotionCode();
   const amount = parseInt(searchParams?.get("plan_amount")!);
   const plan_id = searchParams?.get("plan_id");
 
@@ -331,6 +337,7 @@ export default function Main() {
   const continueProcess = useRef<boolean>(true);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
+  const { user } = useContext(UserContext);
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
@@ -347,10 +354,10 @@ export default function Main() {
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
 
-  const isMonthly = useMemo(()=>{
+  const isMonthly = useMemo(() => {
     const plan = searchParams?.get("plan");
     return plan?.toUpperCase()?.includes("Monthly".toUpperCase());
-  }, [])
+  }, []);
 
   const getMeals = () => {
     return getData(
@@ -417,16 +424,20 @@ export default function Main() {
   };
 
   const initializePayment = () => {
+    let data = {
+      plan_id,
+      promo_code: coupon,
+    };
     setPaymentModal({
       show: true,
       amount: total,
+      gtagEvent: () => {
+        sendGAEvent({ event: "purchase", value: data, customer:user });
+      },
       onContinue: async () => {
         let return_url,
           clientSecret = "";
-        let data = {
-          plan_id,
-          promo_code: coupon,
-        };
+
         const id = localStorage.getItem(DEVICE_ID);
         const axiosClient = getAxiosClient(id!);
         await axiosClient
@@ -463,10 +474,7 @@ export default function Main() {
       .get("subscriptions/me")
       .then((data) => {
         if (data?.data?.data?.used_sub) {
-          // setSideModal({ show: true, component: <Subscription /> });
-
           initializePayment();
-
           setLoading(false);
           continueProcess.current = false;
           return;
@@ -495,7 +503,6 @@ export default function Main() {
             title: "Success",
             description: "Line-up created successfully.",
           });
-          // alert(JSON.stringify(data?.data));
           emptyBox();
         })
         .catch((err) => {
@@ -574,7 +581,6 @@ export default function Main() {
     const urlParams = new URLSearchParams(queryString);
     setSearchParamQuery(urlParams.toString());
   }, []);
-
 
   useEffect(() => {
     !!coupon.length && discountEvent(total);
@@ -742,11 +748,12 @@ export default function Main() {
                         <div className="flex items-center gap-1">
                           <img src="/images/icons/plate_frame.svg" />
                           <p className="font-bold text-sm font-inter">
-                            {isMonthly?"Monthly":`${weeks.length} Days`} meal plan
+                            {isMonthly ? "Monthly" : `${weeks.length} Days`}{" "}
+                            meal plan
                           </p>
                           <p>-</p>
                           <p className="text-sm font-inter">
-                            ({isMonthly?"56":weeks?.length * 2} meals)
+                            ({isMonthly ? "56" : weeks?.length * 2} meals)
                           </p>
                         </div>
 

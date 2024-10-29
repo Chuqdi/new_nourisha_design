@@ -25,7 +25,7 @@ const Payment = ({
   const stripe = useStripe();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
-  const { amount } = useAtomValue(ATOMS.paymentModal);
+  const { amount, gtagEvent } = useAtomValue(ATOMS.paymentModal);
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -50,7 +50,7 @@ const Payment = ({
               returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
           },
         });
-
+        gtagEvent();
         toast({
           variant: "default",
           title: "Payment Successful",
@@ -120,12 +120,6 @@ const PaymentModal = ({
         setLoading(false);
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (!paymentModal?.show) {
-  //     router.replace(pathname, undefined);
-  //   }
-  // }, [paymentModal?.show]);
 
   const stripePromise = loadStripe(process.env.STRIPE_PK_TEST!);
   return loading ? (

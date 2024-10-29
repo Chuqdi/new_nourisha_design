@@ -1,10 +1,11 @@
-import { ICartDetail, IUser } from "@/config/types";
+import { ICartDetail } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import { ATOMS } from "@/store/atoms";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 import DeliveryModal from "./Modals/DeliveryModal";
 import Button from "../ui/Button";
 import { toast } from "@/ui/use-toast";
@@ -54,6 +55,9 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
                         clientSecret: response?.data?.data?.client_secret,
                         returnUrl: `https://www.eatnourisha.com?show_payment_modal=1&reloadWindow=1`,
                       };
+                    },
+                    gtagEvent: () => {
+                      sendGAEvent({ event: "purchase", value: cartDetails });
                     },
                   });
                 }}

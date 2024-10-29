@@ -21,14 +21,11 @@ export default () => {
         if (couponDiscount?.coupon) {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
-            const discountedAmount = Math.round(
-              (discountPercentage / 100) * expectedAmount
-            );
+            const discountedAmount =
+              (discountPercentage / 100) * expectedAmount;
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
-            const discountedAmount = Math.round(
-              couponDiscount?.coupon?.amount_off
-            );
+            const discountedAmount = couponDiscount?.coupon?.amount_off;
             setDisCountedAmount(discountedAmount);
           }
         } else {

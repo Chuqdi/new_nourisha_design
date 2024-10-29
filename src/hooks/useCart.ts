@@ -10,7 +10,6 @@ import { LOGGED_IN_USER } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "./useFingerPrint";
 
-const CART_SESSION_ID = "cart_session_id";
 export const CART_TEMP_ID = "cart_temp_id";
 const useCart = () => {
   const [cartItems, setCartItems] = useAtom<ICartItem[]>(ATOMS.cartItems);
@@ -22,10 +21,6 @@ const useCart = () => {
   const [showCartSideModal, setShowCartSideModal] = useAtom(
     ATOMS.showMobileCartModal
   );
-
-
-
-
 
   const getCartSessionDetails = () => {
     let user = localStorage?.getItem(LOGGED_IN_USER);

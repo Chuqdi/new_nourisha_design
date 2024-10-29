@@ -78,14 +78,10 @@ export default function MealSelectionSection({
         searchPhrase,
       });
     },
-    onSuccess: (data) => {
-      console.log(data?.data?.data?.meals);
-    },
+   
   });
 
   useEffect(() => {
-    //@ts-ignore
-    console.log(data?.data?.data?.totalCount);
     //@ts-ignore
     if (data?.data?.data) {
       //@ts-ignore

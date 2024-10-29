@@ -12,7 +12,7 @@ import { IPlan } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { UserContext } from "@/HOC/UserContext";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -36,14 +36,6 @@ const SinglePlan = ({
   onAfrican?: boolean;
 }) => {
   const selected = activeOptionIndex === index;
-  const perMealPrice = useMemo(() => {
-    if (option?.name?.includes("5")) {
-      return onAfrican ? "8" : "7.10";
-    } else if (option.name?.includes("MONTHLY")) {
-      return onAfrican ? "7.14" : "6.85";
-    }
-    return onAfrican ? "7.14" : "6.85";
-  }, [onAfrican]);
 
   return (
     <div
@@ -95,6 +87,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const { getAxiosClient } = useAuth();
   const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
+  const [checkingSubstate, setCheckingSubstate] = useState(true);
   const { user } = useContext(UserContext);
   const { data: deliveryData, isLoading: deliveryLoading } = useDeliveryDate();
   const activeSearchContinent = useMemo(
@@ -137,6 +130,38 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     return options;
   }, [options, onAfrican]);
 
+  const onContinue = (plan: IPlan) => {
+    router.push(
+      `/food_box?plan=${plan?.name}&plan_id=${plan?._id}&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}&plan_amount=${plan?.amount}&deliveryFee=${plan?.delivery_fee}
+      `
+    );
+  };
+
+  const userAlreadyPaid = (plan: IPlan) => onContinue(plan);
+
+  const checkSub = useCallback(async () => {
+    if (user?.email) {
+      const id = localStorage.getItem(DEVICE_ID);
+      const axiosClient = getAxiosClient(id!);
+      try {
+        await axiosClient.get("subscriptions/me").then((data) => {
+          if (
+            !data?.data?.data?.used_sub &&
+            data?.data?.data?.status === "active"
+          ) {
+            userAlreadyPaid(data?.data?.data?.plan);
+          }
+        });
+      } catch (e) {}
+      setCheckingSubstate(false);
+    } else {
+      setCheckingSubstate(false);
+    }
+  }, []);
+  useEffect(() => {
+    checkSub();
+  }, []);
+
   useEffect(() => {
     if (data?.data?.data?.data) {
       setOptions(data?.data?.data?.data);
@@ -147,9 +172,8 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);
 
-  useEffect(()=>{
-    console.log(deliveryData?.data?.data)
-  }, [ deliveryData ])
+
+
   return (
     <>
       <title>
@@ -166,7 +190,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
             <p className="text-center font-inter text-sm">Loading...</p>
           </div>
         )}
-        {!isLoading && onAfrican && (
+        {!checkingSubstate && !isLoading && onAfrican && (
           <div className="flex items-center gap-1 justify-center my-3 mt-4">
             <p>Weekend delivery (+£8)</p>
 
@@ -180,20 +204,21 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           </div>
         )}
         <div className="grid grid-cols-1 md:flex gap-4">
-          {sortPlans.map((option, index) => {
-            return (
-              <SinglePlan
-                option={option}
-                onAfrican={onAfrican}
-                index={index}
-                isWeekend={isWeekend}
-                setIsWeekend={setIsWeekend}
-                activeOptionIndex={activeOptionIndex}
-                setActiveOptionIndex={setActiveOptionIndex}
-                key={`meal_selection_${index}`}
-              />
-            );
-          })}
+          {!checkingSubstate &&
+            sortPlans.map((option, index) => {
+              return (
+                <SinglePlan
+                  option={option}
+                  onAfrican={onAfrican}
+                  index={index}
+                  isWeekend={isWeekend}
+                  setIsWeekend={setIsWeekend}
+                  activeOptionIndex={activeOptionIndex}
+                  setActiveOptionIndex={setActiveOptionIndex}
+                  key={`meal_selection_${index}`}
+                />
+              );
+            })}
         </div>
 
         {!onAfrican && (
@@ -213,28 +238,14 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           </div>
         )}
 
-        {!isLoading && (
+        {!checkingSubstate && !isLoading && (
           <div className="flex justify-center items-center mt-4 ">
             <Button
               variant="primary"
               className="h-[2.7rem] py-6  w-full md:w-auto"
               onClick={() => {
                 if (user?.email) {
-                  router.push(
-                    `/food_box?plan=${
-                      options.find((o, i) => i === activeOptionIndex)?.name
-                    }&plan_id=${
-                      options.find((o, i) => i === activeOptionIndex)?._id
-                    }&search_continent=${
-                      activeSearchContinent?.search
-                    }&isWeekend=${isWeekend}&plan_amount=${
-                      options.find((o, i) => i === activeOptionIndex)?.amount
-                    }&deliveryFee=${
-                      options.find((o, i) => i === activeOptionIndex)
-                        ?.delivery_fee
-                    }
-                    `
-                  );
+                  onContinue(options.find((o, i) => i === activeOptionIndex)!);
                 } else {
                   router.push("/auth");
                 }

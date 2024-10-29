@@ -8,6 +8,7 @@ import { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
 import IPInfo from "ip-info-react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Head from "next/head";
 import Script from "next/script";
 
@@ -34,10 +35,12 @@ export default function RootLayout({
       setloading(false);
     }
   });
+
+
   return (
     <html lang="en">
       <head>
-        <Script>
+        {/* <Script>
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -45,7 +48,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-PFSLQZK3');
             `}
-        </Script>
+        </Script> */}
 
         <Script
           id="cookieyes"
@@ -53,42 +56,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           src="https://cdn-cookieyes.com/client_data/880430a1c94547acd40ed483/script.js"
         />
       </head>
-      <Suspense fallback={<p>Loading...</p>}>
-        <JotaiProvider>
-          <QueryClientProvider client={queryClient}>
-            <body id="app_wrapper" className={`${interFont.variable} relative`}>
-              <noscript>
-                <iframe
-                  src="https://www.googletagmanager.com/ns.html?id=GTM-PFSLQZK3"
-                  height="0"
-                  width="0"
-                  className="hidden"
-                  //  style="display:none;visibility:hidden"
-                ></iframe>
-              </noscript>
-              <IPInfo>
-                {loading ? (
-                  <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
-                    <div className="animate-pulse">
-                      <img
-                        src="/images/logo2.svg"
-                        className="w-[35rem] md:w-[45rem] h-auto"
-                      />
+      <>
+        <Suspense fallback={<p>Loading...</p>}>
+          <JotaiProvider>
+            <QueryClientProvider client={queryClient}>
+              <body
+                id="app_wrapper"
+                className={`${interFont.variable} relative`}
+              >
+                <noscript>
+                  <iframe
+                    src="https://www.googletagmanager.com/ns.html?id=GTM-PFSLQZK3"
+                    height="0"
+                    width="0"
+                    className="hidden"
+                    //  style="display:none;visibility:hidden"
+                  ></iframe>
+                </noscript>
+                <IPInfo>
+                  {loading ? (
+                    <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
+                      <div className="animate-pulse">
+                        <img
+                          src="/images/logo2.svg"
+                          className="w-[35rem] md:w-[45rem] h-auto"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <UserContextProvider>
-                    <PagesHOC>
-                      {children}
-                      <Toaster />
-                    </PagesHOC>
-                  </UserContextProvider>
-                )}
-              </IPInfo>
-            </body>
-          </QueryClientProvider>
-        </JotaiProvider>
-      </Suspense>
+                  ) : (
+                    <UserContextProvider>
+                      <PagesHOC>
+                        {children}
+                        <Toaster />
+                      </PagesHOC>
+                    </UserContextProvider>
+                  )}
+                </IPInfo>
+              </body>
+            </QueryClientProvider>
+          </JotaiProvider>
+        </Suspense>
+        <GoogleAnalytics gaId="G-PFSLQZK3" />
+      </>
     </html>
   );
 }
