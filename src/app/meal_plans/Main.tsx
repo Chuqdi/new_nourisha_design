@@ -147,6 +147,9 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);
 
+  useEffect(()=>{
+    console.log(deliveryData?.data?.data)
+  }, [ deliveryData ])
   return (
     <>
       <title>
@@ -204,7 +207,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                   className="w-6 h-6 mx-auto"
                 />
               ) : (
-                moment(deliveryData?.data?.data).format("d/MM/YYYY")
+                moment(deliveryData?.data?.data).format("DD/MM/YYYY")
               )}
             </div>
           </div>

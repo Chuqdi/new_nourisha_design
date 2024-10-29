@@ -191,7 +191,7 @@ export default function DeliveryModal({
                   className="w-6 h-6 mx-auto"
                 />
               ) : (
-                moment(data?.data?.data).format("d/MM/YYYY")
+                moment(data?.data?.data).format("DD/MM/YYYY")
               )}
             </div>
           </div>

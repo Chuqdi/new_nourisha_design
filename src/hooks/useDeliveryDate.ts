@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { DEVICE_ID } from "./useFingerPrint";
 import { useQuery } from "react-query";
+import useAuth from "./useAuth";
 
 export default () => {
   const [id, setId] = useState<string | null>(null);
+  const { getAxiosClient } = useAuth();
 
   const getDeliveryDate = () => {
-    //@ts-ignore
-    const axiosClient = getAxiosClient(id);
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
     return axiosClient.get(`lineups/asian/delivery/dates`);
   };
   const { data, isLoading } = useQuery(
