@@ -432,7 +432,7 @@ export default function Main() {
       show: true,
       amount: total,
       gtagEvent: () => {
-        sendGAEvent({ event: "purchase", value: data, customer:user });
+        sendGAEvent({ event: "purchase", value: { ...data, customer: user } });
       },
       onContinue: async () => {
         let return_url,
@@ -469,7 +469,6 @@ export default function Main() {
     }
 
     setLoading(true);
-
     await axiosClient
       .get("subscriptions/me")
       .then((data) => {
@@ -507,12 +506,6 @@ export default function Main() {
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
-          // toast({
-          //   variant: "destructive",
-          //   title: "Error",
-          //   description: msg,
-          // });
-
           if (msg?.includes("Subscription is required")) {
             initializePayment();
           }

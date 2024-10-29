@@ -6,12 +6,13 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import Button from "@/components/ui/Button";
+import { sendGAEvent } from "@next/third-parties/google";
 //@ts-ignore
 import HTMLRenderer from "react-html-renderer";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import queryKeys from "@/config/queryKeys";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { IPlan } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
@@ -20,6 +21,7 @@ import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
 import usePromotionCode from "@/hooks/usePromotionCode";
+import { UserContext } from "@/HOC/UserContext";
 
 const SingleSubscription = ({
   plan,
@@ -35,9 +37,15 @@ const SingleSubscription = ({
   const btnRef = useRef<HTMLButtonElement>(null!);
   const [isSelected, setSelected] = useState(false);
   const [searchParamQuery, setSearchParamQuery] = useState("");
+  const { user } = useContext(UserContext);
 
-  const { coupon, setCoupon, disCountedAmount, loadingDiscount,discountEvent  } =
-  usePromotionCode();
+  const {
+    coupon,
+    setCoupon,
+    disCountedAmount,
+    loadingDiscount,
+    discountEvent,
+  } = usePromotionCode();
 
   const gradientColors = [
     "linear-gradient(181deg, #7DB83A 0.55%, #FEF761 99.53%)",
@@ -61,9 +69,11 @@ const SingleSubscription = ({
 
   useEffect(() => {
     discountEvent(plan?.amount!);
- }, [coupon]);
+  }, [coupon]);
 
-
+  // console.log(plan)
+  // console.log(activePlan)
+  // alert(activePlan?._id === plan?._id)
 
   return (
     <div
@@ -129,9 +139,8 @@ const SingleSubscription = ({
           fullWidth
           ref={btnRef}
           id={`subscription_click_btn_${plan?._id}`}
-          className="py-6 h-[2.75rem] mt-3"
+          className={`py-6 h-[2.75rem] mt-3 ${activePlan?._id === plan?._id&&"pointer-events-none opacity-75" }`}
           title={activePlan?._id === plan?._id ? "Active" : "Subscribe"}
-          disabled={activePlan?._id === plan?._id}
           onClick={() => {
             setSideModal({
               ...sideModal,
@@ -142,6 +151,12 @@ const SingleSubscription = ({
               amount: !!disCountedAmount
                 ? plan?.amount! - disCountedAmount
                 : plan?.amount!,
+              gtagEvent: () => {
+                sendGAEvent({
+                  event: "purchase",
+                  value: { customer: user, plan, disCountedAmount },
+                });
+              },
               onContinue: async () => {
                 let return_url,
                   clientSecret = "";
@@ -188,7 +203,9 @@ export default function Subscription() {
     return axiosClient.get(
       `plans?continent=${
         searchContinent === "Asian" ? "Asian" : "African"
-      }&weekend=${searchParams.get("isWeekend")?searchParams?.get("isWeekend"):"false"}`
+      }&weekend=${
+        searchParams.get("isWeekend") ? searchParams?.get("isWeekend") : "false"
+      }`
     );
   };
 
@@ -210,7 +227,7 @@ export default function Subscription() {
 
   useEffect(() => {
     if (SubscriptionDetails?.data?.data) {
-      setActivePlan(SubscriptionDetails?.data?.data);
+      setActivePlan(SubscriptionDetails?.data?.data?.plan);
     }
   }, [SubscriptionDetails]);
 

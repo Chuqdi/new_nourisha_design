@@ -63,11 +63,9 @@ const SinglePlan = ({
           : option.name?.includes("MONTHLY")
           ? "56 Meals"
           : "14 Meals"}
-        {/* {option?.name} */}
       </h3>
       <div>
         <p className="text-black-900 font-inter text-base">
-          {/* £{perMealPrice}/meal £{option?.amount}/meal */}
           {option?.description}
         </p>
 
