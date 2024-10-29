@@ -71,9 +71,6 @@ const SingleSubscription = ({
     discountEvent(plan?.amount!);
   }, [coupon]);
 
-  // console.log(plan)
-  // console.log(activePlan)
-  // alert(activePlan?._id === plan?._id)
   const isUsersActivePlan = useMemo(
     () =>
       activePlan &&
