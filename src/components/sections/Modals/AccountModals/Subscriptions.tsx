@@ -12,7 +12,7 @@ import HTMLRenderer from "react-html-renderer";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import queryKeys from "@/config/queryKeys";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { IPlan } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
@@ -27,7 +27,7 @@ const SingleSubscription = ({
   plan,
   activePlan,
 }: {
-  activePlan?: IPlan;
+  activePlan?: { plan: IPlan; status: string };
   plan: IPlan;
 }) => {
   const { getAxiosClient } = useAuth();
@@ -74,6 +74,13 @@ const SingleSubscription = ({
   // console.log(plan)
   // console.log(activePlan)
   // alert(activePlan?._id === plan?._id)
+  const isUsersActivePlan = useMemo(
+    () =>
+      activePlan &&
+      activePlan?.plan?._id === plan?._id &&
+      activePlan?.status === "active",
+    [activePlan]
+  );
 
   return (
     <div
@@ -139,8 +146,10 @@ const SingleSubscription = ({
           fullWidth
           ref={btnRef}
           id={`subscription_click_btn_${plan?._id}`}
-          className={`py-6 h-[2.75rem] mt-3 ${activePlan?._id === plan?._id&&"pointer-events-none opacity-75" }`}
-          title={activePlan?._id === plan?._id ? "Active" : "Subscribe"}
+          className={`py-6 h-[2.75rem] mt-3 ${
+            isUsersActivePlan && "pointer-events-none opacity-75"
+          }`}
+          title={isUsersActivePlan ? "Active" : "Subscribe"}
           onClick={() => {
             setSideModal({
               ...sideModal,
@@ -193,7 +202,10 @@ const SingleSubscription = ({
 export default function Subscription() {
   const { getAxiosClient } = useAuth();
   const [plans, setPlans] = useState<IPlan[]>([]);
-  const [activePlan, setActivePlan] = useState<IPlan>();
+  const [activePlan, setActivePlan] = useState<{
+    plan: IPlan;
+    status: string;
+  }>();
   const searchParams = useSearchParams();
   const searchContinent = searchParams?.get("search_continent");
   const searchPlan = searchParams?.get("plan");
@@ -227,7 +239,7 @@ export default function Subscription() {
 
   useEffect(() => {
     if (SubscriptionDetails?.data?.data) {
-      setActivePlan(SubscriptionDetails?.data?.data?.plan);
+      setActivePlan(SubscriptionDetails?.data?.data);
     }
   }, [SubscriptionDetails]);
 
