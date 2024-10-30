@@ -15,10 +15,12 @@ const Option = ({
   extra_id,
   setSelectedExtras,
   selectedExtras,
+  isSwallow,
 }: {
   extra_id?: string;
   setSelectedExtras: (value: IExtraItem | undefined) => void;
   selectedExtras: IExtraItem | undefined;
+  isSwallow:boolean
 }) => {
   const id = localStorage.getItem(DEVICE_ID);
   const { getAxiosClient } = useAuth();
@@ -33,10 +35,8 @@ const Option = ({
 
   useEffect(() => {
     if (data?.data?.data) {
-      const ex = [
-        ...(data?.data?.data?.swallow?.data ?? []),
-        ...(data?.data?.data?.protein?.data ?? []),
-      ].find((e: IExtraItem) => e._id === extra_id);
+      const ex = (isSwallow ?(data?.data?.data?.swallow?.data ?? []) :(data?.data?.data?.protein?.data ?? []))?.find((e: IExtraItem) => e._id === extra_id);
+      console.log(extra_id)
       setExtra(ex);
     }
   }, [data]);
@@ -48,25 +48,25 @@ const Option = ({
   return isLoading ? (
     <p className="text-center">Loading...</p>
   ) : (
-    <div
-      onClick={() => {
-        setSelectedExtras(selected ? undefined : extra);
-      }}
-      className={`w-full p-4 rounded-[0.75rem] border-[2px] z-0 ${
-        selected ? "border-[#FE7E00]" : "border-[#EDEDF3]"
-      } flex justify-between items-center`}
-    >
-      <p className="text-black-900 font-inter text-sm ">{extra?.name}</p>
-      {selected ? (
-        <div className="bg-[#FE7E00] rounded-full w-6 h-6 flex justify-center items-center">
-          <Icon className="w-4 h-4" color="#fff" icon="ic:sharp-check" />
-        </div>
-      ) : (
-        <button className="bg-[#FFEAD6] w-6 h-w-6 flex justify-center items-center text-[#FE7E00] rounded-full font-bold">
-          +
-        </button>
-      )}
+  extra?.name &&  <div
+  onClick={() => {
+    setSelectedExtras(selected ? undefined : extra);
+  }}
+  className={`w-full p-4 rounded-[0.75rem] border-[2px] z-0 ${
+    selected ? "border-[#FE7E00]" : "border-[#EDEDF3]"
+  } flex justify-between items-center`}
+>
+  <p className="text-black-900 font-inter text-sm ">{extra?.name}</p>
+  {selected ? (
+    <div className="bg-[#FE7E00] rounded-full w-6 h-6 flex justify-center items-center">
+      <Icon className="w-4 h-4" color="#fff" icon="ic:sharp-check" />
     </div>
+  ) : (
+    <button className="bg-[#FFEAD6] w-6 h-w-6 flex justify-center items-center text-[#FE7E00] rounded-full font-bold">
+      +
+    </button>
+  )}
+</div>
   );
 };
 function ExtraMealSelectionModal() {
@@ -120,6 +120,7 @@ function ExtraMealSelectionModal() {
                 <Option
                   key={extra}
                   extra_id={extra}
+                  isSwallow
                   selectedExtras={selectedExtras}
                   setSelectedExtras={setSelectedExtras}
                 />
@@ -144,6 +145,7 @@ function ExtraMealSelectionModal() {
                 <Option
                   key={extra}
                   extra_id={extra}
+                  isSwallow={false}
                   selectedExtras={selectedExtras}
                   setSelectedExtras={setSelectedExtras}
                 />
