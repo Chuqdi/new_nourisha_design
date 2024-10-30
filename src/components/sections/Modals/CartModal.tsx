@@ -11,7 +11,7 @@ import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
-import usePromotionCode from "@/hooks/usePromotionCode";
+import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 import { UserContext } from "@/HOC/UserContext";
 
@@ -85,7 +85,6 @@ function CartModal() {
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const { user } = useContext(UserContext);
-  const cartIsLoading = useAtomValue(ATOMS.cartIsLoading);
   const {
     coupon,
     setCoupon,
@@ -105,7 +104,7 @@ function CartModal() {
       if (!!disCountedAmount) {
         t = t - disCountedAmount;
       }
-      return t;
+      return roundUpToTwoDecimalPoints(t);
     } else {
       return getCartTotal()?.total;
     }

@@ -20,7 +20,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
-import usePromotionCode from "@/hooks/usePromotionCode";
+import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
 import { UserContext } from "@/HOC/UserContext";
 
 const SingleSubscription = ({
@@ -155,7 +155,7 @@ const SingleSubscription = ({
             setPaymentModal({
               show: true,
               amount: !!disCountedAmount
-                ? plan?.amount! - disCountedAmount
+                ? roundUpToTwoDecimalPoints(plan?.amount! - disCountedAmount)
                 : plan?.amount!,
               gtagEvent: () => {
                 sendGAEvent({

@@ -12,7 +12,7 @@ import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
-import usePromotionCode from "@/hooks/usePromotionCode";
+import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
 import { UserContext } from "@/HOC/UserContext";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
@@ -105,7 +105,7 @@ function CartSideSection() {
       if (!!disCountedAmount) {
         t = t - disCountedAmount;
       }
-      return t;
+      return roundUpToTwoDecimalPoints(t);
     } else {
       return getCartTotal()?.total;
     }

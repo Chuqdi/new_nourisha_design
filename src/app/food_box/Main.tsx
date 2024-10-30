@@ -16,7 +16,7 @@ import { sendGAEvent } from "@next/third-parties/google";
 import useFetch from "@/hooks/useFetch";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
-import usePromotionCode from "@/hooks/usePromotionCode";
+import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
@@ -351,7 +351,7 @@ export default function Main() {
     if (!!disCountedAmount) {
       t = t - disCountedAmount;
     }
-    return t;
+    return roundUpToTwoDecimalPoints(t);
   }, [disCountedAmount, loadingDiscount, amount]);
 
   const isMonthly = useMemo(() => {
