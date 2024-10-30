@@ -569,11 +569,7 @@ export default function Main() {
     };
   }, []);
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    setSearchParamQuery(urlParams.toString());
-  }, []);
+ 
 
   useEffect(() => {
     !!coupon.length && discountEvent(total);

@@ -22,10 +22,10 @@ export default () => {
           if (couponDiscount?.coupon?.percent_off) {
             const discountPercentage = couponDiscount?.coupon?.percent_off;
             const discountedAmount =
-              (discountPercentage / 100) * expectedAmount;
+              Math.ceil(((discountPercentage / 100) * expectedAmount) * 1000)/1000;
             setDisCountedAmount(discountedAmount);
           } else if (couponDiscount?.coupon?.amount_off) {
-            const discountedAmount = couponDiscount?.coupon?.amount_off;
+            const discountedAmount =Math.ceil((couponDiscount?.coupon?.amount_off) * 1000)/1000;
             setDisCountedAmount(discountedAmount);
           }
         } else {
