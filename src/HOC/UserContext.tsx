@@ -5,8 +5,6 @@ import { useQuery } from "react-query";
 import useAuth from "@/hooks/useAuth";
 import Modal from "@/components/ui/Modal";
 import LoginModal from "@/components/sections/Modals/LoginModal";
-import { ATOMS } from "@/store/atoms";
-import { useSetAtom } from "jotai";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 const VIEWED_LOGOUT_MODAL = "viewed_logout_modal";

@@ -1,8 +1,9 @@
 import SidebarHOC from "@/HOC/SidebarHOC";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import MyProfile from "./MyProfile";
+import Modal from "@/components/ui/Modal";
 import Subscription from "./Subscriptions";
 import Referal from "./Referal";
 import AddressBook from "./AddressBook";
@@ -10,13 +11,18 @@ import Order from "./Orders";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useRouter } from "next/navigation";
 import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
-import { useContext } from "react";
+import { useContext, } from "react";
+import DownloadAppModal from "../DownloadAppModal";
+import { useMediaQuery } from "react-responsive";
+import { BREAKPOINT } from "@/config";
 
 export default function MainAccount() {
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const { deleteToken } = useAuthToken();
   const { setUser } = useContext(UserContext);
   const router = useRouter();
+  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT })
+  const [showGiftCardModal, setShowGiftCardModal] = useAtom(ATOMS.showGiftCardModal);
   const onLogout = () => {
     deleteToken();
     localStorage.removeItem(LOGGED_IN_USER);
@@ -57,17 +63,20 @@ export default function MainAccount() {
 
       icon: <Icon color="#FE7E00" icon="ph:gift-light" className="w-6 h-6" />,
     },
-    // {
-    //   title: "Gift card",
-    //   onClick: () => {},
-    //   icon: (
-    //     <Icon
-    //       color="#FE7E00"
-    //       icon="hugeicons:location-03"
-    //       className="w-6 h-6"
-    //     />
-    //   ),
-    // },
+    {
+      title: "Gift card",
+      onClick: () => {
+        // setSideModal({ ...sideModal, show: false });
+        setShowGiftCardModal(true);
+      },
+      icon: (
+        <Icon
+          color="#FE7E00"
+          icon="hugeicons:location-03"
+          className="w-6 h-6"
+        />
+      ),
+    },
 
     {
       title: "Address",
@@ -95,6 +104,15 @@ export default function MainAccount() {
 
   return (
     <SidebarHOC title="Account">
+      <Modal
+        close={() => setShowGiftCardModal(false)}
+        center
+        large={isMobile}
+        medium={!isMobile}
+        show={showGiftCardModal}
+      >
+        <DownloadAppModal />
+      </Modal>
       <div className="w-full">
         <p className="text-black-900 font-inter text-sm tracking-[-0.01313rem] leading-[1.3125rem] mb-3">
           My account

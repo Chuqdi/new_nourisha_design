@@ -5,12 +5,14 @@ export default function Modal({
   show,
   className,
   large,
+  medium,
   close,
   center,
   children,
 }: {
   show: boolean;
   large?: boolean;
+  medium?: boolean;
   close: () => void;
   center?: boolean;
   className?: string;
@@ -51,7 +53,7 @@ export default function Modal({
           />
           <div
             className={`w-full z-20  ${className} ${
-              large ? "md:w-[70%]" : "md:w-[50%]"
+              large ? "md:w-[70%]" : medium?"md:w-[65%]":"md:w-[50%]"
             }`}
           >
             {children}

@@ -11,6 +11,7 @@ import {
   mealExtraSelection,
   paymentModal,
   SHOW_SIDE_MODAL,
+  showGiftCardModal,
   showMealExtraSelection,
   showMobileCartModal,
 } from "./jotaiDefaultValues";
@@ -21,6 +22,7 @@ export const ATOMS = {
   showSideModal: atom(SHOW_SIDE_MODAL),
   foodBox: atom(FOOD_BOX),
   cartItems: atom(cartItems),
+  showGiftCardModal:atom(showGiftCardModal),
   cartDetails: atom(cartDetails),
   cartIsLoading: atom(cartIsLoading),
   foodInfoModal: atom(foodInfoModal),

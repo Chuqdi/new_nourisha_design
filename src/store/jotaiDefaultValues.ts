@@ -38,6 +38,7 @@ export const showInfoModal: { show: boolean; meal: IMeal; day?: string } = {
 };
 
 export const mealExtraSelection: IStoredExtraType[] = [];
+export const showGiftCardModal = false;
 export const showMealExtraSelection: {
   show: boolean;
   meal?: IMeal;
