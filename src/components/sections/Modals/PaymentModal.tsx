@@ -42,26 +42,22 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
-        await stripe
-          .confirmPayment({
-            elements,
-            clientSecret,
-            confirmParams: {
-              return_url:
-                returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
-            },
-          })
-          .then(() => {
-            gtagEvent();
-          })
-          .catch(() => {
-            gtagEvent();
-            toast({
-              variant: "default",
-              title: "Payment Successful",
-              description: "You have successfully subscribed",
-            });
-          });
+        gtagEvent();
+        const { error } = await stripe.confirmPayment({
+          elements,
+          clientSecret,
+          confirmParams: {
+
+            return_url:
+              returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
+          },
+
+        });
+        toast({
+          variant: "default",
+          title: "Payment Successful",
+          description: "You have successfully subscribed",
+        });
       })
       .catch((error) => {
         toast({

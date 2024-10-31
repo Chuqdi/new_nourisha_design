@@ -430,7 +430,7 @@ export default function Main() {
       show: true,
       amount: total,
       gtagEvent: () => {
-        sendGAEvent({ event: "purchase", value: { ...data,amount, customer: user, disCountedAmount,delivery_date } });
+        sendGAEvent(JSON.stringify({ event: "purchase", value: { ...data,amount, customer: user, disCountedAmount,delivery_date } }));
       },
       onContinue: async () => {
         let return_url,
