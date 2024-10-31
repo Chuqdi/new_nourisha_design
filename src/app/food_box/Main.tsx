@@ -174,10 +174,8 @@ const OrderSummary = ({
   weeks,
   coupon,
   disCountedAmount,
-  setDisCountedAmount,
   setCoupon,
   loadingDiscount,
-  setLoadingDiscount,
 }: {
   weeks: typeof DAYS_OF_THE_WEEK;
   coupon?: string;
@@ -201,7 +199,7 @@ const OrderSummary = ({
         (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
     }
     if (!!disCountedAmount) {
-      t = t - disCountedAmount;
+      t = roundUpToTwoDecimalPoints(t - disCountedAmount);
     }
     return t;
   }, [disCountedAmount, loadingDiscount, amount]);
