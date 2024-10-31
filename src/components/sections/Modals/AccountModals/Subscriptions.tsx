@@ -160,7 +160,7 @@ const SingleSubscription = ({
               gtagEvent: () => {
                 sendGAEvent({
                   event: "purchase",
-                  value: { customer: user, plan, disCountedAmount },
+                  value: { customer: user, plan, disCountedAmount,   },
                 });
               },
               onContinue: async () => {

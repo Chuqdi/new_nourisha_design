@@ -57,7 +57,7 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
                       };
                     },
                     gtagEvent: () => {
-                      sendGAEvent({ event: "purchase", value: cartDetails });
+                      sendGAEvent({ event: "purchase", value: {...cartDetails, } });
                     },
                   });
                 }}
