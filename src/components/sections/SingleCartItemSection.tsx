@@ -73,13 +73,11 @@ export const CartManipulator = ({
     addItem(meal, 1);
     if (meal?.isProtein || meal?.isSwallow) {
       !isExceededQuantity &&
-        setTimeout(() => {
-          setMealExtraModal({
-            meal,
-            day: undefined,
-            show: true,
-          });
-        }, 4000);
+        setMealExtraModal({
+          meal,
+          day: undefined,
+          show: true,
+        });
     }
   };
 
