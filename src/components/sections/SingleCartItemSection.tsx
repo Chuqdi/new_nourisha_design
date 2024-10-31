@@ -16,7 +16,7 @@ import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue, useSetAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
-import {  useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -38,7 +38,7 @@ export const CartManipulator = ({
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
-  const onUpdateCart = (c: () => void, isExceededQuantity?:boolean) => {
+  const onUpdateCart = (c: () => void, isExceededQuantity?: boolean) => {
     if (
       activeCountry?.toUpperCase() === "Asia".toUpperCase() &&
       pathName !== "/food_box"
@@ -48,18 +48,15 @@ export const CartManipulator = ({
     }
     if (user?.email) {
       c();
-      if (
-        meal?.isProtein ||
-        meal?.isSwallow
-
-      ) {
-       !isExceededQuantity && setTimeout(() => {
-        setMealExtraModal({
-          meal,
-          day: undefined,
-          show: true,
-        });
-      }, 4000);
+      if (meal?.isProtein || meal?.isSwallow) {
+        !isExceededQuantity &&
+          setTimeout(() => {
+            setMealExtraModal({
+              meal,
+              day: undefined,
+              show: true,
+            });
+          }, 4000);
       }
     } else {
       toast({
@@ -72,6 +69,19 @@ export const CartManipulator = ({
     }
   };
 
+  const addMealLocally = (isExceededQuantity?: boolean) => {
+    addItem(meal, 1);
+    if (meal?.isProtein || meal?.isSwallow) {
+      !isExceededQuantity &&
+        setTimeout(() => {
+          setMealExtraModal({
+            meal,
+            day: undefined,
+            show: true,
+          });
+        }, 4000);
+    }
+  };
 
   return (
     <div
@@ -101,8 +111,13 @@ export const CartManipulator = ({
       <button
         onClick={() => {
           isLoggedIn
-            ? onUpdateCart(() => addItemToCart(meal, 1, item?.quantity), item?.quantity + 1 > parseInt(item?.item?.available_quantity!))
-            : addItem(meal, 1);
+            ? onUpdateCart(
+                () => addItemToCart(meal, 1, item?.quantity),
+                item?.quantity + 1 > parseInt(item?.item?.available_quantity!)
+              )
+            : addMealLocally(
+                item?.quantity + 1 > parseInt(item?.item?.available_quantity!)
+              );
         }}
         className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
@@ -138,7 +153,7 @@ export default function SingleCartItemSection({
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
   const setMealExtraModal = useSetAtom(ATOMS.showMealExtraSelection);
   const pathName = usePathname();
-  const { getCartItem} = useLocalCart();
+  const { getCartItem } = useLocalCart();
   const { user } = useContext(UserContext);
   const localCartItem = useAtomValue(ATOMS?.localCartItems);
 
@@ -156,8 +171,6 @@ export default function SingleCartItemSection({
   };
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
-
-
   const isMealSelected = useMemo(() => {
     return {
       //@ts-ignore
@@ -167,12 +180,13 @@ export default function SingleCartItemSection({
     };
   }, [activeDayMeal]);
   const cartItemMeal = useMemo(
-    () => isLoggedIn?cartItems.find((i) => i?.item?._id === meal?._id):getCartItem(meal),
+    () =>
+      isLoggedIn
+        ? cartItems.find((i) => i?.item?._id === meal?._id)
+        : getCartItem(meal),
 
     [cartItems, localCartItem]
   );
-
-
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
@@ -224,10 +238,7 @@ export default function SingleCartItemSection({
               <button
                 onClick={() => {
                   addFoodBox(activeWeek!, meal!);
-                  if (
-                    meal?.isProtein ||
-                    meal?.isSwallow
-                  ) {
+                  if (meal?.isProtein || meal?.isSwallow) {
                     setMealExtraModal({
                       meal,
                       day: activeWeek,
