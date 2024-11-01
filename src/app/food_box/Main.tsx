@@ -431,7 +431,10 @@ export default function Main() {
     setPaymentModal({
       show: true,
       amount: total,
-      gtagEvent: () => {},
+      gtagEvent: (clientSecret) => {
+
+ 
+      },
       onContinue: async () => {
         let return_url,
           clientSecret = "";
@@ -445,9 +448,7 @@ export default function Main() {
             clientSecret = response?.data?.data?.client_secret;
           });
 
-        sendGAEvent({
-          event: "purchase",
-          value: {
+          const gtagEvent = {
             transaction_id: clientSecret,
             value: amount,
             tax: null,
@@ -456,12 +457,12 @@ export default function Main() {
             coupon,
             plan: plan_id,
             customer_details: user,
-          },
-        });
+          };
+          const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(gtagEvent)}&show_payment_modal=1`
 
         return {
           clientSecret,
-          returnUrl: `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`,
+          returnUrl:rUrl,
         };
       },
     });

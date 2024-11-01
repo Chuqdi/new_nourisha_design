@@ -20,7 +20,9 @@ import { useAtom, useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import Input from "@/components/ui/Input";
-import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
+import usePromotionCode, {
+  roundUpToTwoDecimalPoints,
+} from "@/hooks/usePromotionCode";
 import { UserContext } from "@/HOC/UserContext";
 
 const SingleSubscription = ({
@@ -157,11 +159,8 @@ const SingleSubscription = ({
               amount: !!disCountedAmount
                 ? roundUpToTwoDecimalPoints(plan?.amount! - disCountedAmount)
                 : plan?.amount!,
-              gtagEvent: () => {
-                sendGAEvent({
-                  event: "purchase",
-                  value: { customer: user, plan, disCountedAmount,   },
-                });
+              gtagEvent: (clientSecret) => {
+                
               },
               onContinue: async () => {
                 let return_url,
@@ -178,10 +177,17 @@ const SingleSubscription = ({
                     return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}`;
                     clientSecret = response?.data?.data?.client_secret;
                   });
+                const gtagEvent = {
+                  customer: user,
+                  plan,
+                  disCountedAmount,
+                  transaction_id: clientSecret,
+                };
+                const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(gtagEvent)}&show_payment_modal=1`
 
                 return {
                   clientSecret,
-                  returnUrl: `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`,
+                  returnUrl: rUrl ,
                 };
               },
             });

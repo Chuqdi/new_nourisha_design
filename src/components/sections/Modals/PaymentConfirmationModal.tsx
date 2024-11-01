@@ -1,9 +1,11 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { sendGAEvent } from "@next/third-parties/google";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 function PaymentConfirmationModal({ close }: { close: () => void }) {
   const searchParams = useSearchParams();
+  const triggeredEvent = useRef(false);
   const onClose = () => {
     const reloadWindow = searchParams?.get("reloadWindow");
     if (reloadWindow && reloadWindow === "1") {
@@ -11,6 +13,19 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
     }
     close();
   };
+
+  useEffect(() => {
+    const gtagEvent = searchParams.get("gtagEvent");
+    const gtagEventData = JSON.parse(gtagEvent ?? "");
+
+    if (gtagEventData && !triggeredEvent?.current) {
+      sendGAEvent({
+        event: "purchase",
+        value: gtagEventData,
+      });
+      triggeredEvent.current = true;
+    }
+  }, [searchParams]);
   return (
     <div className="bg-white rounded-[0.75rem] p-4">
       <div className="flex justify-between items-center">

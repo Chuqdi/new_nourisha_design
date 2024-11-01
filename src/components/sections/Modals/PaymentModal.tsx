@@ -27,6 +27,8 @@ const Payment = ({
   const [paymentLoading, setPaymentLoadng] = useState(false);
   const { amount, gtagEvent } = useAtomValue(ATOMS.paymentModal);
 
+ 
+
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
       return;
@@ -42,22 +44,29 @@ const Payment = ({
 
     await getClientSecret()
       .then(async ({ clientSecret, returnUrl }) => {
-        gtagEvent();
-        const { error } = await stripe.confirmPayment({
+        alert(returnUrl);
+        const result = await stripe.confirmPayment({
           elements,
           clientSecret,
           confirmParams: {
-
             return_url:
               returnUrl ?? "https://www.eatnourisha.com?show_payment_modal=1",
           },
+        });
 
-        });
-        toast({
-          variant: "default",
-          title: "Payment Successful",
-          description: "You have successfully subscribed",
-        });
+        if (result.error) {
+          toast({
+            variant: "destructive",
+            title: "Payment was not completed",
+            description: "Subscription failed",
+          });
+        } else {
+          toast({
+            variant: "default",
+            title: "Payment Successful",
+            description: "You have successfully subscribed",
+          });
+        }
       })
       .catch((error) => {
         toast({
@@ -97,7 +106,6 @@ const PaymentModal = ({
   getClientSecret: () => Promise<{ clientSecret: string; returnUrl: string }>;
 }) => {
   const [loading, setLoading] = useState(true);
-  const [clientSecret, setClientSecret] = useState("");
   const [error, setError] = useState("");
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
   const router = useRouter();

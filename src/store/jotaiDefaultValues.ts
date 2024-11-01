@@ -53,11 +53,11 @@ export const paymentModal: {
   amount: number;
   redirect_url?:string;
   onContinue: () => Promise<{ clientSecret: string; returnUrl: string }>;
-  gtagEvent:()=> void
+  gtagEvent:(clientSecret:string)=> void
 } = {
   show: false,
   amount: 0,
-  gtagEvent:()=>{},
+  gtagEvent:(c)=>{},
   onContinue: async () => {
     return {
       clientSecret: "",
