@@ -50,7 +50,7 @@ export default function DeliveryModal({
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
   const { getAxiosClient } = useAuth();
-  const { data, isLoading } = useDeliveryDate();
+  const { data, isLoading, convertDateFormat } = useDeliveryDate();
   const { user } = useContext(UserContext);
   const [id, setId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -183,7 +183,7 @@ export default function DeliveryModal({
                   className="w-6 h-6 mx-auto"
                 />
               ) : (
-                moment(data?.data?.data).format("DD/MM/YYYY")
+                convertDateFormat(data?.data?.data)
               )}
             </div>
           </div>

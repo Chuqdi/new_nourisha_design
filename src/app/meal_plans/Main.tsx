@@ -87,7 +87,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const router = useRouter();
   const [checkingSubstate, setCheckingSubstate] = useState(true);
   const { user } = useContext(UserContext);
-  const { data: deliveryData, isLoading: deliveryLoading } = useDeliveryDate();
+  const { data: deliveryData, isLoading: deliveryLoading, convertDateFormat } = useDeliveryDate();
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
@@ -230,7 +230,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                   className="w-6 h-6 mx-auto"
                 />
               ) : (
-                moment(deliveryData?.data?.data).format("DD/MM/YYYY")
+                convertDateFormat(deliveryData?.data?.data)
               )}
             </div>
           </div>
