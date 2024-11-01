@@ -89,17 +89,17 @@ export default function MainAccount() {
         />
       ),
     },
-    {
-      title: "Subscriptions",
-      onClick: () => setSideModal({ show: true, component: <Subscription /> }),
-      icon: (
-        <Icon
-          color="#FE7E00"
-          icon="hugeicons:organic-food"
-          className="w-6 h-6"
-        />
-      ),
-    },
+    // {
+    //   title: "Subscriptions",
+    //   onClick: () => setSideModal({ show: true, component: <Subscription /> }),
+    //   icon: (
+    //     <Icon
+    //       color="#FE7E00"
+    //       icon="hugeicons:organic-food"
+    //       className="w-6 h-6"
+    //     />
+    //   ),
+    // },
   ];
 
   return (
