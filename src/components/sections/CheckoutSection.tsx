@@ -51,14 +51,26 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
                         coupon,
                       });
 
+                      sendGAEvent({
+                        event: "purchase",
+                        value: {
+                          transaction_id: response?.data?.data?.client_secret,
+                          value: total,
+                          tax: null,
+                          shipping: null,
+                          currency: "gbp",
+                          coupon,
+                          plan: null,
+                          customer_details: user,
+                        },
+                      });
+
                       return {
                         clientSecret: response?.data?.data?.client_secret,
                         returnUrl: `https://www.eatnourisha.com?show_payment_modal=1&reloadWindow=1`,
                       };
                     },
-                    gtagEvent: () => {
-                      sendGAEvent({ event: "purchase", value: {...cartDetails, } });
-                    },
+                    gtagEvent: () => {},
                   });
                 }}
               />
