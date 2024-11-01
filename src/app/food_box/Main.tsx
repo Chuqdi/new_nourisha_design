@@ -16,7 +16,9 @@ import { sendGAEvent } from "@next/third-parties/google";
 import useFetch from "@/hooks/useFetch";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
-import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
+import usePromotionCode, {
+  roundUpToTwoDecimalPoints,
+} from "@/hooks/usePromotionCode";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
@@ -429,9 +431,7 @@ export default function Main() {
     setPaymentModal({
       show: true,
       amount: total,
-      gtagEvent: () => {
-        sendGAEvent(JSON.stringify({ event: "purchase", value: { ...data,amount, customer: user, disCountedAmount,delivery_date } }));
-      },
+      gtagEvent: () => {},
       onContinue: async () => {
         let return_url,
           clientSecret = "";
@@ -444,6 +444,20 @@ export default function Main() {
             return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`;
             clientSecret = response?.data?.data?.client_secret;
           });
+
+        sendGAEvent({
+          event: "purchase",
+          value: {
+            transaction_id: clientSecret,
+            value: amount,
+            tax: null,
+            shipping: null,
+            currency: "gbp",
+            coupon,
+            plan: plan_id,
+            customer_details: user,
+          },
+        });
 
         return {
           clientSecret,
@@ -566,8 +580,6 @@ export default function Main() {
       );
     };
   }, []);
-
- 
 
   useEffect(() => {
     !!coupon.length && discountEvent(total);
