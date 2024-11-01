@@ -1,12 +1,5 @@
 "use client";
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import Button from "@/components/ui/Button";
-import { sendGAEvent } from "@next/third-parties/google";
 //@ts-ignore
 import HTMLRenderer from "react-html-renderer";
 import SidebarHOC from "@/HOC/SidebarHOC";
