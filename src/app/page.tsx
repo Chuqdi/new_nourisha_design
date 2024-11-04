@@ -60,13 +60,13 @@ export default function Main() {
 
   const whatOffered = [
     {
-      text: "Meal Subscriptions",
+      text: "Meal Plans",
       description: `Enjoy a variety of meals delivered to you on a weekly  or monthly basis with our convenient subscription plans.
       <br />
         Our weekly meal plan food box is delivered once a week and the monthly plan delivered once a week for a month.
         `,
       onClick: () => router.push("/meal_plans"),
-      btnText: "Start Your Subscription",
+      btnText: "Select a plan",
       image: "subscription.png",
     },
     {
