@@ -42,9 +42,21 @@ export default function SignUp({ formikObj }:{formikObj:any}) {
       </div>
 
       <div>
+        <label>Phone number</label>
+        <Input
+          type="tel"
+          value={values.phone}
+          onChange={handleChange("phone")}
+          className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"
+        />
+        {errors.phone && (
+          <p className="error_text">{errors.phone}</p>
+        )}
+      </div>
+
+      <div>
         <label>Password</label>
         <Input
-          type="password"
           value={values.password}
           onChange={handleChange("password")}
           className="h-[3rem] rounded-[0.75rem] bg-[#F2F4F7]"

@@ -95,7 +95,7 @@ export default function LoginModal({
       {showPromoCode ? (
         <div className="flex-1 p-1 md:p-6  flex-col flex justify-center items-center gap-3">
           <h4 className="font-NewSpiritBold text-center text-xl">
-            Enjoy 10% off your first meal plan order by using the following code
+            Enjoy 5% off your first meal plan order by using the following code
             at checkout:
           </h4>
           <button
@@ -119,7 +119,7 @@ export default function LoginModal({
           className="flex flex-1 flex-col gap-7 py-14 px-6"
         >
           <h4 className="text-black-900 text-center font-NewSpiritBold text-[1.75rem]">
-            Get 10% discount on your first order
+            Get 5% discount on your first order
           </h4>
 
           <div className="flex flex-col gap-6">

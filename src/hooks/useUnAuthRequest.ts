@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { BACKEND_URL } from "@/config";
 import axios from "axios";
 import { useState } from "react";
+import { DEVICE_ID } from "./useFingerPrint";
 
 const useUnAuthRequest = <T>() => {
   const [response, setResponse] = useState<{
@@ -54,12 +55,13 @@ const useUnAuthRequest = <T>() => {
 
 
   const getData =(path:string)=>{
+    const id = localStorage.getItem(DEVICE_ID);
     return  axios
     .get(`${process.env.API_URL}${path}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "device-id": "29a1df4646cb3417c19994a59a3e022a",
+        "device-id": id??"29a1df4646cb3417c19994a59a3e022a",
       },
     })
   }
