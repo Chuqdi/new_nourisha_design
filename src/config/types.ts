@@ -44,7 +44,7 @@ export interface IMeal {
   calories?: string;
   name?: string;
   slug?: string;
-  isProtein:boolean;
+  isProtein: boolean;
   createdAt?: string;
   updatedAt?: string;
   image_url?: string;
@@ -80,12 +80,18 @@ export interface IOrder {
   delivery_address: { address_: string; city: string; country: string };
   subtotal: string;
   total: string;
-  status?:string;
+  status?: string;
   createdAt: string;
   updatedAt: string;
   delivery_date: string;
   weekend_delivery: boolean;
   delivery_fee?: string;
+  orderExtras: [
+    {
+      item: string;
+      _id: string;
+    }
+  ];
 }
 
 export interface IReferal {

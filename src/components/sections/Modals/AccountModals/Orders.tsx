@@ -3,68 +3,86 @@ import { IMeal, IOrder } from "@/config/types";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useQuery } from "react-query";
 
 function SingleListItem({ order }: { order: IOrder }) {
   const [showDetails, setShowDetails] = useState(false);
-  const [ meal, setMeal ] = useState<IMeal|null>(null);
+  const [meal, setMeal] = useState<IMeal | null>(null);
   const { getAxiosClient } = useAuth();
-
+  const isProcessing = useMemo(()=> order?.status === "processing", []);
+  const itemsCount = useMemo(()=> order?.orderExtras?.length, [])
 
   const getMealItem = () => {
     const deviceID = window.localStorage.getItem(DEVICE_ID);
-   const axiosClient = getAxiosClient(deviceID!);
+    const axiosClient = getAxiosClient(deviceID!);
+    return axiosClient.get(
+      `meals/pack/${order?.orderExtras[order?.orderExtras?.length - 1]?.item}`
+    );
+  };
+  const { data, isLoading, } = useQuery(["SINGLE_MEAL"], getMealItem);
 
-   return axiosClient.get(
-     `meals/pack/${order?.items[order?.items.length -1]}`
-   );
- };
- const { data, isLoading, refetch  } = useQuery(
-   ["SINGLE_MEAL"],
-   getMealItem, 
- );
 
- 
-
-  useEffect(()=>{
-    console.log(meal)
-  }, [data])
+  useEffect(() => {
+    if (data?.data?.data) {
+      setMeal(data.data.data);
+    }
+  }, [data]);
   return (
     <div
       onClick={() => setShowDetails(true)}
       className="cursor-pointer flex items-center justify-between"
     >
-      <div className="flex items-center gap-2">
-        <img
-          src={`${meal?.image_url}`}
-          className="w-14 h-14 object-cover rounded-lg"
-        />
-        <div>
-          <p className="text-303237 font-PlusSan text-sm">
-            {order?.items?.map((item, key) => (
-              <span key={key}>
-                {meal?.name}
-                {key !== order.items.length - 1 && ","}
-              </span>
-            ))}
-          </p>
-          <p className="font-PlusSan text-[#667085] text-[0.75rem]">
-            {moment(order?.delivery_date).format("YYYY-MM-DD HH:mm:ss")}
-          </p>
+      {(isLoading || !meal?._id) && (
+        <div className="w-full flex justify-center items-center">
+          <Icon color="#000000ac" className="w-6 h-6" icon="eos-icons:loading" />
         </div>
-      </div>
-      <div className="flex flex-col justify-end items-end">
-        <p className="text-475569 text-base font-bold font-PlusSan">
-          ${order.total}
-        </p>
-        <div className="text-[0.75rem] text-primary-main font-semibold bg-[#ffa6002d] p-2 rounded-md">
-          {order?.status}
-        </div>
-      </div>
+      )}
+      {!isLoading && !!meal?._id && (
+        <>
+          <div className="flex items-center gap-2">
+            <img
+              src={`${meal?.image_url}`}
+              className="w-14 h-14 object-cover rounded-lg"
+            />
+            <div>
+              <p className="text-303237 font-PlusSan text-sm">
+                {/* {order?.items?.map((item, key) => (
+                  <span key={key}>
+                    {`${order?.orderExtras?.length}`}
+                    {key !== order.items.length - 1 && ","}
+                  </span>
+                ))} */}
+
+                {
+                  !!itemsCount && `${itemsCount} item${!!(itemsCount>1)?'s':""}`}
+                
+              </p>
+              <p className="font-PlusSan text-[#667085] text-[0.75rem]">
+                {moment(order?.delivery_date).format("YYYY-MM-DD")}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col justify-end items-end">
+            <p className="text-475569 text-base font-bold font-PlusSan">
+              ${order.total}
+            </p>
+            <div className={`text-[0.75rem]  font-semibold  p-2 rounded-md ${isProcessing?'bg-[#ffa6002d] text-primary-main':'bg-[#1b881b] text-white'}`}>
+              {
+                isProcessing
+                ?
+                "Processing"
+                :
+                "Payment recieved"
+              }
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -78,7 +96,7 @@ export default function Order() {
   // const { apiClient, useQuery } = useContext(ApiClientContext);
 
   const getOrders = () => {
-     const deviceID = window.localStorage.getItem(DEVICE_ID);
+    const deviceID = window.localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(deviceID!);
 
     return axiosClient.get(
@@ -87,19 +105,17 @@ export default function Order() {
         : "orders/open/orders"
     );
   };
-  const { data, isLoading, refetch  } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     [queryKeys.GET_ORDERS, activeCategory],
-    getOrders, { enabled:false }
+    getOrders,
+    { enabled: false }
   );
 
-  useEffect(()=>{
-    if(window && window.localStorage && localStorage){
+  useEffect(() => {
+    if (window && window.localStorage && localStorage) {
       refetch();
     }
-  }, [])
-
-
-
+  }, []);
 
   return (
     <SidebarHOC isBack title="Orders">
