@@ -387,7 +387,8 @@ export default function Main() {
   }, [boxStore]);
 
   const prepareMealForBE = () => {
-    return DAYS_OF_THE_WEEK.map((week) => {
+    let returnValue = {delivery_date}
+    const value = DAYS_OF_THE_WEEK.forEach((week) => {
       if (boxStore) {
         //@ts-ignore
         const activeDayBox = boxStore[week];
@@ -404,23 +405,35 @@ export default function Main() {
           meals?.last_meal,
           week as IFoodBoxDayType
         );
-
-        return {
-          [week?.toLowerCase()]: {
-            lunch: {
-              mealId: meals?.first_meal?._id,
-              extraId: firstSelectedExtra?.extra?._id,
-            },
-            dinner: {
-              mealId: meals?.last_meal?._id,
-              extraId: secondSelectedExtra?.extra?._id,
-            },
+        //@ts-ignore
+        returnValue[week?.toLowerCase()] =  {
+          lunch: {
+            mealId: meals?.first_meal?._id,
+            extraId: firstSelectedExtra?.extra?._id,
           },
-        };
+          dinner: {
+            mealId: meals?.last_meal?._id,
+            extraId: secondSelectedExtra?.extra?._id,
+          },
+        }
+
+        // return {
+        //   [week?.toLowerCase()]: {
+        //     lunch: {
+        //       mealId: meals?.first_meal?._id,
+        //       extraId: firstSelectedExtra?.extra?._id,
+        //     },
+        //     dinner: {
+        //       mealId: meals?.last_meal?._id,
+        //       extraId: secondSelectedExtra?.extra?._id,
+        //     },
+        //   },
+        // };
       }
 
       return undefined;
     });
+    return returnValue;
   };
 
   const initializePayment = () => {

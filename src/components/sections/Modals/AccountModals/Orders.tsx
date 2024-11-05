@@ -63,7 +63,7 @@ function SingleListItem({ order }: { order: IOrder }) {
                 
               </p>
               <p className="font-PlusSan text-[#667085] text-[0.75rem]">
-                {moment(order?.delivery_date).format("YYYY-MM-DD")}
+                {moment(order?.delivery_date).format("MMM, YYYY-MM-DD")}
               </p>
             </div>
           </div>
@@ -101,8 +101,8 @@ export default function Order() {
 
     return axiosClient.get(
       activeCategory === "CLOSED"
-        ? "orders/closed/orders"
-        : "orders/open/orders"
+        ? "orders/closed/orders/history"
+        : "orders/open/orders/history"
     );
   };
   const { data, isLoading, refetch } = useQuery(
