@@ -1,16 +1,38 @@
 import queryKeys from "@/config/queryKeys";
-import { IOrder } from "@/config/types";
+import { IMeal, IOrder } from "@/config/types";
 import SidebarHOC from "@/HOC/SidebarHOC";
 import useAuth from "@/hooks/useAuth";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useQuery } from "react-query";
 
 function SingleListItem({ order }: { order: IOrder }) {
   const [showDetails, setShowDetails] = useState(false);
+  const [ meal, setMeal ] = useState<IMeal|null>(null);
+  const { getAxiosClient } = useAuth();
+
+
+  const getMealItem = () => {
+    const deviceID = window.localStorage.getItem(DEVICE_ID);
+   const axiosClient = getAxiosClient(deviceID!);
+
+   return axiosClient.get(
+     `meals/pack/${order?.items[order?.items.length -1]}`
+   );
+ };
+ const { data, isLoading, refetch  } = useQuery(
+   ["SINGLE_MEAL"],
+   getMealItem, 
+ );
+
+ 
+
+  useEffect(()=>{
+    console.log(meal)
+  }, [data])
   return (
     <div
       onClick={() => setShowDetails(true)}
@@ -18,20 +40,20 @@ function SingleListItem({ order }: { order: IOrder }) {
     >
       <div className="flex items-center gap-2">
         <img
-          src={`${order.items[0].item.image_url}`}
+          src={`${meal?.image_url}`}
           className="w-14 h-14 object-cover rounded-lg"
         />
         <div>
           <p className="text-303237 font-PlusSan text-sm">
-            {order.items.map((item, key) => (
+            {order?.items?.map((item, key) => (
               <span key={key}>
-                {item?.item?.name}
+                {meal?.name}
                 {key !== order.items.length - 1 && ","}
               </span>
             ))}
           </p>
           <p className="font-PlusSan text-[#667085] text-[0.75rem]">
-            {moment(order.delivery_date).format("YYYY-MM-DD HH:mm:ss")}
+            {moment(order?.delivery_date).format("YYYY-MM-DD HH:mm:ss")}
           </p>
         </div>
       </div>
@@ -40,7 +62,7 @@ function SingleListItem({ order }: { order: IOrder }) {
           ${order.total}
         </p>
         <div className="text-[0.75rem] text-primary-main font-semibold bg-[#ffa6002d] p-2 rounded-md">
-          Processing
+          {order?.status}
         </div>
       </div>
     </div>
@@ -56,18 +78,28 @@ export default function Order() {
   // const { apiClient, useQuery } = useContext(ApiClientContext);
 
   const getOrders = () => {
-    const deviceID = localStorage.get(DEVICE_ID);
-    const axiosClient = getAxiosClient(deviceID);
+     const deviceID = window.localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(deviceID!);
+
     return axiosClient.get(
       activeCategory === "CLOSED"
         ? "orders/closed/orders"
         : "orders/open/orders"
     );
   };
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch  } = useQuery(
     [queryKeys.GET_ORDERS, activeCategory],
-    getOrders
+    getOrders, { enabled:false }
   );
+
+  useEffect(()=>{
+    if(window && window.localStorage && localStorage){
+      refetch();
+    }
+  }, [])
+
+
+
 
   return (
     <SidebarHOC isBack title="Orders">
@@ -91,7 +123,7 @@ export default function Order() {
       </div>
 
       {!isLoading &&
-        (data?.data?.data?.data as [])?.map((order, key) => (
+        (data?.data?.data as [])?.map((order, key) => (
           <SingleListItem key={`order_${key}`} order={order} />
         ))}
       {isLoading &&
@@ -99,7 +131,7 @@ export default function Order() {
           <Skeleton key={`skeleton_${index}`} className="h-14" />
         ))}
 
-      {!isLoading && !data?.data?.data?.data?.length && (
+      {!isLoading && !data?.data?.data?.length && (
         <div className="flex justify-center items-center mt-30">
           <img src="/images/no_order.png" />
         </div>

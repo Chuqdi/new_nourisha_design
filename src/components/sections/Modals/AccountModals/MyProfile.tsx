@@ -5,13 +5,13 @@ import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSetAtom } from "jotai";
 import ChangePassword from "./ChangePassword";
-import { FormEvent,  useContext,  useEffect,  useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import useAuthToken from "@/hooks/useAuthToken";
 import axios from "axios";
 import { toast } from "@/ui/use-toast";
 import { IUser } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
-
+import { DEVICE_ID } from "@/hooks/useFingerPrint";
 
 export default function MyProfile() {
   const setSideModal = useSetAtom(ATOMS.showSideModal);
@@ -19,6 +19,7 @@ export default function MyProfile() {
   const { getToken } = useAuthToken();
   const token = getToken();
   const { user, setUser } = useContext(UserContext);
+  const [phone, setPhone] = useState(user?.phone);
 
   const [formData, setFormData] = useState({
     address_: user?.address?.address_,
@@ -30,12 +31,23 @@ export default function MyProfile() {
     e.preventDefault();
     setIsLoading(true);
     const { address_, city, country, postcode } = formData;
+    if (!phone) {
+      toast({
+        title: "Error",
+        description: "Phone number is required",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    const id = localStorage.getItem(DEVICE_ID);
     await axios
       .put(
         `${process.env.API_URL}customers/me`,
         {
           gender: "male",
           avatar: "profileImage",
+          phone,
           address: {
             address_,
             city,
@@ -47,7 +59,7 @@ export default function MyProfile() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            "device-id": `29a1df4646cb3417c19994a59a3e022a`,
+            "device-id": id ?? `29a1df4646cb3417c19994a59a3e022a`,
           },
         }
       )
@@ -69,20 +81,33 @@ export default function MyProfile() {
     setIsLoading(false);
   };
 
-
-
-  useEffect(()=>{
+  useEffect(() => {
     setFormData({
       address_: user?.address?.address_,
       city: user?.address?.city,
       country: user?.address?.country,
       postcode: user?.address?.postcode,
-    })
-  }, [ user ])
+    });
+  }, [user]);
   return (
     <SidebarHOC isBack title="My Profile">
       <div className="w-full">
-        <form name="edit_profile_form" onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
+        <form
+          name="edit_profile_form"
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col gap-6"
+        >
+          <div>
+            <label>Phone number</label>
+            <Input
+              className="bg-[#F2F4F7] rounded-[0.75rem] h-[3rem]"
+              onChange={(e) => setPhone(e.target.value)}
+              type="tel"
+              value={phone}
+              placeholder="Enter your phone number"
+            />
+          </div>
+
           <div>
             <label>Address</label>
             <Input
@@ -132,9 +157,13 @@ export default function MyProfile() {
             />
           </div>
 
-        
-
-          <Button className="h-[3rem]" disabled={isLoading} title="Save changes" variant="primary" fullWidth />
+          <Button
+            className="h-[3rem]"
+            disabled={isLoading}
+            title="Save changes"
+            variant="primary"
+            fullWidth
+          />
         </form>
 
         <button

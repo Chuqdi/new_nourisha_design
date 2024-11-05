@@ -76,10 +76,11 @@ export interface IExtraItem {
 }
 export interface IOrder {
   _id: string;
-  items: { item: IMeal }[];
+  items: string[];
   delivery_address: { address_: string; city: string; country: string };
   subtotal: string;
   total: string;
+  status?:string;
   createdAt: string;
   updatedAt: string;
   delivery_date: string;

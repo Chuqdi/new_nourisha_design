@@ -36,7 +36,6 @@ const Option = ({
   useEffect(() => {
     if (data?.data?.data) {
       const ex = (isSwallow ?(data?.data?.data?.swallow?.data ?? []) :(data?.data?.data?.protein?.data ?? []))?.find((e: IExtraItem) => e._id === extra_id);
-      console.log(extra_id)
       setExtra(ex);
     }
   }, [data]);
@@ -74,7 +73,11 @@ function ExtraMealSelectionModal() {
   const { addExtraItem } = useFoodbox();
   const isMobile = useMediaQuery({ maxWidth:BREAKPOINT })
 
-  const [selectedExtras, setSelectedExtras] = useState<IExtraItem | undefined>(
+  const [selectedProteinExtras, setSelectedProteinExtras] = useState<IExtraItem | undefined>(
+    undefined
+  );
+
+  const [selectedSwallowExtras, setSelectedSwallowExtras] = useState<IExtraItem | undefined>(
     undefined
   );
 
@@ -121,8 +124,8 @@ function ExtraMealSelectionModal() {
                   key={extra}
                   extra_id={extra}
                   isSwallow
-                  selectedExtras={selectedExtras}
-                  setSelectedExtras={setSelectedExtras}
+                  selectedExtras={selectedSwallowExtras}
+                  setSelectedExtras={setSelectedSwallowExtras}
                 />
               ))}
             </div>
@@ -146,8 +149,8 @@ function ExtraMealSelectionModal() {
                   key={extra}
                   extra_id={extra}
                   isSwallow={false}
-                  selectedExtras={selectedExtras}
-                  setSelectedExtras={setSelectedExtras}
+                  selectedExtras={selectedProteinExtras}
+                  setSelectedExtras={setSelectedProteinExtras}
                 />
               ))}
             </div>
@@ -158,7 +161,7 @@ function ExtraMealSelectionModal() {
       <Button
         title="Select"
         onClick={() => {
-          addExtraItem(selectedExtras);
+          addExtraItem(selectedProteinExtras ?? selectedSwallowExtras);
           setExtraModal({ show: false, meal: undefined, day: undefined });
         }}
         variant="primary"

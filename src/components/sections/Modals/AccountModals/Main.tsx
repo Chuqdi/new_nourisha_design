@@ -49,7 +49,7 @@ export default function MainAccount() {
       ),
     },
     {
-      title: "Orders",
+      title: "Order History",
       onClick: () =>
         setSideModal({
           show: true,
@@ -78,17 +78,17 @@ export default function MainAccount() {
       ),
     },
 
-    {
-      title: "Address",
-      onClick: () => setSideModal({ show: true, component: <AddressBook /> }),
-      icon: (
-        <Icon
-          color="#FE7E00"
-          icon="hugeicons:location-03"
-          className="w-6 h-6"
-        />
-      ),
-    },
+    // {
+    //   title: "Address",
+    //   onClick: () => setSideModal({ show: true, component: <AddressBook /> }),
+    //   icon: (
+    //     <Icon
+    //       color="#FE7E00"
+    //       icon="hugeicons:location-03"
+    //       className="w-6 h-6"
+    //     />
+    //   ),
+    // },
     // {
     //   title: "Subscriptions",
     //   onClick: () => setSideModal({ show: true, component: <Subscription /> }),

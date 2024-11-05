@@ -24,12 +24,14 @@ const SinglePlan = ({
   index,
   setIsWeekend,
   setActiveOptionIndex,
+  onMealPlanClicked,
   option,
   onAfrican,
 }: {
   activeOptionIndex: number;
   index: number;
   setActiveOptionIndex: (value: number) => void;
+  onMealPlanClicked: (value: number) => void;
   option: IPlan;
   isWeekend: boolean;
   setIsWeekend: (value: boolean) => void;
@@ -41,7 +43,8 @@ const SinglePlan = ({
     <div
       onClick={(e) => {
         e.stopPropagation();
-        setActiveOptionIndex(index);
+        onMealPlanClicked(index);
+
         // setIsWeekend(false);
       }}
       className={`p-4 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer justify-between
@@ -87,7 +90,11 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   const router = useRouter();
   const [checkingSubstate, setCheckingSubstate] = useState(true);
   const { user } = useContext(UserContext);
-  const { data: deliveryData, isLoading: deliveryLoading, convertDateFormat } = useDeliveryDate();
+  const {
+    data: deliveryData,
+    isLoading: deliveryLoading,
+    convertDateFormat,
+  } = useDeliveryDate();
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
@@ -135,6 +142,14 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     );
   };
 
+  const onMealPlanClicked = (index: number) => {
+    if (index === activeOptionIndex) {
+      onContinue(options.find((o, i) => i === activeOptionIndex)!);
+    } else {
+      setActiveOptionIndex(index);
+    }
+  };
+
   const userAlreadyPaid = (plan: IPlan) => onContinue(plan);
 
   const checkSub = useCallback(async () => {
@@ -169,8 +184,6 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   useEffect(() => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);
-
-
 
   return (
     <>
@@ -214,6 +227,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
                   activeOptionIndex={activeOptionIndex}
                   setActiveOptionIndex={setActiveOptionIndex}
                   key={`meal_selection_${index}`}
+                  onMealPlanClicked={onMealPlanClicked}
                 />
               );
             })}
