@@ -69,7 +69,7 @@ function SingleListItem({ order }: { order: IOrder }) {
           </div>
           <div className="flex flex-col justify-end items-end">
             <p className="text-475569 text-base font-bold font-PlusSan">
-              ${order.total}
+            £{order.total}
             </p>
             <div className={`text-[0.75rem]  font-semibold  p-2 rounded-md ${isProcessing?'bg-[#ffa6002d] text-primary-main':'bg-[#1b881b] text-white'}`}>
               {
@@ -88,7 +88,7 @@ function SingleListItem({ order }: { order: IOrder }) {
 }
 
 export default function Order() {
-  const [activeCategory, setActiveCategory] = useState<"OPEN" | "CLOSED">(
+  const [activeCategory, setActiveCategory] = useState<"OPEN" | "CLOSED" |"MEALPLAN">(
     "OPEN"
   );
   const { getAxiosClient } = useAuth();
@@ -101,25 +101,38 @@ export default function Order() {
 
     return axiosClient.get(
       activeCategory === "CLOSED"
-        ? "orders/closed/orders/history"
-        : "orders/open/orders/history"
+        ? "orders/closed/orders":
+        activeCategory === "MEALPLAN"
+        ?""
+        : "orders/open/orders"
     );
   };
-  const { data, isLoading, refetch } = useQuery(
+  const { data, isLoading,  } = useQuery(
     [queryKeys.GET_ORDERS, activeCategory],
     getOrders,
-    { enabled: false }
   );
 
   useEffect(() => {
-    if (window && window.localStorage && localStorage) {
-      refetch();
+    console.log(data?.data?.data)
+    if (data?.data?.data) {
+      // setOrders(data.data.data);
     }
-  }, []);
+  }, [data?.data]);
+
+ 
 
   return (
     <SidebarHOC isBack title="Orders">
       <div className="bg-[#F5F5F5] h-[2.5rem] flex p-1 justify-between">
+      <div
+          onClick={() => setActiveCategory("MEALPLAN")}
+          className={`flex-1 flex justify-center items-center text-center text-[#081E4B] cursor-pointer ${
+            activeCategory === "MEALPLAN" ? "bg-white" : "bg-transparent"
+          }`}
+        >
+          Meal plan
+        </div>
+
         <div
           onClick={() => setActiveCategory("OPEN")}
           className={`flex-1 flex justify-center items-center text-center text-[#081E4B] cursor-pointer ${

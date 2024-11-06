@@ -388,7 +388,7 @@ export default function Main() {
 
   const prepareMealForBE = () => {
     let returnValue = {delivery_date}
-    const value = DAYS_OF_THE_WEEK.forEach((week) => {
+    DAYS_OF_THE_WEEK.forEach((week) => {
       if (boxStore) {
         //@ts-ignore
         const activeDayBox = boxStore[week];
