@@ -1,6 +1,7 @@
 import {
   ICartDetail,
   ICartItem,
+  IExtraItem,
   IFoodBox,
   IFoodBoxDayType,
   ILocalCartItem,
@@ -43,10 +44,12 @@ export const showMealExtraSelection: {
   show: boolean;
   meal?: IMeal;
   day: IFoodBoxDayType | undefined;
+  onContinue:( proteinId:string, extraId:string, protein?:IExtraItem, swallow?:IExtraItem, )=>void;
 } = {
   show: false,
   meal: {} as IMeal,
   day: undefined,
+  onContinue:(proteinId, extraId )=>{}
 };
 export const paymentModal: {
   show: boolean;

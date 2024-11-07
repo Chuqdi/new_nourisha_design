@@ -1,6 +1,7 @@
 import { COUNTRIES } from "@/config";
 import {
   ICartItem,
+  IExtraItem,
   IFoodBox,
   IFoodBoxDayType,
   ILocalCartItem,
@@ -14,9 +15,9 @@ import useLocalCart from "@/hooks/useLocalCart";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 
 export const CartManipulator = ({
   meal,
@@ -29,7 +30,8 @@ export const CartManipulator = ({
   small?: boolean;
   activeCountry?: string;
 }) => {
-  const { addItemToCart, removeItemFrommCart } = useCart();
+  const { addItemToCart, removeItemFrommCart, checkMealExistsInCart } =
+    useCart();
   const { user } = useContext(UserContext);
   const router = useRouter();
   const pathName = usePathname();
@@ -38,7 +40,10 @@ export const CartManipulator = ({
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
-  const onUpdateCart = (c: () => void, isExceededQuantity?: boolean) => {
+  const onUpdateCart = (
+    c: (proteinId?: string, extraId?: string) => void,
+    isExceededQuantity?: boolean
+  ) => {
     if (
       activeCountry?.toUpperCase() === "Asia".toUpperCase() &&
       pathName !== "/food_box"
@@ -46,17 +51,21 @@ export const CartManipulator = ({
       router.push("/meal_plans?onAsian=1");
       return;
     }
+
     if (user?.email) {
-      c();
-      if (meal?.isProtein || meal?.isSwallow) {
+      const mealExists = checkMealExistsInCart(meal);
+      if ((meal?.isProtein || meal?.isSwallow) && !mealExists) {
         !isExceededQuantity &&
-          setTimeout(() => {
-            setMealExtraModal({
-              meal,
-              day: undefined,
-              show: true,
-            });
-          }, 4000);
+          setMealExtraModal({
+            meal,
+            onContinue: (proteinId: string, extraId: string) => {
+              c(proteinId, extraId);
+            },
+            day: undefined,
+            show: true,
+          });
+      } else {
+        c();
       }
     } else {
       toast({
@@ -77,6 +86,7 @@ export const CartManipulator = ({
           meal,
           day: undefined,
           show: true,
+          onContinue: (proteinId: string, extraId: string) => {},
         });
     }
   };
@@ -110,7 +120,8 @@ export const CartManipulator = ({
         onClick={() => {
           isLoggedIn
             ? onUpdateCart(
-                () => addItemToCart(meal, 1, item?.quantity),
+                (proteinId, extraId) =>
+                  addItemToCart(meal, 1, item?.quantity, proteinId, extraId),
                 item?.quantity + 1 > parseInt(item?.item?.available_quantity!)
               )
             : addMealLocally(
@@ -153,6 +164,9 @@ export default function SingleCartItemSection({
   const pathName = usePathname();
   const { getCartItem } = useLocalCart();
   const { user } = useContext(UserContext);
+  const [mealExtraSelection, setMealExtraSelection] = useAtom(
+    ATOMS.mealExtraSelection
+  );
   const localCartItem = useAtomValue(ATOMS?.localCartItems);
 
   const activeDayBox = useMemo(() => {
@@ -185,6 +199,36 @@ export default function SingleCartItemSection({
 
     [cartItems, localCartItem]
   );
+
+  const addMealToFoodbox = () => {
+    if (meal?.isProtein || meal?.isSwallow) {
+      setMealExtraModal({
+        meal,
+        day: activeWeek,
+        show: true,
+        onContinue: (
+          proteinId: string,
+          extraId: string,
+          protein?: IExtraItem,
+          swallow?: IExtraItem
+        ) => {
+          addFoodBox(activeWeek!, meal!);
+          setMealExtraSelection([
+            ...mealExtraSelection,
+            {
+              day: activeWeek,
+              extra: swallow,
+              meal,
+              protein,
+            },
+          ]);
+        },
+      });
+    }
+    const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
+    if (bothSelected?.isFirstMealAlreadySelected)
+      goToNextWeek && goToNextWeek();
+  };
 
   return (
     <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
@@ -234,19 +278,7 @@ export default function SingleCartItemSection({
             </button>
             <div className="flex flex-col items-center gap-2">
               <button
-                onClick={() => {
-                  addFoodBox(activeWeek!, meal!);
-                  if (meal?.isProtein || meal?.isSwallow) {
-                    setMealExtraModal({
-                      meal,
-                      day: activeWeek,
-                      show: true,
-                    });
-                  }
-                  const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
-                  if (bothSelected?.isFirstMealAlreadySelected)
-                    goToNextWeek && goToNextWeek();
-                }}
+                onClick={addMealToFoodbox}
                 className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
               >
                 <Icon

@@ -166,11 +166,13 @@ export interface IFoodBox {
   day: IFoodBoxDayType;
   meals: IFoodBoxItem;
   extra?: IExtraItem;
+  protein?:IExtraItem;
 }
 
 export interface IStoredExtraType {
   meal?: IMeal;
   extra?: IExtraItem;
+  protein?:IExtraItem;
   day?: IFoodBoxDayType;
 }
 

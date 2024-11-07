@@ -20,7 +20,7 @@ const Option = ({
   extra_id?: string;
   setSelectedExtras: (value: IExtraItem | undefined) => void;
   selectedExtras: IExtraItem | undefined;
-  isSwallow:boolean
+  isSwallow: boolean;
 }) => {
   const id = localStorage.getItem(DEVICE_ID);
   const { getAxiosClient } = useAuth();
@@ -35,7 +35,11 @@ const Option = ({
 
   useEffect(() => {
     if (data?.data?.data) {
-      const ex = (isSwallow ?(data?.data?.data?.swallow?.data ?? []) :(data?.data?.data?.protein?.data ?? []))?.find((e: IExtraItem) => e._id === extra_id);
+      const ex = (
+        isSwallow
+          ? data?.data?.data?.swallow?.data ?? []
+          : data?.data?.data?.protein?.data ?? []
+      )?.find((e: IExtraItem) => e._id === extra_id);
       setExtra(ex);
     }
   }, [data]);
@@ -47,46 +51,78 @@ const Option = ({
   return isLoading ? (
     <p className="text-center">Loading...</p>
   ) : (
-  extra?.name &&  <div
-  onClick={() => {
-    setSelectedExtras(selected ? undefined : extra);
-  }}
-  className={`w-full p-4 rounded-[0.75rem] border-[2px] z-0 ${
-    selected ? "border-[#FE7E00]" : "border-[#EDEDF3]"
-  } flex justify-between items-center`}
->
-  <p className="text-black-900 font-inter text-sm ">{extra?.name}</p>
-  {selected ? (
-    <div className="bg-[#FE7E00] rounded-full w-6 h-6 flex justify-center items-center">
-      <Icon className="w-4 h-4" color="#fff" icon="ic:sharp-check" />
-    </div>
-  ) : (
-    <button className="bg-[#FFEAD6] w-6 h-w-6 flex justify-center items-center text-[#FE7E00] rounded-full font-bold">
-      +
-    </button>
-  )}
-</div>
+    extra?.name && (
+      <div
+        onClick={() => {
+          setSelectedExtras(selected ? undefined : extra);
+        }}
+        className={`w-full p-4 rounded-[0.75rem] border-[2px] z-0 ${
+          selected ? "border-[#FE7E00]" : "border-[#EDEDF3]"
+        } flex justify-between items-center`}
+      >
+        <p className="text-black-900 font-inter text-sm ">{extra?.name}</p>
+        {selected ? (
+          <div className="bg-[#FE7E00] rounded-full w-6 h-6 flex justify-center items-center">
+            <Icon className="w-4 h-4" color="#fff" icon="ic:sharp-check" />
+          </div>
+        ) : (
+          <button className="bg-[#FFEAD6] w-6 h-w-6 flex justify-center items-center text-[#FE7E00] rounded-full font-bold">
+            +
+          </button>
+        )}
+      </div>
+    )
   );
 };
 function ExtraMealSelectionModal() {
   const [extraModal, setExtraModal] = useAtom(ATOMS.showMealExtraSelection);
   const { addExtraItem } = useFoodbox();
-  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT })
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
 
-  const [selectedProteinExtras, setSelectedProteinExtras] = useState<IExtraItem | undefined>(
-    undefined
-  );
+  const [selectedProteinExtras, setSelectedProteinExtras] = useState<
+    IExtraItem | undefined
+  >(undefined);
 
-  const [selectedSwallowExtras, setSelectedSwallowExtras] = useState<IExtraItem | undefined>(
-    undefined
-  );
+  const [selectedSwallowExtras, setSelectedSwallowExtras] = useState<
+    IExtraItem | undefined
+  >(undefined);
+
+  const onContinue = () => {
+    if ((extraModal?.meal?.isSwallow && !selectedSwallowExtras?._id) || (extraModal?.meal?.isProtein && !selectedProteinExtras?._id)) {
+      alert("Please select both protein and swallow extras");
+      return;
+    }
+    addExtraItem(selectedSwallowExtras, selectedProteinExtras);
+
+    extraModal.onContinue(
+      selectedProteinExtras?._id!,
+      selectedSwallowExtras?._id!,
+      selectedProteinExtras,
+      selectedSwallowExtras,
+    );
+    setExtraModal({
+      show: false,
+      meal: undefined,
+      day: undefined,
+      onContinue: () => {},
+    });
+  };
 
   return (
-    <div className={`z-[999999999999999999] w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll ${isMobile && 'pb-[20rem]'}`}>
+    <div
+      className={`z-[999999999999999999] w-full bg-white flex flex-col  py-8 px-3 h-[100vh] overflow-y-scroll ${
+        isMobile && "pb-[20rem]"
+      }`}
+    >
       <div className="h-[30rem] w-full relative">
         <div
           onClick={() =>
-            setExtraModal({ show: false, meal: undefined, day: undefined })
+            setExtraModal({
+              show: false,
+              meal: undefined,
+              day: undefined,
+              onContinue: () => {},
+            })
           }
           className="cursor-pointer w-6 h-6 justify-center flex rounded-full items-center bg-black absolute right-4 top-4 "
         >
@@ -160,10 +196,7 @@ function ExtraMealSelectionModal() {
 
       <Button
         title="Select"
-        onClick={() => {
-          addExtraItem(selectedProteinExtras ?? selectedSwallowExtras);
-          setExtraModal({ show: false, meal: undefined, day: undefined });
-        }}
+        onClick={onContinue}
         variant="primary"
         className="py-6 h-[2.75rem] mt-4"
       />

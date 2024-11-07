@@ -1,19 +1,16 @@
-import {
-  IExtraItem,
-  IFoodBoxDayType,
-  IMeal,
-  IStoredExtraType,
-} from "@/config/types";
+import { DAYS_OF_THE_WEEK } from "@/config";
+import { IExtraItem, IFoodBoxDayType, IMeal } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
 
 export default function () {
   const box = localStorage.getItem(FOOD_BOX_STORE);
-  const [boxStore, setBoxStore] = useAtom(ATOMS.foodBox);
+  const [boxStore,setBoxStore] = useAtom(ATOMS.foodBox);
+
   const [mealExtraSelection, setMealExtraSelection] = useAtom(
     ATOMS.mealExtraSelection
   );
@@ -27,7 +24,12 @@ export default function () {
     const fdBoxExtra = localStorage.getItem(MEAL_EXTRA_STORE);
     setMealExtraSelection(fdBoxExtra ? JSON.parse(fdBoxExtra) : {});
   };
-  const addFoodBox = (day: IFoodBoxDayType, meal: IMeal) => {
+  const addFoodBox = (
+    day: IFoodBoxDayType,
+    meal: IMeal,
+    proteinId?: string,
+    extraId?: string
+  ) => {
     let foodBox;
     if (box) {
       foodBox = JSON.parse(box);
@@ -88,12 +90,13 @@ export default function () {
     setBoxStore(foodBox);
   };
 
-  const addExtraItem = (extra?: IExtraItem) => {
+  const addExtraItem = (extra?: IExtraItem, protein?: IExtraItem) => {
     const { meal, day } = showMealExtraSelection;
     const mealExtra = {
       meal,
       extra,
       day,
+      protein,
     };
     const extraStore = localStorage.getItem(MEAL_EXTRA_STORE);
     if (extraStore) {
@@ -107,7 +110,7 @@ export default function () {
     }
   };
 
-  const checkIfBothMealsAreSelected =(day:IFoodBoxDayType)=>{
+  const checkIfBothMealsAreSelected = (day: IFoodBoxDayType) => {
     let foodBox;
     if (box) {
       foodBox = JSON.parse(box);
@@ -132,26 +135,70 @@ export default function () {
     const isFirstMealAlreadySelected = foodBox[day].meals["first_meal"];
     const isSecondMealAlreadySelected = foodBox[day].meals["last_meal"];
     return {
-      isFirstMealAlreadySelected:!!isFirstMealAlreadySelected,
-      isSecondMealAlreadySelected:!!isSecondMealAlreadySelected,
+      isFirstMealAlreadySelected: !!isFirstMealAlreadySelected,
+      isSecondMealAlreadySelected: !!isSecondMealAlreadySelected,
     };
-
-
-  }
+  };
 
   const getMealExtraFromMealAndDay = (meal: IMeal, day: IFoodBoxDayType) => {
     if (mealExtraSelection && !!mealExtraSelection?.length) {
-      const storedExtra =mealExtraSelection;
-      const selectedExtra = (storedExtra??[])?.find((item) => {
+      const storedExtra = mealExtraSelection;
+      const selectedExtra = (storedExtra ?? [])?.find((item) => {
         return item?.meal?._id === meal?._id && day === item?.day;
       });
       return selectedExtra;
     }
   };
 
+
   const emptyBox = () => {
     setBoxStore(null);
     localStorage.removeItem(FOOD_BOX_STORE);
+  };
+
+
+  const prepareMealForBE = (delivery_date:string) => {
+    let returnValue = {delivery_date}
+    DAYS_OF_THE_WEEK.forEach((week) => {
+      if (boxStore) {
+        //@ts-ignore
+        const activeDayBox = boxStore[week];
+        const meals = activeDayBox?.meals as {
+          first_meal: IMeal;
+          last_meal: IMeal;
+        };
+        const firstSelectedExtra = getMealExtraFromMealAndDay(
+          meals?.first_meal,
+          week as IFoodBoxDayType
+        );
+
+        const secondSelectedExtra = getMealExtraFromMealAndDay(
+          meals?.last_meal,
+          week as IFoodBoxDayType
+        );
+
+
+
+        //@ts-ignore
+        returnValue[week?.toLowerCase()] =  {
+          lunch: {
+            mealId: meals?.first_meal?._id,
+            extraId: firstSelectedExtra?.extra?._id,
+            proteinId: firstSelectedExtra?.protein?._id,
+          },
+          dinner: {
+            mealId: meals?.last_meal?._id,
+            extraId: secondSelectedExtra?.extra?._id,
+            proteinId: secondSelectedExtra?.protein?._id,
+          },
+        }
+
+        
+      }
+
+      return undefined;
+    });
+    return returnValue;
   };
 
   return {
@@ -163,5 +210,6 @@ export default function () {
     addExtraItem,
     getMealExtraFromMealAndDay,
     checkIfBothMealsAreSelected,
+    prepareMealForBE
   };
 }

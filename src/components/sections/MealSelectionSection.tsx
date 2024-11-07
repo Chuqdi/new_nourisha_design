@@ -3,7 +3,7 @@
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import { BREAKPOINT, CONTINENTS } from "@/config";
 import queryKeys from "@/config/queryKeys";
-import { ICartItem, IMeal, IUser } from "@/config/types";
+import { ICartItem, IMeal } from "@/config/types";
 import useFetch from "@/hooks/useFetch";
 import useUnAuthRequest from "@/hooks/useUnAuthRequest";
 import { Icon } from "@iconify/react/dist/iconify.js";

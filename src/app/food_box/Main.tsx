@@ -11,8 +11,6 @@ import queryKeys from "@/config/queryKeys";
 import { LAST_FOOD_BOX_CONTINENNT } from "@/config/storageKeys";
 import { IFoodBox, IFoodBoxDayType, IMeal } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
-import { sendGAEvent } from "@next/third-parties/google";
-
 import useFetch from "@/hooks/useFetch";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useFoodbox from "@/hooks/useFoodbox";
@@ -338,6 +336,7 @@ export default function Main() {
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
   const { user } = useContext(UserContext);
+  const { prepareMealForBE } = useFoodbox();
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
@@ -386,55 +385,58 @@ export default function Main() {
     return count;
   }, [boxStore]);
 
-  const prepareMealForBE = () => {
-    let returnValue = {delivery_date}
-    DAYS_OF_THE_WEEK.forEach((week) => {
-      if (boxStore) {
-        //@ts-ignore
-        const activeDayBox = boxStore[week];
-        const meals = activeDayBox?.meals as {
-          first_meal: IMeal;
-          last_meal: IMeal;
-        };
-        const firstSelectedExtra = getMealExtraFromMealAndDay(
-          meals?.first_meal,
-          week as IFoodBoxDayType
-        );
+  // const prepareMealForBE = () => {
+  //   let returnValue = {delivery_date}
+  //   DAYS_OF_THE_WEEK.forEach((week) => {
+  //     if (boxStore) {
+  //       //@ts-ignore
+  //       const activeDayBox = boxStore[week];
+  //       const meals = activeDayBox?.meals as {
+  //         first_meal: IMeal;
+  //         last_meal: IMeal;
+  //       };
+  //       const firstSelectedExtra = getMealExtraFromMealAndDay(
+  //         meals?.first_meal,
+  //         week as IFoodBoxDayType
+  //       );
 
-        const secondSelectedExtra = getMealExtraFromMealAndDay(
-          meals?.last_meal,
-          week as IFoodBoxDayType
-        );
-        //@ts-ignore
-        returnValue[week?.toLowerCase()] =  {
-          lunch: {
-            mealId: meals?.first_meal?._id,
-            extraId: firstSelectedExtra?.extra?._id,
-          },
-          dinner: {
-            mealId: meals?.last_meal?._id,
-            extraId: secondSelectedExtra?.extra?._id,
-          },
-        }
+  //       const secondSelectedExtra = getMealExtraFromMealAndDay(
+  //         meals?.last_meal,
+  //         week as IFoodBoxDayType
+  //       );
 
-        // return {
-        //   [week?.toLowerCase()]: {
-        //     lunch: {
-        //       mealId: meals?.first_meal?._id,
-        //       extraId: firstSelectedExtra?.extra?._id,
-        //     },
-        //     dinner: {
-        //       mealId: meals?.last_meal?._id,
-        //       extraId: secondSelectedExtra?.extra?._id,
-        //     },
-        //   },
-        // };
-      }
+  //       //@ts-ignore
+  //       returnValue[week?.toLowerCase()] =  {
+  //         lunch: {
+  //           mealId: meals?.first_meal?._id,
+  //           extraId: firstSelectedExtra?.extra?._id,
+  //           proteinId: firstSelectedExtra?.protein?._id,
+  //         },
+  //         dinner: {
+  //           mealId: meals?.last_meal?._id,
+  //           extraId: secondSelectedExtra?.extra?._id,
+  //           proteinId: secondSelectedExtra?.protein?._id,
+  //         },
+  //       }
 
-      return undefined;
-    });
-    return returnValue;
-  };
+  //       // return {
+  //       //   [week?.toLowerCase()]: {
+  //       //     lunch: {
+  //       //       mealId: meals?.first_meal?._id,
+  //       //       extraId: firstSelectedExtra?.extra?._id,
+  //       //     },
+  //       //     dinner: {
+  //       //       mealId: meals?.last_meal?._id,
+  //       //       extraId: secondSelectedExtra?.extra?._id,
+  //       //     },
+  //       //   },
+  //       // };
+  //     }
+
+  //     return undefined;
+  //   });
+  //   return returnValue;
+  // };
 
   const initializePayment = () => {
     let data = {
@@ -444,10 +446,7 @@ export default function Main() {
     setPaymentModal({
       show: true,
       amount: total,
-      gtagEvent: (clientSecret) => {
-
- 
-      },
+      gtagEvent: (clientSecret) => {},
       onContinue: async () => {
         let return_url,
           clientSecret = "";
@@ -461,21 +460,23 @@ export default function Main() {
             clientSecret = response?.data?.data?.client_secret;
           });
 
-          const gtagEvent = {
-            transaction_id: clientSecret,
-            value: amount,
-            tax: null,
-            shipping: null,
-            currency: "gbp",
-            coupon,
-            plan: plan_id,
-            customer_details: user,
-          };
-          const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(gtagEvent)}&show_payment_modal=1`
+        const gtagEvent = {
+          transaction_id: clientSecret,
+          value: amount,
+          tax: null,
+          shipping: null,
+          currency: "gbp",
+          coupon,
+          plan: plan_id,
+          customer_details: user,
+        };
+        const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(
+          gtagEvent
+        )}&show_payment_modal=1`;
 
         return {
           clientSecret,
-          returnUrl:rUrl,
+          returnUrl: rUrl,
         };
       },
     });
@@ -484,7 +485,6 @@ export default function Main() {
   const createLineUp = async () => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -515,7 +515,7 @@ export default function Main() {
       });
 
     if (continueProcess.current) {
-      const data = prepareMealForBE();
+      const data = prepareMealForBE(delivery_date);
 
       axiosClient
         .post(`lineups/web`, {

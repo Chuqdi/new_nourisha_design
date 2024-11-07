@@ -24,7 +24,7 @@ export const UserContext = createContext<{
 function UserContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [userFound, setUserFound] = useState(false);
+  // const [userFound, setUserFound] = useState(false);
   const { getAxiosClient } = useAuth();
   // const setloggedInUser = useSetAtom(ATOMS.loggedInUser);
 
@@ -67,18 +67,18 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isError]);
 
-  useEffect(() => {
-    const s = localStorage.getItem(LOGGED_IN_USER) ?? "";
-    if (!!s) {
-      const localUser = JSON.parse(s);
-      if (localUser?.email) {
-        setUser(localUser);
-        setUserFound(true);
-      } else {
-        setUser(undefined);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const s = localStorage.getItem(LOGGED_IN_USER) ?? "";
+  //   if (!!s) {
+  //     const localUser = JSON.parse(s);
+  //     if (localUser?.email) {
+  //       setUser(localUser);
+  //       setUserFound(true);
+  //     } else {
+  //       setUser(undefined);
+  //     }
+  //   }
+  // }, []);
   return (
     <UserContext.Provider value={{ user, setUser, isLoading }}>
       <div className="flex-1 w-full">
@@ -93,7 +93,8 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
             close={() => setShowLoginModal(false)}
           />
         </Modal>
-        {!userFound && isLoading ? (
+        {/* !userFound && */}
+        { isLoading ? (
           <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
             <div className="animate-pulse">
               <img

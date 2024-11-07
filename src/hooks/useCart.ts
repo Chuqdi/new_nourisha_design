@@ -110,18 +110,24 @@ const useCart = () => {
       ...showCartSideModal,
       show: true,
     });
-
   };
 
-  const addItemToCart = async (item: IMeal, quantity: number, currentQuantity:number) => {
-
-    if((currentQuantity+quantity) > parseInt(item?.available_quantity!)){
+  const addItemToCart = async (
+    item: IMeal,
+    quantity: number,
+    currentQuantity: number,
+    proteinId?: string,
+    extraId?: string
+  ) => {
+    if (currentQuantity + quantity > parseInt(item?.available_quantity!)) {
       alert("Item available quantity exceeded");
       return;
     }
     const data = {
       itemId: item?._id,
       quantity,
+      proteinId: proteinId ?? "",
+      extraId: extraId ?? "",
     };
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
@@ -144,6 +150,9 @@ const useCart = () => {
     });
   };
 
+  const checkMealExistsInCart = (item: IMeal) => 
+    cartItems?.some((c) => c?.item?._id === item?._id);
+
   const returnValue = useMemo(() => {
     return {
       addItemToCart,
@@ -153,6 +162,7 @@ const useCart = () => {
       updateItemBE,
       removeItemFrommCart,
       emptyCart,
+      checkMealExistsInCart
     };
   }, [cartItems]);
   return returnValue;
