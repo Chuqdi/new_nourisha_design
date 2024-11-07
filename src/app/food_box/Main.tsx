@@ -599,6 +599,10 @@ export default function Main() {
     !!coupon.length && discountEvent(total);
   }, [coupon]);
 
+  useEffect(()=>{
+    emptyBox()
+  }, [])
+
   return (
     <div className="w-full h-full relative pt-6">
       <Navbar />

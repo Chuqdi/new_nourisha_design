@@ -214,7 +214,6 @@ export default function SingleCartItemSection({
         ) => {
           addFoodBox(activeWeek!, meal!);
           setMealExtraSelection([
-            ...mealExtraSelection,
             {
               day: activeWeek,
               extra: swallow,
@@ -224,6 +223,8 @@ export default function SingleCartItemSection({
           ]);
         },
       });
+    }else{
+      addFoodBox(activeWeek!, meal!);
     }
     const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
     if (bothSelected?.isFirstMealAlreadySelected)
