@@ -166,13 +166,13 @@ export interface IFoodBox {
   day: IFoodBoxDayType;
   meals: IFoodBoxItem;
   extra?: IExtraItem;
-  protein?:IExtraItem;
+  protein?: IExtraItem;
 }
 
 export interface IStoredExtraType {
   meal?: IMeal;
   extra?: IExtraItem;
-  protein?:IExtraItem;
+  protein?: IExtraItem;
   day?: IFoodBoxDayType;
 }
 
@@ -180,4 +180,29 @@ export interface ILocalCartItem {
   item: IMeal;
   quantity: number;
   extra: IExtraItem;
+}
+
+export interface ILineUpItem {
+  createdAt?: string;
+  delivery_date?: string;
+  week:1|2;
+  plan:IPlan;
+  status:string;
+  in_week:boolean;
+  delivery_status:string;
+  tuesday: {
+    dinner: {
+      mealId: IMeal;
+    };
+  };
+  saturday: {
+    dinner: {
+      mealId: IMeal;
+    };
+  };
+  monday: {
+    dinner: {
+      mealId: IMeal;
+    };
+  };
 }
