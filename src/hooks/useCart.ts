@@ -127,7 +127,7 @@ const useCart = () => {
       itemId: item?._id,
       quantity,
       proteinId: proteinId ?? "",
-      extraId: extraId ?? "",
+      swallowId: extraId ?? "",
     };
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
