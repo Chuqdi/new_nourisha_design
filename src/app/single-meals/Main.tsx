@@ -21,9 +21,9 @@ export default function Main() {
       >
         <Navbar />
         <div className="flex flex-col gap-6 mt-32">
-          <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
+          <h1 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
             Single Meal Orders
-          </h3>
+          </h1>
 
           <p className="text-black-900 font-inter text-lg text-center w-4/5 md:w-2/5 mx-auto">
             Craving something specific? Order single meals and satisfy your

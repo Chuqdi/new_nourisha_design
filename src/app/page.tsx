@@ -114,11 +114,12 @@ export default function Main() {
   return (
     <>
       <title>
-        Nourisha: UK's No.1 African Meal Prep, Meal Plans & Delivery services
+        Nourisha: UK’s No.1 African, Asian and European Meal Prep & Delivery
       </title>
       <meta
         name="description"
-        content="Nourisha is the UK's No.1 African Meal Prep, Meal Plans & Delivery services. Our team of chefs, delivery drivers, and customer service experts provide top-notch meal preparation, meal plans, and delivery services."
+        content="Nourisha is the UK's No.1 African, Asian and European Meal Prep, Meal Plans & Delivery services. Our team of chefs, delivery drivers, and customer service experts provide top-notch meal
+"
       />
 
       <div
@@ -152,9 +153,9 @@ export default function Main() {
         <div className="flex flex-col-reverse md:flex-row my-32 mt-2 mb-8 md:mb-32 items-center md:items-start">
           <div className="w-full   p-2  md:p-0 md:ml-[2rem] flex flex-col gap-5">
             <div>
-              <h2 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[3.5rem] md:tracking-[-0.135rem]">
+              <h1 className="text-[#030517] font-NewSpiritBold text-[2.5rem] md:text-[3.5rem] md:tracking-[-0.135rem]">
                 Savour the Flavours with Nourisha
-              </h2>
+              </h1>
               <p className="text-black-900 tracking-[-0.01688rem] leading-[1.6875rem] font-inter font-[500] text-lg mt-3 md:mt-0 w-full md:w-[93%]">
                 Allow yourself to explore your culinary desires and fully
                 immerse in the excitement of authentic African, Asian and

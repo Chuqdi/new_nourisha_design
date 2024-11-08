@@ -141,12 +141,12 @@ export default function Main() {
         <div className="mx-1.25 md:mx-6.25 flex flex-col gap-8 mt-32">
           <MessageBtn title="ABOUT US" />
           <div className="w-full md:w-4/5 mx-auto">
-            <h4 className="text-[#7DB83A] text-center font-NewSpiritBold text-[2rem] md:text-[4rem] ">
-              We're happy to do the cooking
-            </h4>
+            <h1 className="text-[#7DB83A] text-center font-NewSpiritBold text-[2rem] md:text-[4rem] ">
+              We're happy to do the cooking
+            </h1>
             <p className="text-black-900 text-center font-inter text-base">
-              Look, we know you’re busy, and even with the best intentions, you
-              don’t always eat right. That’s why we deliver freshly prepared
+              Look, we know you&apos;re busy, and even with the best intentions, you
+              don&apos;t always eat right. That&apos;s why we deliver freshly prepared
               food. And we only use the freshest, locally-sourced ingredients
               that help support local farmers and suppliers
             </p>
@@ -196,14 +196,14 @@ export default function Main() {
             <img src="/images/our_mission.png" />
           )}
           <p className="text-center font-bold text-[1.5rem] md:text-[2rem] font-NewSpiritBold mt-4">
-            Your meals right on schedule. But there’s more:
+            Your meals right on schedule. But there&apos;s more:
           </p>
         </div>
 
         <div className="mx-2.5 md:mx-6.25 bg-[#FFF8E7] rounded-[2rem] flex flex-col md:flex-row  items-center justify-center p-4 md:p-10 gap-8">
           <div className="flex flex-col gap-3 p-0 md:p-8">
             <h3 className="font-NewSpiritBold text-base md:text-7xl text-black">
-              We’re promise keepers.
+              We&apos;re promise keepers.
             </h3>
             <p className="font-inter text-[1.25rem] text-[#030517]">
               Save time, eat better, be healthier. With Nourisha, it's never

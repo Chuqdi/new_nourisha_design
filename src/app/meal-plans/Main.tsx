@@ -192,7 +192,8 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       </title>
       <meta
         name="description"
-        content="Discover a wide range of freshly-cooked Nigerian, African, Asian and European meal plans from NOURISHA- Meal prep & food delivery service in the UK. Lunch & Dinner  meals delivered from less than £100/week . Choose your meals and order now."
+        content="Discover a wide range of African, Asian and European meal plans from NOURISHA- Meal prep & delivery in the UK.  Get meals for up to 7days , starting form £80/week . Choose your meals and order now.
+"
       />
       <div className="mx-1.25 md:mx-[2rem] my-6">
         {isLoading && (
@@ -287,9 +288,9 @@ export default function MealPlan() {
         />
       </Modal>
       <div className="flex flex-col gap-6 mt-32">
-        <h3 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
+        <h1 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Meal Plans
-        </h3>
+        </h1>
         <h4 className="text-center font-NewSpiritBold text-black-900 text-[2rem] mx-auto w-4/5 md:w-full md:text-[3.5rem]">
           Select your custom meal plan
         </h4>
