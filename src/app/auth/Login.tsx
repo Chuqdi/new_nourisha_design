@@ -1,9 +1,8 @@
 import Input from "@/components/ui/Input";
 import Link from "next/link";
 
-export default function Login({ formikObj }: {formikObj:any} ) {
-  const { values, errors,  handleChange,  } = formikObj;
- 
+export default function Login({ formikObj }: { formikObj: any }) {
+  const { values, errors, handleChange } = formikObj;
 
   return (
     <div className="flex flex-col gap-6">
@@ -15,9 +14,7 @@ export default function Login({ formikObj }: {formikObj:any} ) {
           onChange={handleChange("email")}
           placeholder="Enter your email address"
         />
-        {errors.email  && (
-          <p className="error_text">{errors.email}</p>
-        )}
+        {errors.email && <p className="error_text">{errors.email}</p>}
       </div>
 
       <div>
@@ -29,17 +26,15 @@ export default function Login({ formikObj }: {formikObj:any} ) {
           placeholder="Enter your password"
           isPassword
         />
-        {errors.password && (
-          <p className="error_text">{errors.password}</p>
-        )}
+        {errors.password && <p className="error_text">{errors.password}</p>}
       </div>
 
-       <Link
+      <Link
         className="underline text-black-900 font-inter text-base font-semibold"
-        href="/forgot_password"
+        href="/forgot-password"
       >
         Forgot Password?
-      </Link> 
+      </Link>
     </div>
   );
 }

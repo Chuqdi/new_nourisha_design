@@ -65,7 +65,7 @@ export default function Main() {
       <br />
         Our weekly meal plan food box is delivered once a week and the monthly plan delivered once a week for a month.
         `,
-      onClick: () => router.push("/meal_plans"),
+      onClick: () => router.push("/meal-plans"),
       btnText: "Select a plan",
       image: "subscription.png",
     },
@@ -75,7 +75,7 @@ export default function Main() {
         <br />
         Order single meals and get your delivery within 24-48 hours.
         `,
-      onClick: () => router.push("/single_meals"),
+      onClick: () => router.push("/single-meals"),
       btnText: "Order now",
       image: "single.png",
     },
@@ -84,7 +84,7 @@ export default function Main() {
       text: "Bulk Meal Orders",
       description:
         "Hosting an event or just stocking up? Order in bulk and get large quantities of your favorite dishes. ",
-      onClick: () => router.push("/bulk_meals"),
+      onClick: () => router.push("/bulk-meals"),
       btnText: "Order now",
     },
   ];
@@ -113,7 +113,6 @@ export default function Main() {
 
   return (
     <>
-    
       <title>
         Nourisha: UK's No.1 African Meal Prep, Meal Plans & Delivery services
       </title>
@@ -165,7 +164,7 @@ export default function Main() {
             <div className="my-0 md:my-0">
               <Button
                 fullWidth={isMobile}
-                onClick={() => router.push("/meal_plans")}
+                onClick={() => router.push("/meal-plans")}
                 variant="primary"
                 title="Get started"
                 className="h-[2.75rem] rounded-[3rem]  py-8 md:py-6  font-bold font-inter "

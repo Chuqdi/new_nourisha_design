@@ -37,15 +37,17 @@ export default function SelectOrdertypeModalSection({
       ],
     },
   ];
-  const ismobile = useMediaQuery({ maxWidth:BREAKPOINT });
+  const ismobile = useMediaQuery({ maxWidth: BREAKPOINT });
   return (
     <div className="w-full bg-white rounded-[1rem] p-8 flex flex-col gap-8 mt-[30rem] md:mt-0 h-[40em]    overflow-y-scroll">
-
       <div className="flex justify-between items-center">
         <h4 className="text-[#323546] text-[2rem] md:text-[2.5rem] tracking-[-0.075rem] font-NewSpiritBold">
           Select an order type
         </h4>
-        <button onClick={close} className="p-2  flex justify-center items-center bg-[#EDEDF3] rounded-full">
+        <button
+          onClick={close}
+          className="p-2  flex justify-center items-center bg-[#EDEDF3] rounded-full"
+        >
           <Icon color="#000" className="text-2xl" icon="iconoir:cancel" />
         </button>
       </div>
@@ -94,7 +96,11 @@ export default function SelectOrdertypeModalSection({
 
       <div className="flex justify-center items-center">
         <Button
-        onClick={()=> navigation.push("/food_box")} fullWidth={ismobile} title="Continue" variant="primary" />
+          onClick={() => navigation.push("/food-box")}
+          fullWidth={ismobile}
+          title="Continue"
+          variant="primary"
+        />
       </div>
     </div>
   );

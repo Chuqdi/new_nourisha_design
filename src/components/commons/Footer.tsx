@@ -17,20 +17,20 @@ export default function Footer() {
       options: [
         {
           title: "About us",
-          link: "/about_us",
+          link: "/about-us",
         },
         // {
         //   title: "Pricing",
         //   link: "/pricing",
         // },
-      
+
         {
           title: "Terms of Service",
-          link: "/terms_and_conditions",
+          link: "/terms-and-conditions",
         },
         {
           title: "Privacy Policy",
-          link: "/privacy_policy",
+          link: "/privacy-policy",
         },
       ],
     },
@@ -39,19 +39,19 @@ export default function Footer() {
       options: [
         {
           title: "Meal plans",
-          link: "/meal_plans",
+          link: "/meal-plans",
         },
         {
           title: "Single Meal Orders",
-          link: "/single_meals",
+          link: "/single-meals",
         },
         {
           title: "Bulk Meal Orders",
-          link: "/bulk_meals",
+          link: "/bulk-meals",
         },
         {
           title: "Party Plan",
-          link: "/party_plan",
+          link: "/party-meal-plans",
         },
       ],
     },
@@ -64,7 +64,7 @@ export default function Footer() {
         },
         {
           title: "Contact us",
-          link: "/contact_us",
+          link: "/contact-us",
         },
       ],
     },

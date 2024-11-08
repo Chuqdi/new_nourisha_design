@@ -75,8 +75,7 @@ const SinglePlan = ({
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           <span>Total: </span>
           <span className="font-bold">
-            {/* @ts-ignore */}
-            £{option?.amount + option?.delivery_fee}
+            {/* @ts-ignore */}£{option?.amount + option?.delivery_fee}
           </span>
         </p>
       </div>
@@ -137,7 +136,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
 
   const onContinue = (plan: IPlan) => {
     router.push(
-      `/food_box?plan=${plan?.name}&plan_id=${plan?._id}&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}&plan_amount=${plan?.amount}&deliveryFee=${plan?.delivery_fee}
+      `/food-box?plan=${plan?.name}&plan_id=${plan?._id}&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}&plan_amount=${plan?.amount}&deliveryFee=${plan?.delivery_fee}
       `
     );
   };
