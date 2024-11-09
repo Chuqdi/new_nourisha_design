@@ -187,7 +187,6 @@ const OrderSummary = ({
 }) => {
   const searchParams = useSearchParams();
 
-  const { getAxiosClient } = useAuth();
   const amount = parseInt(searchParams?.get("plan_amount")!);
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
@@ -324,19 +323,17 @@ export default function Main() {
     initializeFoodBox,
     emptyBox,
     initializeFoodMealExtra,
-    getMealExtraFromMealAndDay,
+    loadingLineUpCreation,
   } = useFoodbox();
   const { getAxiosClient } = useAuth();
-  const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState("9");
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
-  const continueProcess = useRef<boolean>(true);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
   const { user } = useContext(UserContext);
-  const { prepareMealForBE } = useFoodbox();
+  const { prepareMealForBE, createLineUp:submitLineUp } = useFoodbox();
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
@@ -385,58 +382,6 @@ export default function Main() {
     return count;
   }, [boxStore]);
 
-  // const prepareMealForBE = () => {
-  //   let returnValue = {delivery_date}
-  //   DAYS_OF_THE_WEEK.forEach((week) => {
-  //     if (boxStore) {
-  //       //@ts-ignore
-  //       const activeDayBox = boxStore[week];
-  //       const meals = activeDayBox?.meals as {
-  //         first_meal: IMeal;
-  //         last_meal: IMeal;
-  //       };
-  //       const firstSelectedExtra = getMealExtraFromMealAndDay(
-  //         meals?.first_meal,
-  //         week as IFoodBoxDayType
-  //       );
-
-  //       const secondSelectedExtra = getMealExtraFromMealAndDay(
-  //         meals?.last_meal,
-  //         week as IFoodBoxDayType
-  //       );
-
-  //       //@ts-ignore
-  //       returnValue[week?.toLowerCase()] =  {
-  //         lunch: {
-  //           mealId: meals?.first_meal?._id,
-  //           extraId: firstSelectedExtra?.extra?._id,
-  //           proteinId: firstSelectedExtra?.protein?._id,
-  //         },
-  //         dinner: {
-  //           mealId: meals?.last_meal?._id,
-  //           extraId: secondSelectedExtra?.extra?._id,
-  //           proteinId: secondSelectedExtra?.protein?._id,
-  //         },
-  //       }
-
-  //       // return {
-  //       //   [week?.toLowerCase()]: {
-  //       //     lunch: {
-  //       //       mealId: meals?.first_meal?._id,
-  //       //       extraId: firstSelectedExtra?.extra?._id,
-  //       //     },
-  //       //     dinner: {
-  //       //       mealId: meals?.last_meal?._id,
-  //       //       extraId: secondSelectedExtra?.extra?._id,
-  //       //     },
-  //       //   },
-  //       // };
-  //     }
-
-  //     return undefined;
-  //   });
-  //   return returnValue;
-  // };
 
   const initializePayment = () => {
     let data = {
@@ -472,7 +417,7 @@ export default function Main() {
         };
         const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1`;
+        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
 
         return {
           clientSecret,
@@ -483,8 +428,6 @@ export default function Main() {
   };
 
   const createLineUp = async () => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -494,52 +437,55 @@ export default function Main() {
       return;
     }
 
-    setLoading(true);
-    await axiosClient
-      .get("subscriptions/me")
-      .then((data) => {
-        if (data?.data?.data?.used_sub) {
-          initializePayment();
-          setLoading(false);
-          continueProcess.current = false;
-          return;
-        }
-      })
-      .catch((err) => {
-        let msg = err?.response?.data?.message ?? "Line-up was not created.";
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: msg,
-        });
-      });
+    // setLoading(true);
+    // await axiosClient
+    //   .get("subscriptions/me")
+    //   .then((data) => {
+    //     if (data?.data?.data?.used_sub) {
+    //       initializePayment();
+    //       setLoading(false);
+    //       continueProcess.current = false;
+    //       return;
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     let msg = err?.response?.data?.message ?? "Line-up was not created.";
+    //     toast({
+    //       variant: "destructive",
+    //       title: "Error",
+    //       description: msg,
+    //     });
+    //   });
 
-    if (continueProcess.current) {
-      const data = prepareMealForBE(delivery_date);
+    // if (continueProcess.current) {
+    //   const data = prepareMealForBE(delivery_date);
 
-      axiosClient
-        .post(`lineups/web`, {
-          ...data,
-          delivery_date: delivery_date ?? "",
-        })
-        .then((data) => {
-          toast({
-            variant: "default",
-            title: "Success",
-            description: "Line-up created successfully.",
-          });
-          emptyBox();
-        })
-        .catch((err) => {
-          let msg = err?.response?.data?.message ?? "Line-up was not created.";
-          if (msg?.includes("Subscription is required")) {
-            initializePayment();
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    //   axiosClient
+    //     .post(`lineups/web`, {
+    //       ...data,
+    //       delivery_date: delivery_date ?? "",
+    //     })
+    //     .then((data) => {
+    //       toast({
+    //         variant: "default",
+    //         title: "Success",
+    //         description: "Line-up created successfully.",
+    //       });
+    //       emptyBox();
+    //     })
+    //     .catch((err) => {
+    //       let msg = err?.response?.data?.message ?? "Line-up was not created.";
+    //       if (msg?.includes("Subscription is required")) {
+    //         initializePayment();
+    //       }
+    //     })
+    //     .finally(() => {
+    //       setLoading(false);
+    //     });
+    // }
+
+
+    submitLineUp(deliveryFree!, initializePayment);
   };
   const goToNextWeek = () => {
     if (activeWeek === weeks[weeks.length - 1]) {
@@ -816,7 +762,7 @@ export default function Main() {
                         })
                       }
                       fullWidth
-                      disabled={loading}
+                      disabled={loadingLineUpCreation}
                       title="Go to Checkout"
                       variant="primary"
                       className="py-6 h-[2.7rem]"

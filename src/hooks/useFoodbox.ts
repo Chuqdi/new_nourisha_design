@@ -3,13 +3,19 @@ import { IExtraItem, IFoodBoxDayType, IMeal } from "@/config/types";
 import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { DEVICE_ID } from "./useFingerPrint";
+import useAuth from "./useAuth";
+import { useRef, useState } from "react";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
 
 export default function () {
   const box = localStorage.getItem(FOOD_BOX_STORE);
-  const [boxStore,setBoxStore] = useAtom(ATOMS.foodBox);
+  const [boxStore, setBoxStore] = useAtom(ATOMS.foodBox);
+  const { getAxiosClient } = useAuth();
+  const [loadingLineUpCreation, setLoadingLineUpCreation] = useState(false);
+  const continueCreateLineUpProcess = useRef<boolean>(true);
 
   const [mealExtraSelection, setMealExtraSelection] = useAtom(
     ATOMS.mealExtraSelection
@@ -150,15 +156,13 @@ export default function () {
     }
   };
 
-
   const emptyBox = () => {
     setBoxStore(null);
     localStorage.removeItem(FOOD_BOX_STORE);
   };
 
-
-  const prepareMealForBE = (delivery_date:string) => {
-    let returnValue = {delivery_date}
+  const prepareMealForBE = (delivery_date: string) => {
+    let returnValue = { delivery_date };
     DAYS_OF_THE_WEEK.forEach((week) => {
       if (boxStore) {
         //@ts-ignore
@@ -177,10 +181,8 @@ export default function () {
           week as IFoodBoxDayType
         );
 
-
-
         //@ts-ignore
-        returnValue[week?.toLowerCase()] =  {
+        returnValue[week?.toLowerCase()] = {
           lunch: {
             mealId: meals?.first_meal?._id,
             extraId: firstSelectedExtra?.extra?._id,
@@ -191,14 +193,67 @@ export default function () {
             extraId: secondSelectedExtra?.extra?._id,
             proteinId: secondSelectedExtra?.protein?._id,
           },
-        }
-
-        
+        };
       }
 
       return undefined;
     });
     return returnValue;
+  };
+
+  const createLineUp = async (
+    delivery_date: string,
+    initializePayment?: () => void
+  ) => {
+    const id = localStorage.getItem(DEVICE_ID);
+    const axiosClient = getAxiosClient(id!);
+
+    setLoadingLineUpCreation(true);
+    await axiosClient
+      .get("subscriptions/me")
+      .then((data) => {
+        if (data?.data?.data?.used_sub) {
+          initializePayment!!();
+          setLoadingLineUpCreation(false);
+          continueCreateLineUpProcess.current = false;
+          return;
+        }
+      })
+      .catch((err) => {
+        let msg = err?.response?.data?.message ?? "Line-up was not created.";
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: msg,
+        });
+      });
+
+    if (continueCreateLineUpProcess.current) {
+      const data = prepareMealForBE(delivery_date);
+
+      axiosClient
+        .post(`lineups/web`, {
+          ...data,
+          delivery_date: delivery_date ?? "",
+        })
+        .then((data) => {
+          toast({
+            variant: "default",
+            title: "Success",
+            description: "Line-up created successfully.",
+          });
+          emptyBox();
+        })
+        .catch((err) => {
+          let msg = err?.response?.data?.message ?? "Line-up was not created.";
+          if (msg?.includes("Subscription is required")) {
+            initializePayment!!();
+          }
+        })
+        .finally(() => {
+          setLoadingLineUpCreation(false);
+        });
+    }
   };
 
   return {
@@ -210,6 +265,8 @@ export default function () {
     addExtraItem,
     getMealExtraFromMealAndDay,
     checkIfBothMealsAreSelected,
-    prepareMealForBE
+    prepareMealForBE,
+    createLineUp,
+    loadingLineUpCreation,
   };
 }

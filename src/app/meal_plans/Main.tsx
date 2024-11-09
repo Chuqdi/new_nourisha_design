@@ -16,17 +16,13 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { UserContext } from "@/HOC/UserContext";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import moment from "moment";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
 
 const SinglePlan = ({
   activeOptionIndex,
   index,
-  setIsWeekend,
-  setActiveOptionIndex,
   onMealPlanClicked,
   option,
-  onAfrican,
 }: {
   activeOptionIndex: number;
   index: number;
