@@ -82,10 +82,9 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
         <EnterCouponCodeModal />
       </Modal>
 
-      {/* showPaymentConfirmationModal */}
       <Modal
         close={() => setShowPaymentConfirmationModal(false)}
-        show={true}
+        show={showPaymentConfirmationModal}
       >
         <PaymentConfirmationModal
           close={() => setShowPaymentConfirmationModal(false)}
