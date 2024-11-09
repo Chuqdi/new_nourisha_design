@@ -27,6 +27,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { UserContext } from "@/HOC/UserContext";
+import moment from "moment";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -418,7 +419,7 @@ export default function Main() {
         };
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
+        )}&show_payment_modal=1&delivery_date=${moment(delivery_date).format("MMM, YYYY-MM-DD")}`;
 
         return {
           clientSecret,

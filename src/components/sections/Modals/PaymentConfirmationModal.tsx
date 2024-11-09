@@ -34,7 +34,6 @@ const LineupOrderConfirmation = ({
           </p>
           <div className=" bg-[#DEF54C] rounded-[0.8975rem] p-2 w-fit mx-auto font-bold font-NewSpiritBold">
             {deliveryDate}
-            {moment(deliveryDate).format("MMM, YYYY-MM-DD")}
           </div>
           <button
             onClick={onClose}
