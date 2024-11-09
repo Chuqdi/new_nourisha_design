@@ -12,7 +12,7 @@ const LineupOrderConfirmation = ({
   onClose: () => void;
   deliveryDate: string;
 }) => {
-  const { createLineUp } = useFoodbox();
+  const { createLineUp, loadingLineUpCreation } = useFoodbox();
   useEffect(() => {
     createLineUp(deliveryDate);
   }, []);
@@ -38,9 +38,12 @@ const LineupOrderConfirmation = ({
           </div>
           <button
             onClick={onClose}
-            className="w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center"
+            disabled={loadingLineUpCreation}
+            className={`w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center ${
+              loadingLineUpCreation && "opacity-80 pointer-events-none"
+            }`}
           >
-            Go home
+            {loadingLineUpCreation ? "Please wait" : "Go Home"}
           </button>
         </div>
       </div>
@@ -65,13 +68,13 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
     if (gtagEvent) {
       try {
         const gtagEventData = JSON.parse(gtagEvent ?? "");
-        alert("Running evernt with"+ gtagEventData)
+        alert("Running evernt with" + gtagEventData);
         // sendGAEvent({
         //   event: "purchase",
         //   value: gtagEventData,
         // });
         triggeredEvent.current = true;
-        return JSON.parse(gtagEventData);
+        return JSON.parse(gtagEvent);
       } catch (e) {
         console.error("Invalid JSON in search param:", e);
         return null; // Return null if JSON is invalid

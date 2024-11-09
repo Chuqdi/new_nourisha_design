@@ -324,6 +324,7 @@ export default function Main() {
     emptyBox,
     initializeFoodMealExtra,
     loadingLineUpCreation,
+    createLineUp:submitLineUp,
   } = useFoodbox();
   const { getAxiosClient } = useAuth();
   const [limit, setLimit] = useState("9");
@@ -333,7 +334,7 @@ export default function Main() {
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
   const { user } = useContext(UserContext);
-  const { createLineUp:submitLineUp } = useFoodbox();
+
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
