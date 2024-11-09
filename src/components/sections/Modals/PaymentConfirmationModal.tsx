@@ -15,7 +15,6 @@ const LineupOrderConfirmation = ({
   const { createLineUp } = useFoodbox();
   useEffect(() => {
     createLineUp(deliveryDate);
-    window.location.href = "/";
   }, []);
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
@@ -55,7 +54,7 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
   const deliveryDate = searchParams.get("delivery_date");
   const onClose = () => {
     const reloadWindow = searchParams?.get("reloadWindow");
-    if (reloadWindow && reloadWindow === "1") {
+    if ((reloadWindow && reloadWindow === "1") || !!deliveryDate) {
       window.location.href = "/";
     }
     close();
