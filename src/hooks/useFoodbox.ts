@@ -207,6 +207,7 @@ export default function () {
   ) => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
+    alert("Creating Line up")
 
     setLoadingLineUpCreation(true);
     await axiosClient

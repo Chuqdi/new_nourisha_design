@@ -15,6 +15,7 @@ const LineupOrderConfirmation = ({
   const { createLineUp } = useFoodbox();
   useEffect(() => {
     createLineUp(deliveryDate);
+    window.location.href = "/";
   }, []);
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
