@@ -87,8 +87,7 @@ export default function FaqSection() {
       answer: `No. You can either select from the African or Asian/European menu when planning your meal but not both.`,
     },
     {
-      question:
-        "What happens if I have auto renewal turned on?",
+      question: "What happens if I have auto renewal turned on?",
       answer:
         "If you have turned on auto renewal, you will be debited weekly and you will get an in-app notifications to plan your meal for the week and select your preffered delivery date. You can always select your meals from what is available on our menu and you are not restricted to the meals you had the previous week.",
     },
@@ -111,7 +110,7 @@ export default function FaqSection() {
 
     {
       question: "Do you cater for events?",
-      answer: `Yes, we do. <a style="color:#FE7E00;fontSize:1rem;" href="/party_plan">Visit our party plans page</a>.`,
+      answer: `Yes, we do. <a style="color:#FE7E00;fontSize:1rem;" href="/party-meal-plans">Visit our party plans page</a>.`,
     },
   ];
   const mainQuestions = useMemo(() => {

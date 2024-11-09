@@ -46,9 +46,9 @@ export const CartManipulator = ({
   ) => {
     if (
       activeCountry?.toUpperCase() === "Asia".toUpperCase() &&
-      pathName !== "/food_box"
+      pathName !== "/food-box"
     ) {
-      router.push("/meal_plans?onAsian=1");
+      router.push("/meal-plans?onAsian=1");
       return;
     }
 
@@ -223,7 +223,7 @@ export default function SingleCartItemSection({
           ]);
         },
       });
-    }else{
+    } else {
       addFoodBox(activeWeek!, meal!);
     }
     const bothSelected = checkIfBothMealsAreSelected(activeWeek!);
@@ -252,7 +252,7 @@ export default function SingleCartItemSection({
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
-      {pathName?.toUpperCase() !== "/food_box".toUpperCase() && (
+      {pathName?.toUpperCase() !== "/food-box".toUpperCase() && (
         <p className="text-black-900 font-inter text-xl tracking-[-0.01875rem] leading-[1.875rem] font-bold mt-4">
           £{meal?.price?.amount}
         </p>

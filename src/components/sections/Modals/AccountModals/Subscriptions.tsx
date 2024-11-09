@@ -152,9 +152,7 @@ const SingleSubscription = ({
               amount: !!disCountedAmount
                 ? roundUpToTwoDecimalPoints(plan?.amount! - disCountedAmount)
                 : plan?.amount!,
-              gtagEvent: (clientSecret) => {
-                
-              },
+              gtagEvent: (clientSecret) => {},
               onContinue: async () => {
                 let return_url,
                   clientSecret = "";
@@ -167,7 +165,7 @@ const SingleSubscription = ({
                 await axiosClient
                   .post("billings/subscribe", data)
                   .then(async (response) => {
-                    return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}`;
+                    return_url = `https://www.eatnourisha.com/food-box?${searchParamQuery}`;
                     clientSecret = response?.data?.data?.client_secret;
                   });
                 const gtagEvent = {
@@ -176,11 +174,13 @@ const SingleSubscription = ({
                   disCountedAmount,
                   transaction_id: clientSecret,
                 };
-                const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(gtagEvent)}&show_payment_modal=1`
+                const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
+                  gtagEvent
+                )}&show_payment_modal=1`;
 
                 return {
                   clientSecret,
-                  returnUrl: rUrl ,
+                  returnUrl: rUrl,
                 };
               },
             });

@@ -61,9 +61,9 @@ export default function AboutPage() {
               PARTY PLANS
             </button>
             <div>
-              <h2 className="text-primary-Green-900 font-NewSpiritBold text-[2rem] md:text-[3.5rem]">
+              <h1 className="text-primary-Green-900 font-NewSpiritBold text-[2rem] md:text-[3.5rem]">
                 Impress Guests with Party Meals
-              </h2>
+              </h1>
               <p className="text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem]">
                 Are you planning a memorable party or event? Let us take care of
                 the culinary magic for you. We specialize in crafting delectable

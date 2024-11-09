@@ -401,7 +401,7 @@ export default function Main() {
         await axiosClient
           .post("billings/subscribe", data)
           .then(async (response) => {
-            return_url = `https://www.eatnourisha.com/food_box?${searchParamQuery}&show_payment_modal=1`;
+            return_url = `https://www.eatnourisha.com/food-box?${searchParamQuery}&show_payment_modal=1`;
             clientSecret = response?.data?.data?.client_secret;
           });
 
@@ -415,7 +415,7 @@ export default function Main() {
           plan: plan_id,
           customer_details: user,
         };
-        const rUrl = `https://www.eatnourisha.com/food_box?${searchParamQuery}&gtagEvent=${JSON.stringify(
+        const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
         )}&show_payment_modal=1&delivery_date=${delivery_date}`;
 
@@ -544,8 +544,6 @@ export default function Main() {
   useEffect(() => {
     !!coupon.length && discountEvent(total);
   }, [coupon]);
-
-
 
   return (
     <div className="w-full h-full relative pt-6">

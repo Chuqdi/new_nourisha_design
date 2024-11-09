@@ -70,8 +70,7 @@ export default function Main() {
   return (
     <>
       <title>
-        Meal Prep, Meal Plans & Delivery Services At Affordable Prices in Uk |
-        Nourisha
+        Meal Prep, Meal Plans & Delivery At Affordable Prices in UK | Nourisha
       </title>
       <meta
         name="description"
@@ -81,9 +80,9 @@ export default function Main() {
         <Navbar />
         <div className="flex flex-col gap-6 mt-32">
           <MessageBtn title="PRICING" />
-          <h3 className="text-center text-[2rem] md:text-[4.5rem] text-primary-Green-900 tracking-[-0.18rem] font-NewSpiritBold w-[80%] mx-auto">
+          <h1 className="text-center text-[2rem] md:text-[4.5rem] text-primary-Green-900 tracking-[-0.18rem] font-NewSpiritBold w-[80%] mx-auto">
             Great food, delivered to you on a budget.
-          </h3>
+          </h1>
           <p className="text-black-900 font-inter text-lg w-ful md:w-[65%] text-center mx-auto p-4">
             Whatever plan you choose, stay home, we will bring your food to you.
           </p>
@@ -171,8 +170,8 @@ export default function Main() {
                 />
 
                 <p className="text-black-900 text-sm text-center font-inter my-4">
-                + <span className="text-base">Free weekday delivery</span> and £8 for
-          weekend delivery
+                  + <span className="text-base">Free weekday delivery</span> and
+                  £8 for weekend delivery
                 </p>
               </div>
             </div>
