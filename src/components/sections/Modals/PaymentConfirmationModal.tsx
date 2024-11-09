@@ -67,11 +67,10 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
     if (gtagEvent) {
       try {
         const gtagEventData = JSON.parse(gtagEvent ?? "");
-        alert("Running evernt with" + gtagEventData);
-        // sendGAEvent({
-        //   event: "purchase",
-        //   value: gtagEventData,
-        // });
+        sendGAEvent({
+          event: "purchase",
+          value: gtagEventData,
+        });
         triggeredEvent.current = true;
         return JSON.parse(gtagEvent);
       } catch (e) {

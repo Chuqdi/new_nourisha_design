@@ -390,6 +390,7 @@ export default function Main() {
       plan_id,
       promo_code: coupon,
     };
+  
     setPaymentModal({
       show: true,
       amount: total,
@@ -439,55 +440,7 @@ export default function Main() {
       return;
     }
 
-    // setLoading(true);
-    // await axiosClient
-    //   .get("subscriptions/me")
-    //   .then((data) => {
-    //     if (data?.data?.data?.used_sub) {
-    //       initializePayment();
-    //       setLoading(false);
-    //       continueProcess.current = false;
-    //       return;
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     let msg = err?.response?.data?.message ?? "Line-up was not created.";
-    //     toast({
-    //       variant: "destructive",
-    //       title: "Error",
-    //       description: msg,
-    //     });
-    //   });
-
-    // if (continueProcess.current) {
-    //   const data = prepareMealForBE(delivery_date);
-
-    //   axiosClient
-    //     .post(`lineups/web`, {
-    //       ...data,
-    //       delivery_date: delivery_date ?? "",
-    //     })
-    //     .then((data) => {
-    //       toast({
-    //         variant: "default",
-    //         title: "Success",
-    //         description: "Line-up created successfully.",
-    //       });
-    //       emptyBox();
-    //     })
-    //     .catch((err) => {
-    //       let msg = err?.response?.data?.message ?? "Line-up was not created.";
-    //       if (msg?.includes("Subscription is required")) {
-    //         initializePayment();
-    //       }
-    //     })
-    //     .finally(() => {
-    //       setLoading(false);
-    //     });
-    // }
-
-
-    submitLineUp(deliveryFree!, initializePayment);
+    submitLineUp(delivery_date!, initializePayment);
   };
   const goToNextWeek = () => {
     if (activeWeek === weeks[weeks.length - 1]) {
