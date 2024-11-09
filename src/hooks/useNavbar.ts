@@ -5,28 +5,28 @@ export default () => {
   const pathName = usePathname();
   return [
     {
-      page: "/meal_plans",
-      isActive: pathName === "/meal_plans",
+      page: "/meal-plans",
+      isActive: pathName === "/meal-plans",
       name: "Meal Plans",
     },
     {
-      page: "/single_meals",
-      isActive: pathName === "/single_meals",
+      page: "/single-meals",
+      isActive: pathName === "/single-meals",
       name: "Single Meals",
     },
     {
-      page: "/bulk_meals",
-      isActive: pathName === "/bulk_meals",
+      page: "/bulk-meals",
+      isActive: pathName === "/bulk-meals",
       name: "Bulk Meals",
     },
     {
-      page: "/party_plan",
-      isActive: pathName === "/party_plan",
+      page: "/party-meal-plans",
+      isActive: pathName === "/party-meal-plans",
       name: "Party Plans",
     },
     {
-      page: "/about_us",
-      isActive: pathName === "/about_us",
+      page: "/about-us",
+      isActive: pathName === "/about-us",
       name: "About Us",
       options: [],
     },

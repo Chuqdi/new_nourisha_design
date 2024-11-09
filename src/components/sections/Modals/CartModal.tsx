@@ -6,12 +6,14 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue } from "jotai";
 import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
-import {  useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import CheckoutSection from "../CheckoutSection";
 import { useRouter } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
-import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
+import usePromotionCode, {
+  roundUpToTwoDecimalPoints,
+} from "@/hooks/usePromotionCode";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 import { UserContext } from "@/HOC/UserContext";
 
@@ -36,8 +38,6 @@ function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
       });
     }
   };
-
-
 
   return (
     <div className="z-[999999999] p-2 rouned-[0.5rem] border-[1px] border-[#EDF0F5] flex flex-col gap-5">
@@ -116,8 +116,6 @@ function CartModal() {
     isLoggedIn,
   ]);
 
-
-
   useEffect(() => {
     discountEvent(total);
   }, [coupon]);
@@ -128,9 +126,7 @@ function CartModal() {
         {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <p className="text-black-900 text-sm font-inter">Cart Summary</p>
         )}
-        {( isLoggedIn
-          ? !cartItems.length
-          : !localCartItems.length) && (
+        {(isLoggedIn ? !cartItems.length : !localCartItems.length) && (
           <div className="text-center font-inter text-sm text-black-900 w-full flex flex-col items-center justify-center gap-2">
             <img src="/images/no_data.png" className="h-[12.5rem] w-auto" />
             <div>
@@ -140,14 +136,13 @@ function CartModal() {
                   setSideModal({ ...sideModal, show: false });
                 }}
                 className="text-primary-orange-900"
-                href="/single_meals"
+                href="/single-meals"
               >
                 add here...
               </Link> */}
             </div>
           </div>
         )}
-       
 
         <div className="flex flex-col gap-3">
           {(isLoggedIn ? cartItems : localCartItems)?.map((item, index) => (

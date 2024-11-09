@@ -1,5 +1,59 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  redirects: async () => {
+    return [
+      {
+        source: "/about_us",
+        destination: "/about-us",
+        permanent: true,
+      },
+      {
+        source: "/contact_us",
+        destination: "/contact-us",
+        permanent: true,
+      },
+      {
+        source: "/bulk_meals",
+        destination: "/bulk-meals",
+        permanent: true,
+      },
+      {
+        source: "/food_box",
+        destination: "/food-box",
+        permanent: true,
+      },
+      {
+        source: "/forgot_password",
+        destination: "/forgot-password",
+        permanent: true,
+      },
+      {
+        source: "/meal_plans",
+        destination: "/meal-plans",
+        permanent: true,
+      },
+      {
+        source: "/party_plan",
+        destination: "/party-meal-plans",
+        permanent: true,
+      },
+      {
+        source: "/privacy_policy",
+        destination: "/privacy-policy",
+        permanent: true,
+      },
+      {
+        source: "/single_meal",
+        destination: "/single-meal",
+        permanent: true,
+      },
+      {
+        source: "/terms_and_conditions",
+        destination: "/terms-and-conditions",
+        permanent: true,
+      },
+    ];
+  },
   onError: (error) => {
     if (process.env.NEXT_IGNORE_BUILD_ERROR === "true") {
       console.warn("Ignoring build error:", error);

@@ -43,13 +43,12 @@ export default function MealSelectionSection({
   const [allMealsLoaded, setAllMealLoaded] = useState(false);
   const localCartItem = useAtomValue(ATOMS?.localCartItems);
 
-
   const getMeals = () => {
     return getData(
       `meals/pack?page=1&limit=${limit}&continent=${
         activeContinent.search
       }&searchPhrase=${searchPhrase}${
-        pathName?.toUpperCase() === "/bulk_meals".toUpperCase() &&
+        pathName?.toUpperCase() === "/bulk-meals".toUpperCase() &&
         "&orderType=bulk-order"
       }`
     );
@@ -58,13 +57,12 @@ export default function MealSelectionSection({
   const isComingSoon = useMemo(() => {
     return (
       activeContinent?.search?.toUpperCase() === "Asian".toUpperCase() &&
-      pathName?.toUpperCase() === "/bulk_meals".toUpperCase()
+      pathName?.toUpperCase() === "/bulk-meals".toUpperCase()
     );
   }, [activeContinent, pathName]);
   const { user } = useContext(UserContext);
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
-
 
   const { data, isLoading } = useFetch(
     getMeals,
@@ -78,7 +76,6 @@ export default function MealSelectionSection({
         searchPhrase,
       });
     },
-   
   });
 
   useEffect(() => {
@@ -97,7 +94,6 @@ export default function MealSelectionSection({
       setMeals(data?.data?.data?.data);
     }
   }, [data]);
-
 
   useEffect(() => {
     if (phrase) {
@@ -214,7 +210,7 @@ export default function MealSelectionSection({
               </div>
             )}
           </div>
-          { !!(isLoggedIn?cartItems:localCartItem).length && (
+          {!!(isLoggedIn ? cartItems : localCartItem).length && (
             <div className="hidden md:block mt-4">
               <CartSideSection />
             </div>

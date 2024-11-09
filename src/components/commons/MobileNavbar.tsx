@@ -20,7 +20,6 @@ export default function MobileNavbar({ close }: { close: () => void }) {
 
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
-
   return (
     <motion.div className="bg-white fixed top-[0rem] right-0 bottom-0 left-0 max-h-[100vh] overflow-y-scroll ">
       <div className="flex justify-between items-center px-4">
@@ -52,7 +51,7 @@ export default function MobileNavbar({ close }: { close: () => void }) {
           className="h-[2.7rem] py-6"
           fullWidth
           onClick={() => {
-            router.push("/single_meals");
+            router.push("/single-meals");
             close();
           }}
           title="Start order"
