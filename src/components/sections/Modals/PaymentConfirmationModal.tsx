@@ -9,14 +9,12 @@ const LineupOrderConfirmation = ({
   onClose,
 }: {
   onClose: () => void;
-  deliveryDate: string;
 }) => {
   const searchParams = useSearchParams();
   const deliveryDate = searchParams.get("delivery_date");
   const { createLineUp, loadingLineUpCreation } = useFoodbox();
   useEffect(() => {
-    const parsedDate = deliveryDate ? new Date(deliveryDate) : null;
-    createLineUp(parsedDate?.toDateString()!);
+    createLineUp(deliveryDate!);
   }, []);
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
@@ -84,7 +82,7 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
     }
   }, [searchParams]);
   return !!deliveryDate ? (
-    <LineupOrderConfirmation onClose={onClose} deliveryDate={deliveryDate} />
+    <LineupOrderConfirmation onClose={onClose} />
   ) : (
     <div className="bg-white rounded-[0.75rem] p-4">
       <div className="flex justify-between items-center">

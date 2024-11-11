@@ -239,6 +239,7 @@ export default function () {
           delivery_date: delivery_date ?? "",
         })
         .then((data) => {
+          alert("Line up created successfully");
           toast({
             variant: "default",
             title: "Success",

@@ -111,9 +111,9 @@ export default function DeliveryModal({
   };
 
  
-  useEffect(() => {
-    setDeliveryDate(delivery_date);
-  }, [delivery_date]);
+  // useEffect(() => {
+  //   setDeliveryDate(delivery_date);
+  // }, [delivery_date]);
 
   useEffect(() => {
     setAddress({
@@ -168,7 +168,10 @@ export default function DeliveryModal({
             <label>Delivery date</label>
             <FoodDeliveryDateSelection
               delivery_date={delivery_date}
-              set_delivery_date={set_delivery_date}
+              set_delivery_date={(value)=>{
+                set_delivery_date(value);
+                setDeliveryDate(value);
+              }}
             />
           </div>
         ) : (

@@ -325,17 +325,16 @@ export default function Main() {
     emptyBox,
     initializeFoodMealExtra,
     loadingLineUpCreation,
-    createLineUp:submitLineUp,
+    createLineUp: submitLineUp,
   } = useFoodbox();
   const { getAxiosClient } = useAuth();
   const [limit, setLimit] = useState("9");
-  const [delivery_date, set_delivery_date] = useState(Date.now().toString());
+  const [delivery_date, set_delivery_date] = useState();
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
   const { user } = useContext(UserContext);
-
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryFree = searchParams?.get("deliveryFee");
@@ -384,13 +383,13 @@ export default function Main() {
     return count;
   }, [boxStore]);
 
-
   const initializePayment = () => {
+
     let data = {
       plan_id,
       promo_code: coupon,
     };
-  
+
     setPaymentModal({
       show: true,
       amount: total,
@@ -418,10 +417,10 @@ export default function Main() {
           plan: plan_id,
           customer_details: user,
         };
-        const dateObj = new Date(delivery_date).toISOString();
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1&delivery_date=${dateObj}`;
+        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
+       
 
         return {
           clientSecret,
@@ -440,6 +439,8 @@ export default function Main() {
       });
       return;
     }
+
+    alert("First date" + delivery_date);
 
     submitLineUp(delivery_date!, initializePayment);
   };
@@ -704,6 +705,7 @@ export default function Main() {
                         setSideModal({
                           component: (
                             <DeliveryModal
+                              //@ts-ignore
                               setDeliveryDate={set_delivery_date}
                               proceed={createLineUp}
                               hidDeliveryDate={searchParams

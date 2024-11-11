@@ -74,7 +74,6 @@ const FoodDeliveryDateSelection = ({
     <div>
       <input
         type="date"
-        value={delivery_date || ""}
         onChange={handleDateChange}
         min={minDate}
         disabled={false}
