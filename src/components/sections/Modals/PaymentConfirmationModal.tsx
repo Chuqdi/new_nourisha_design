@@ -5,17 +5,10 @@ import moment from "moment";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-const LineupOrderConfirmation = ({
-  onClose,
-}: {
-  onClose: () => void;
-}) => {
+const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
   const searchParams = useSearchParams();
   const deliveryDate = searchParams.get("delivery_date");
-  const { createLineUp, loadingLineUpCreation } = useFoodbox();
-  useEffect(() => {
-    createLineUp(deliveryDate!);
-  }, []);
+
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
       <img src="/images/icon_with_title.png" className="w-36 h-auto" />
@@ -24,10 +17,10 @@ const LineupOrderConfirmation = ({
         <img src="/images/chef.png" className="w-[17.89019rem] h-auto" />
         <div className="w-[90%] md:w-[80%] mx-auto rounded-[0.718rem] bg-white p-3 flex flex-col gap-3 -mt-6">
           <p className="font-NewSpiritBold text-[1.077rem] text-center">
-            Your order is being processed
+            Your payment was successfully
           </p>
           <p className="text-center text-[#5C5F84] font-inter w-3/4 mx-auto">
-            Our chefs will start making your order shortly
+            Click continue to submit your meal selection.
           </p>
           <p className="text-[#030517] text-[0.83769rem] font-inter text-center">
             YOUR DELIVERY DATE IS:
@@ -39,12 +32,9 @@ const LineupOrderConfirmation = ({
           </div>
           <button
             onClick={onClose}
-            disabled={loadingLineUpCreation}
-            className={`w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center ${
-              loadingLineUpCreation && "opacity-80 pointer-events-none"
-            }`}
+            className={`w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center `}
           >
-            {loadingLineUpCreation ? "Please wait" : "Go Home"}
+            Continue
           </button>
         </div>
       </div>
@@ -64,7 +54,7 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
     close();
   };
 
-  useEffect(() => {
+  const onTriggerEvent = () => {
     const gtagEvent = searchParams.get("gtagEvent");
     if (gtagEvent) {
       try {
@@ -74,15 +64,18 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
           value: gtagEventData,
         });
         triggeredEvent.current = true;
-        return JSON.parse(gtagEvent);
+        JSON.parse(gtagEvent);
       } catch (e) {
         console.error("Invalid JSON in search param:", e);
         return null; // Return null if JSON is invalid
       }
     }
+  };
+  useEffect(() => {
+    onTriggerEvent();
   }, [searchParams]);
   return !!deliveryDate ? (
-    <LineupOrderConfirmation onClose={onClose} />
+    <LineupOrderConfirmation onClose={close} />
   ) : (
     <div className="bg-white rounded-[0.75rem] p-4">
       <div className="flex justify-between items-center">

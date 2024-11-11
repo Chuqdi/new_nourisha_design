@@ -16,7 +16,7 @@ import { useAtom } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
@@ -25,6 +25,9 @@ export default function Main() {
   const { setUser } = useContext(UserContext);
   const router = useRouter();
   const { prepareCartForAuth, emptyCart } = useLocalCart();
+  const searchParams = useSearchParams();
+  const deliveryDate = searchParams.get("delivery_date");
+
   const [showMobileCartModal, setShowMobileCatModal] = useAtom(
     ATOMS.showMobileCartModal
   );
@@ -45,6 +48,7 @@ export default function Main() {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+
     const cartItem = prepareCartForAuth();
     const body = {
       ...(onLogin ? loginFormik?.values : signUpForm?.values),
@@ -63,17 +67,21 @@ export default function Main() {
         JSON.stringify(createdUser?.payload)
       );
       localStorage.setItem("AUTH_USER_EMAIL", body.email);
-      setUser(createdUser?.payload)
+      setUser(createdUser?.payload);
 
       toast({
         variant: "default",
         title: !onLogin ? "Registeration was successful" : "Login successful",
       });
-      // window.location.replace("/");
-      router.push("/")
-
-      emptyCart();
       (onLogin ? loginFormik : signUpForm).resetForm();
+
+      if (!!deliveryDate) {
+        const params = new URLSearchParams(searchParams.toString());
+        router.push(`/food-box?${params}`);
+      } else {
+        emptyCart();
+        router.push("/");
+      }
     }
   };
 

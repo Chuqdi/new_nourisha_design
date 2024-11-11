@@ -335,6 +335,7 @@ export default function Main() {
   const { user } = useContext(UserContext);
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
+  const deliveryDate = searchParams.get("delivery_date");
   const deliveryFree = searchParams?.get("deliveryFee");
   const total = useMemo(() => {
     let t = amount;
@@ -348,6 +349,7 @@ export default function Main() {
     }
     return roundUpToTwoDecimalPoints(t);
   }, [disCountedAmount, loadingDiscount, amount]);
+  const router = useRouter();
 
   const isMonthly = useMemo(() => {
     const plan = searchParams?.get("plan");
@@ -414,7 +416,8 @@ export default function Main() {
           plan: plan_id,
           customer_details: user,
         };
-        const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
+        const params = new URLSearchParams(searchParams.toString());
+        const rUrl = `https://www.eatnourisha.com/food-box?${params}&gtagEvent=${JSON.stringify(
           gtagEvent
         )}&show_payment_modal=1&delivery_date=${date}`;
         return {
@@ -694,22 +697,38 @@ export default function Main() {
                     />
 
                     <Button
-                      onClick={() =>
-                        setSideModal({
-                          component: (
-                            <DeliveryModal
-                              //@ts-ignore
-                              setDeliveryDate={(value) => {}}
-                              proceed={createLineUp}
-                              hidDeliveryDate={searchParams
-                                .get("search_continent")
-                                ?.toUpperCase()
-                                ?.includes("Asian".toUpperCase())}
-                            />
-                          ),
-                          show: true,
-                        })
-                      }
+                      onClick={() => {
+                        if (!user?.email) {
+                          toast({
+                            variant: "destructive",
+                            title:
+                              "Please login to access checkout functionality",
+                          });
+                          const params = new URLSearchParams(
+                            searchParams.toString()
+                          );
+                          router.push(`/auth?${params}`);
+                        } else {
+                          if (!!deliveryDate) {
+                            createLineUp(deliveryDate);
+                          } else {
+                            setSideModal({
+                              component: (
+                                <DeliveryModal
+                                  //@ts-ignore
+                                  setDeliveryDate={(value) => {}}
+                                  proceed={createLineUp}
+                                  hidDeliveryDate={searchParams
+                                    .get("search_continent")
+                                    ?.toUpperCase()
+                                    ?.includes("Asian".toUpperCase())}
+                                />
+                              ),
+                              show: true,
+                            });
+                          }
+                        }
+                      }}
                       fullWidth
                       disabled={loadingLineUpCreation}
                       title="Go to Checkout"
