@@ -420,7 +420,7 @@ export default function Main() {
         };
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1&delivery_date=${moment(delivery_date).format("MMM, YYYY-MM-DD")}`;
+        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
 
         return {
           clientSecret,
@@ -440,6 +440,7 @@ export default function Main() {
       return;
     }
 
+    alert("delivery date: " + delivery_date);
     submitLineUp(delivery_date!, initializePayment);
   };
   const goToNextWeek = () => {
