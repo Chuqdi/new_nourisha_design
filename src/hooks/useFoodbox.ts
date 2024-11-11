@@ -7,6 +7,7 @@ import { DEVICE_ID } from "./useFingerPrint";
 import useAuth from "./useAuth";
 import { useEffect, useRef, useState } from "react";
 import { MEALEXTRASELECTIONS } from "@/config/storageKeys";
+import { useRouter } from "next/navigation";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
@@ -17,6 +18,7 @@ export default function () {
   const { getAxiosClient } = useAuth();
   const [loadingLineUpCreation, setLoadingLineUpCreation] = useState(false);
   const continueCreateLineUpProcess = useRef<boolean>(true);
+  const router = useRouter();
 
   const [mealExtraSelection, setMealExtraSelection] = useAtom(
     ATOMS.mealExtraSelection
@@ -286,6 +288,7 @@ export default function () {
             description: "Line-up created successfully.",
           });
           emptyBox();
+          router.push("/")
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
