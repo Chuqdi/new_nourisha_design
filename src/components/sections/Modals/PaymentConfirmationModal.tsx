@@ -15,7 +15,8 @@ const LineupOrderConfirmation = ({
   const deliveryDate = searchParams.get("delivery_date");
   const { createLineUp, loadingLineUpCreation } = useFoodbox();
   useEffect(() => {
-    createLineUp(deliveryDate!);
+    const parsedDate = deliveryDate ? new Date(deliveryDate) : null;
+    createLineUp(parsedDate?.toDateString()!);
   }, []);
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
@@ -34,7 +35,9 @@ const LineupOrderConfirmation = ({
             YOUR DELIVERY DATE IS:
           </p>
           <div className=" bg-[#DEF54C] rounded-[0.8975rem] p-2 w-fit mx-auto font-bold font-NewSpiritBold">
-            {moment(deliveryDate).format("MMM, YYYY-MM-DD")}
+            {moment(deliveryDate ? new Date(deliveryDate) : null).format(
+              "MMM, YYYY-MM-DD"
+            )}
           </div>
           <button
             onClick={onClose}

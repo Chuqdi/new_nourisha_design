@@ -418,9 +418,10 @@ export default function Main() {
           plan: plan_id,
           customer_details: user,
         };
+        const dateObj = new Date(delivery_date).toISOString();
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
+        )}&show_payment_modal=1&delivery_date=${dateObj}`;
 
         return {
           clientSecret,
