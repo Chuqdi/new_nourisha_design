@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "@/components/commons/Navbar";
-import Subscription from "@/components/sections/Modals/AccountModals/Subscriptions";
 import DeliveryModal from "@/components/sections/Modals/DeliveryModal";
 import SingleCartItemSection from "@/components/sections/SingleCartItemSection";
 import Button from "@/components/ui/Button";
@@ -329,7 +328,6 @@ export default function Main() {
   } = useFoodbox();
   const { getAxiosClient } = useAuth();
   const [limit, setLimit] = useState("9");
-  const [delivery_date, set_delivery_date] = useState();
   const [searchPhrase, setSearchPhrase] = useState("");
   const [phrase] = useDebounce(searchPhrase, 1000);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
@@ -383,7 +381,12 @@ export default function Main() {
     return count;
   }, [boxStore]);
 
-  const initializePayment = () => {
+  const initializePayment = (date: string) => {
+    const gtagEvent = {};
+    const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
+      gtagEvent
+    )}&show_payment_modal=1&delivery_date=${date}`;
+    window.location.href = rUrl;
 
     let data = {
       plan_id,
@@ -419,8 +422,7 @@ export default function Main() {
         };
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
-        )}&show_payment_modal=1&delivery_date=${delivery_date}`;
-       
+        )}&show_payment_modal=1&delivery_date=${date}`;
 
         return {
           clientSecret,
@@ -430,7 +432,7 @@ export default function Main() {
     });
   };
 
-  const createLineUp = async () => {
+  const createLineUp = async (date: string) => {
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -440,9 +442,7 @@ export default function Main() {
       return;
     }
 
-    alert("First date" + delivery_date);
-
-    submitLineUp(delivery_date!, initializePayment);
+    submitLineUp(date!, () => initializePayment(date));
   };
   const goToNextWeek = () => {
     if (activeWeek === weeks[weeks.length - 1]) {
@@ -706,7 +706,7 @@ export default function Main() {
                           component: (
                             <DeliveryModal
                               //@ts-ignore
-                              setDeliveryDate={set_delivery_date}
+                              setDeliveryDate={(value) => {}}
                               proceed={createLineUp}
                               hidDeliveryDate={searchParams
                                 .get("search_continent")

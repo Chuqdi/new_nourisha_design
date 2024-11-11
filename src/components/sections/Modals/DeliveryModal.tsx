@@ -3,7 +3,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
@@ -41,7 +41,7 @@ export default function DeliveryModal({
   setDeliveryDate,
   hidDeliveryDate,
 }: {
-  proceed: () => Promise<void>;
+  proceed: (delivery:string) => Promise<void>;
   setDeliveryDate: (d: string) => void;
   hidDeliveryDate?: boolean;
 }) {
@@ -61,6 +61,7 @@ export default function DeliveryModal({
     address_: user?.address?.address_,
     postcode: user?.address?.postcode,
   });
+  const setAtomDeliveryDate = useSetAtom(ATOMS.DELIVERY_DATE);
   const inputRef = useRef<HTMLInputElement>(null!);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,7 +100,9 @@ export default function DeliveryModal({
         },
       });
 
-      proceed();
+
+      proceed(delivery_date);
+      
       setSideModal({
         ...sideModal,
         show: false,
@@ -111,9 +114,9 @@ export default function DeliveryModal({
   };
 
  
-  // useEffect(() => {
-  //   setDeliveryDate(delivery_date);
-  // }, [delivery_date]);
+  useEffect(() => {
+    setDeliveryDate(delivery_date);
+  }, [delivery_date]);
 
   useEffect(() => {
     setAddress({
@@ -170,7 +173,7 @@ export default function DeliveryModal({
               delivery_date={delivery_date}
               set_delivery_date={(value)=>{
                 set_delivery_date(value);
-                setDeliveryDate(value);
+                // setDeliveryDate(value);
               }}
             />
           </div>

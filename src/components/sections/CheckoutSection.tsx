@@ -33,7 +33,7 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
             component: (
               <DeliveryModal
                 setDeliveryDate={set_delivery_date}
-                proceed={async () => {
+                proceed={async (date) => {
                   setPaymentModal({
                     show: true,
                     amount: total,
@@ -47,7 +47,7 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
                           city: user?.address?.city,
                           country: user?.address?.country,
                         },
-                        delivery_date,
+                        delivery_date:date,
                         coupon,
                       });
 

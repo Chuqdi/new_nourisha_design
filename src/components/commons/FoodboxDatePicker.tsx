@@ -1,5 +1,7 @@
+import { ATOMS } from "@/store/atoms";
+import { useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const FoodDeliveryDateSelection = ({
   set_delivery_date,
@@ -34,7 +36,9 @@ const FoodDeliveryDateSelection = ({
     const value = e.target.value;
     if (!value) return;
     if (isMonday(new Date(value))) {
-      alert("You cannot choose Monday as a delivery day. Please choose another day.");
+      alert(
+        "You cannot choose Monday as a delivery day. Please choose another day."
+      );
       return;
     }
     if (isWeekendDelivery && !isWeekend(new Date(value))) {
@@ -76,6 +80,7 @@ const FoodDeliveryDateSelection = ({
         type="date"
         onChange={handleDateChange}
         min={minDate}
+        value={delivery_date}
         disabled={false}
         className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem] w-full p-2"
       />

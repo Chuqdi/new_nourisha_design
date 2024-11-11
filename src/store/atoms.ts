@@ -4,6 +4,7 @@ import {
   cartIsLoading,
   cartItems,
   couponCode,
+  DELIVERY_DATE,
   device_id,
   FOOD_BOX,
   foodInfoModal,
@@ -35,5 +36,6 @@ export const ATOMS = {
   mealExtraSelection: atom(mealExtraSelection),
   showMealExtraSelection: atom(showMealExtraSelection),
   couponCode: atom(couponCode),
+  DELIVERY_DATE:atom(DELIVERY_DATE),
   showMobileCartModal: atom(showMobileCartModal),
 };

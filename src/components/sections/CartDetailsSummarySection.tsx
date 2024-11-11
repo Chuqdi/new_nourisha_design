@@ -33,7 +33,7 @@ function Main() {
     getCartSessionDetails
   );
 
-  const onSubmit = async () => {
+  const onSubmit = async (date:string) => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     const address = user?.address;
@@ -47,7 +47,7 @@ function Main() {
           country: address?.country,
         },
 
-        delivery_date,
+        delivery_date:date,
       })
       .then(() => {
         toast({
@@ -68,9 +68,9 @@ function Main() {
       .finally(() => setLoading(false));
   };
 
-  const createOrder = async () => {
+  const createOrder = async (date:string) => {
     setLoading(true);
-    onSubmit();
+    onSubmit(date);
   };
 
   useEffect(() => {

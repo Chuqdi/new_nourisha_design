@@ -207,8 +207,6 @@ export default function () {
   ) => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
-    alert("Here");
-    alert(delivery_date);
 
     setLoadingLineUpCreation(true);
     await axiosClient
@@ -239,7 +237,6 @@ export default function () {
           delivery_date: delivery_date ?? "",
         })
         .then((data) => {
-          alert("Line up created successfully");
           toast({
             variant: "default",
             title: "Success",
