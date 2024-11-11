@@ -111,6 +111,10 @@ export default function Main() {
     }
   }, []);
 
+  useEffect(()=>{
+    alert("fhfhf")
+  }, [])
+
   return (
     <>
       <title>

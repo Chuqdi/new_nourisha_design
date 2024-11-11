@@ -440,7 +440,6 @@ export default function Main() {
       return;
     }
 
-    alert("delivery date: " + delivery_date);
     submitLineUp(delivery_date!, initializePayment);
   };
   const goToNextWeek = () => {
