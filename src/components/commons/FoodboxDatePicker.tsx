@@ -36,6 +36,7 @@ const FoodDeliveryDateSelection = ({
     const value = e.target.value;
     if (!value) return;
     if (isMonday(new Date(value))) {
+      
       alert(
         "You cannot choose Monday as a delivery day. Please choose another day."
       );
