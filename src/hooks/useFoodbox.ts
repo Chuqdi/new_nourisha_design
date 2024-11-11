@@ -237,7 +237,7 @@ export default function () {
           delivery_date: delivery_date ?? "",
         })
         .then((data) => {
-          toast({
+           toast({
             variant: "default",
             title: "Success",
             description: "Line-up created successfully.",
@@ -248,6 +248,8 @@ export default function () {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
           if (msg?.includes("Subscription is required")) {
             initializePayment!!();
+          }else{
+            alert(msg)
           }
         })
         .finally(() => {
