@@ -161,12 +161,12 @@ export default function Order() {
     getOrders
   );
 
-  useEffect(() => {
-    console.log(data?.data?.data);
-    if (data?.data?.data) {
-      // setOrders(data.data.data);
-    }
-  }, [data?.data]);
+  // useEffect(() => {
+  //   console.log(data?.data?.data);
+  //   if (data?.data?.data) {
+  //     // setOrders(data.data.data);
+  //   }
+  // }, [data?.data]);
 
   useEffect(() => {
     setOnLineUp(activeCategory === "MEALPLAN");

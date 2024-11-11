@@ -16,8 +16,9 @@ import {
   showMealExtraSelection,
   showMobileCartModal,
 } from "./jotaiDefaultValues";
-import { atomWithStorage } from "jotai/utils";
+import { atomWithStorage, createJSONStorage } from "jotai/utils";
 import { ILocalCartItem } from "@/config/types";
+
 
 export const ATOMS = {
   showSideModal: atom(SHOW_SIDE_MODAL),
@@ -33,7 +34,7 @@ export const ATOMS = {
     localCartItems as ILocalCartItem[]
   ),
   paymentModal: atom(paymentModal),
-  mealExtraSelection: atom(mealExtraSelection),
+  mealExtraSelection: atomWithStorage("mealExtraSelection",mealExtraSelection),
   showMealExtraSelection: atom(showMealExtraSelection),
   couponCode: atom(couponCode),
   DELIVERY_DATE:atom(DELIVERY_DATE),

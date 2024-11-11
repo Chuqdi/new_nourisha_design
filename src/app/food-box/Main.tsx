@@ -26,7 +26,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { UserContext } from "@/HOC/UserContext";
-import moment from "moment";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -37,7 +36,8 @@ const SingleWeekendBreakDown = ({
 }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const mealExtraSelection = useAtomValue(ATOMS.mealExtraSelection);
-  const { removeFoodBox, getMealExtraFromMealAndDay } = useFoodbox();
+  const { removeFoodBox, getMealExtraFromMealAndDay, emptyBox } = useFoodbox();
+
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const activeDayBox = useMemo(() => {
     if (boxStore) {

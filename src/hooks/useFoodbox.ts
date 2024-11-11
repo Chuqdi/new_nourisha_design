@@ -5,7 +5,8 @@ import { toast } from "@/ui/use-toast";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DEVICE_ID } from "./useFingerPrint";
 import useAuth from "./useAuth";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MEALEXTRASELECTIONS } from "@/config/storageKeys";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
@@ -156,9 +157,30 @@ export default function () {
     }
   };
 
+  const getMealCountInStore = (meal: IMeal) => {
+    let count = 0;
+    DAYS_OF_THE_WEEK?.map((day) => {
+      if (boxStore) {
+        //@ts-ignore
+        const currentDayMeal = boxStore[day];
+        const meals = currentDayMeal?.meals;
+        if (
+          meals?.first_meal?._id === meal?._id ||
+          meals?.last_meal?._id === meal?._id
+        ) {
+          count = count + 1;
+        }
+      }
+    });
+
+    return count;
+  };
+
   const emptyBox = () => {
     setBoxStore(null);
+    setMealExtraSelection([]);
     localStorage.removeItem(FOOD_BOX_STORE);
+    localStorage.removeItem(MEALEXTRASELECTIONS);
   };
 
   const prepareMealForBE = (delivery_date: string) => {
@@ -185,15 +207,39 @@ export default function () {
         returnValue[week?.toLowerCase()] = {
           lunch: {
             mealId: meals?.first_meal?._id,
-            extraId: firstSelectedExtra?.extra?._id,
-            proteinId: firstSelectedExtra?.protein?._id,
+            // extraId: firstSelectedExtra?.extra?._id,
+            // proteinId: firstSelectedExtra?.protein?._id,
           },
           dinner: {
             mealId: meals?.last_meal?._id,
-            extraId: secondSelectedExtra?.extra?._id,
-            proteinId: secondSelectedExtra?.protein?._id,
+            // extraId: secondSelectedExtra?.extra?._id,
+            // proteinId: secondSelectedExtra?.protein?._id,
           },
         };
+
+        if (firstSelectedExtra?.extra?._id) {
+          //@ts-ignore
+          returnValue[week?.toLowerCase()].lunch.extraId =
+            firstSelectedExtra?.extra?._id;
+        }
+
+        if (firstSelectedExtra?.protein?._id) {
+          //@ts-ignore
+          returnValue[week?.toLowerCase()].lunch.proteinId =
+            firstSelectedExtra?.protein?._id;
+        }
+
+        if (secondSelectedExtra?.extra?._id) {
+          //@ts-ignore
+          returnValue[week?.toLowerCase()].dinner.extraId =
+            secondSelectedExtra?.extra?._id;
+        }
+
+        if (secondSelectedExtra?.protein?._id) {
+          //@ts-ignore
+          returnValue[week?.toLowerCase()].dinner.proteinId =
+            secondSelectedExtra?.protein?._id;
+        }
       }
 
       return undefined;
@@ -232,12 +278,9 @@ export default function () {
       const data = prepareMealForBE(delivery_date);
 
       axiosClient
-        .post(`lineups/web`, {
-          ...data,
-          delivery_date: delivery_date ?? "",
-        })
+        .post(`lineups/web`,data)
         .then((data) => {
-           toast({
+          toast({
             variant: "default",
             title: "Success",
             description: "Line-up created successfully.",
@@ -248,8 +291,8 @@ export default function () {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
           if (msg?.includes("Subscription is required")) {
             initializePayment!!();
-          }else{
-            alert(msg)
+          } else {
+            alert(msg);
           }
         })
         .finally(() => {
@@ -257,6 +300,15 @@ export default function () {
         });
     }
   };
+
+  useEffect(() => {
+    const v = localStorage.getItem(MEALEXTRASELECTIONS);
+    if (v) {
+      try {
+        setMealExtraSelection(JSON.parse(v));
+      } catch (e) {}
+    }
+  }, []);
 
   return {
     initializeFoodBox,
@@ -270,5 +322,6 @@ export default function () {
     prepareMealForBE,
     createLineUp,
     loadingLineUpCreation,
+    getMealCountInStore,
   };
 }

@@ -1,4 +1,5 @@
 import { COUNTRIES } from "@/config";
+import { MEALEXTRASELECTIONS } from "@/config/storageKeys";
 import {
   ICartItem,
   IExtraItem,
@@ -155,8 +156,12 @@ export default function SingleCartItemSection({
   country: (typeof COUNTRIES)[0];
   goToNextWeek?: () => void;
 }) {
-  const { addFoodBox, removeFoodBox, checkIfBothMealsAreSelected } =
-    useFoodbox();
+  const {
+    addFoodBox,
+    removeFoodBox,
+    checkIfBothMealsAreSelected,
+    getMealCountInStore,
+  } = useFoodbox();
   const boxStore = useAtomValue(ATOMS.foodBox) as IFoodBox;
   const cartItems = useAtomValue(ATOMS.cartItems) as ICartItem[];
   const setFoodInfoModal = useSetAtom(ATOMS.foodInfoModal);
@@ -201,6 +206,15 @@ export default function SingleCartItemSection({
   );
 
   const addMealToFoodbox = () => {
+    if (getMealCountInStore(meal) + 1 > parseInt(meal?.available_quantity!)) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          "Meal available quantity exceeded. Please choose a different meal.",
+      });
+      return;
+    }
     if (meal?.isProtein || meal?.isSwallow) {
       setMealExtraModal({
         meal,
@@ -213,14 +227,21 @@ export default function SingleCartItemSection({
           swallow?: IExtraItem
         ) => {
           addFoodBox(activeWeek!, meal!);
-          setMealExtraSelection([
+          const extrasValue = [
+            ...(!!mealExtraSelection?.length ? mealExtraSelection : []),
             {
               day: activeWeek,
               extra: swallow,
               meal,
               protein,
             },
-          ]);
+          ];
+          setMealExtraSelection(extrasValue);
+
+          localStorage.setItem(
+            MEALEXTRASELECTIONS,
+            JSON.stringify(extrasValue)
+          );
         },
       });
     } else {
