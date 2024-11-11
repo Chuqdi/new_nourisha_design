@@ -686,15 +686,17 @@ export default function Main() {
 
                     <WeeksBreakDown weeks={weeks} activeWeek={activeWeek} />
 
-                    <OrderSummary
-                      coupon={coupon}
-                      setCoupon={setCoupon}
-                      loadingDiscount={loadingDiscount}
-                      setLoadingDiscount={setLoadingDiscount}
-                      disCountedAmount={disCountedAmount}
-                      setDisCountedAmount={setDisCountedAmount}
-                      weeks={weeks}
-                    />
+                    {!deliveryDate && (
+                      <OrderSummary
+                        coupon={coupon}
+                        setCoupon={setCoupon}
+                        loadingDiscount={loadingDiscount}
+                        setLoadingDiscount={setLoadingDiscount}
+                        disCountedAmount={disCountedAmount}
+                        setDisCountedAmount={setDisCountedAmount}
+                        weeks={weeks}
+                      />
+                    )}
 
                     <Button
                       onClick={() => {
@@ -731,7 +733,7 @@ export default function Main() {
                       }}
                       fullWidth
                       disabled={loadingLineUpCreation}
-                      title="Go to Checkout"
+                      title={!!deliveryDate ?"Continue":"Go to Checkout"}
                       variant="primary"
                       className="py-6 h-[2.7rem]"
                     />
