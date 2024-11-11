@@ -280,6 +280,7 @@ export default function () {
       axiosClient
         .post(`lineups/web`,data)
         .then((data) => {
+          alert("Line up created successfully")
           toast({
             variant: "default",
             title: "Success",
