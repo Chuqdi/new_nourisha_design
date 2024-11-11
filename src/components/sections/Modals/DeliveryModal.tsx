@@ -61,7 +61,6 @@ export default function DeliveryModal({
     address_: user?.address?.address_,
     postcode: user?.address?.postcode,
   });
-  const setAtomDeliveryDate = useSetAtom(ATOMS.DELIVERY_DATE);
   const inputRef = useRef<HTMLInputElement>(null!);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

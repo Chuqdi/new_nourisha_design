@@ -382,12 +382,6 @@ export default function Main() {
   }, [boxStore]);
 
   const initializePayment = (date: string) => {
-    const gtagEvent = {};
-    const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
-      gtagEvent
-    )}&show_payment_modal=1&delivery_date=${date}`;
-    window.location.href = rUrl;
-
     let data = {
       plan_id,
       promo_code: coupon,
@@ -423,7 +417,6 @@ export default function Main() {
         const rUrl = `https://www.eatnourisha.com/food-box?${searchParamQuery}&gtagEvent=${JSON.stringify(
           gtagEvent
         )}&show_payment_modal=1&delivery_date=${date}`;
-
         return {
           clientSecret,
           returnUrl: rUrl,
