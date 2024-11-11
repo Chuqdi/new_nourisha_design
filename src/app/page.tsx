@@ -111,9 +111,7 @@ export default function Main() {
     }
   }, []);
 
-useEffect(()=>{
-  alert("dffhfh")
-}, [])
+
 
   return (
     <>
