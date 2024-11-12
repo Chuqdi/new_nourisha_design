@@ -293,8 +293,6 @@ export default function () {
 
     if (continueCreateLineUpProcess.current) {
       const data = prepareMealForBE(delivery_date);
-      console.log(data)
-
       axiosClient
         .post(`lineups/web`,data)
         .then((data) => {
