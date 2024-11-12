@@ -27,7 +27,7 @@ const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
           </p>
           <div className=" bg-[#DEF54C] rounded-[0.8975rem] p-2 w-fit mx-auto font-bold font-NewSpiritBold">
             {moment(deliveryDate ? new Date(deliveryDate) : null).format(
-              "MMM, YYYY-MM-DD"
+              "MMM, DD-YYYY-MM"
             )}
           </div>
           <button

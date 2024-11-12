@@ -26,6 +26,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { UserContext } from "@/HOC/UserContext";
+import useDeliveryDate from "@/hooks/useDeliveryDate";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -429,6 +430,7 @@ export default function Main() {
   };
 
   const createLineUp = async (date: string) => {
+    let deliveryD = date;
     if (numberOfMealsSelected < weeks.length) {
       toast({
         variant: "default",
@@ -438,7 +440,11 @@ export default function Main() {
       return;
     }
 
-    submitLineUp(date!, () => initializePayment(date));
+    if (searchParams.get("search_continent")?.includes("Asian")) {
+      deliveryD = searchParams?.get("date")!;
+    }
+
+    submitLineUp(deliveryD!, () => initializePayment(deliveryD));
   };
   const goToNextWeek = () => {
     if (activeWeek === weeks[weeks.length - 1]) {
@@ -733,7 +739,7 @@ export default function Main() {
                       }}
                       fullWidth
                       disabled={loadingLineUpCreation}
-                      title={!!deliveryDate ?"Continue":"Go to Checkout"}
+                      title={!!deliveryDate ? "Continue" : "Go to Checkout"}
                       variant="primary"
                       className="py-6 h-[2.7rem]"
                     />
