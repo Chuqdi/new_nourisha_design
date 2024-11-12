@@ -53,6 +53,9 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
   }, [data]);
 
   useEffect(() => {
+    if (isError) {
+      setUser(undefined);
+    }
     if (isError && !user?.email) {
       // localStorage.setItem(LOGGED_IN_USER, "");
       setTimeout(() => {
@@ -94,7 +97,7 @@ function UserContextProvider({ children }: { children: React.ReactNode }) {
           />
         </Modal>
         {/* !userFound && */}
-        { isLoading ? (
+        {isLoading ? (
           <div className="fixed top-0 right-0 left-0 bottom-0 bg-white flex justify-center items-center z-[9999999999999999]">
             <div className="animate-pulse">
               <img
