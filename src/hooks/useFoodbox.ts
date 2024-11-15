@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
 
-export default function () {
+export default function useFoodbox() {
   const box = localStorage.getItem(FOOD_BOX_STORE);
   const [boxStore, setBoxStore] = useAtom(ATOMS.foodBox);
   const { getAxiosClient } = useAuth();
@@ -280,7 +280,7 @@ export default function () {
       const data = prepareMealForBE(delivery_date);
 
       axiosClient
-        .post(`lineups/web`,data)
+        .post(`lineups/web`, data)
         .then((data) => {
           toast({
             variant: "default",
@@ -288,7 +288,7 @@ export default function () {
             description: "Line-up created successfully.",
           });
           emptyBox();
-          router.push("/")
+          router.push("/");
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
