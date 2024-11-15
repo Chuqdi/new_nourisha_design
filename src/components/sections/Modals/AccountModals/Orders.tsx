@@ -126,7 +126,7 @@ function SingleListItem({ order }: { order: IOrder }) {
                   : "bg-[#1b881b] text-white"
               }`}
             >
-              {isProcessing ? "Processing" : "Payment recieved"}
+              {isProcessing ? "Pending" : "Payment recieved"}
             </div>
           </div>
         </>
