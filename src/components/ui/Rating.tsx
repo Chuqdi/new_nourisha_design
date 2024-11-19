@@ -1,12 +1,13 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 
 export default function Ratings() {
   return (
     <div className="flex items-center gap-1">
-      {/* {[1, 2, 3, 4, 5].map((rate, index) => (
-        <Link
+      {[1, 2, 3, 4, 5].map((rate, index) => (
+        <a
+          key={`home_page_rating_${index}`}
           href="https://uk.trustpilot.com/review/eatnourisha.com"
           target="__blank"
         >
@@ -14,15 +15,16 @@ export default function Ratings() {
             className="bg-[#00B67A] h-8 w-8 flex justify-center items-center"
             key={`home_page_rating_${index}`}
           >
-            <img
+            <Image
+              width={24}
+              height={24}
               alt="ratings"
               src="/images/rating_star.png"
-              className="w-6 h-w-6"
             />
           </div>
-        </Link>
-      ))} */}
-      <img src="/images/rating.png" className="w-[10.71431rem] h-8" />
+        </a>
+      ))}
+      {/* <img src="/images/rating.png" className="w-[10.71431rem] h-8" /> */}
     </div>
   );
 }

@@ -5,25 +5,20 @@ import { toast } from "@/ui/use-toast";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DEVICE_ID } from "./useFingerPrint";
 import useAuth from "./useAuth";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MEALEXTRASELECTIONS } from "@/config/storageKeys";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
 
-export default function () {
+export default function useFoodbox() {
   const box = localStorage.getItem(FOOD_BOX_STORE);
   const [boxStore, setBoxStore] = useAtom(ATOMS.foodBox);
   const { getAxiosClient } = useAuth();
-  const searchParams = useSearchParams();
   const [loadingLineUpCreation, setLoadingLineUpCreation] = useState(false);
   const continueCreateLineUpProcess = useRef<boolean>(true);
   const router = useRouter();
-  const isWeekly = useMemo(
-    () => searchParams.get("plan")?.includes("5".toUpperCase()),
-    [searchParams]
-  );
 
   const [mealExtraSelection, setMealExtraSelection] = useAtom(
     ATOMS.mealExtraSelection
@@ -190,19 +185,9 @@ export default function () {
     localStorage.removeItem(MEALEXTRASELECTIONS);
   };
 
-  const weeks = useMemo(() => {
-    if (isWeekly) {
-      return DAYS_OF_THE_WEEK.filter((wk) => {
-        return !(wk === "Sunday") && !(wk === "Saturday");
-      });
-    }
-
-    return DAYS_OF_THE_WEEK;
-  }, [isWeekly]);
-
   const prepareMealForBE = (delivery_date: string) => {
     let returnValue = { delivery_date };
-    weeks.forEach((week) => {
+    DAYS_OF_THE_WEEK.forEach((week) => {
       if (boxStore) {
         //@ts-ignore
         const activeDayBox = boxStore[week];
@@ -293,8 +278,9 @@ export default function () {
 
     if (continueCreateLineUpProcess.current) {
       const data = prepareMealForBE(delivery_date);
+
       axiosClient
-        .post(`lineups/web`,data)
+        .post(`lineups/web`, data)
         .then((data) => {
           toast({
             variant: "default",
@@ -302,10 +288,12 @@ export default function () {
             description: "Line-up created successfully.",
           });
           emptyBox();
-          router.push("/")
+          router.push("/");
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
+          console.log("err", err);
+          
           if (msg?.includes("Subscription is required")) {
             initializePayment!!();
           } else {

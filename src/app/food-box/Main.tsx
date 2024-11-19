@@ -27,6 +27,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { UserContext } from "@/HOC/UserContext";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
+import Image from "next/image";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -664,7 +665,12 @@ export default function Main() {
 
                       <div className="py-3 flex flex-col gap-3">
                         <div className="flex items-center gap-1">
-                          <img src="/images/icons/plate_frame.svg" />
+                          <Image
+                            width={20}
+                            height={20}
+                            alt=""
+                            src="/images/icons/plate_frame.svg"
+                          />
                           <p className="font-bold text-sm font-inter">
                             {isMonthly ? "Monthly" : `${weeks.length} Days`}{" "}
                             meal plan
@@ -676,7 +682,12 @@ export default function Main() {
                         </div>
 
                         <div className="flex items-center gap-1">
-                          <img src="/images/icons/van.svg" />
+                          <Image
+                            width={20}
+                            height={20}
+                            alt=""
+                            src="/images/icons/van.svg"
+                          />
                           <p className="font-bold text-sm font-inter">
                             DELIVERY DAY
                           </p>
