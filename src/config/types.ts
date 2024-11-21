@@ -110,10 +110,10 @@ export interface IReferal {
 }
 export interface IPlan {
   _id: string;
-  amount?: number;
+  amount: number;
   createdAt?: string;
   currency?: string;
-  delivery_fee?: string;
+  delivery_fee: string;
   name?: string;
   perks: [];
   description?: string;
@@ -182,27 +182,35 @@ export interface ILocalCartItem {
   extra: IExtraItem;
 }
 
+export interface IDayMeals {
+  lunch?: {
+    mealId?: IMeal;
+  };
+  dinner?: {
+    mealId?: IMeal;
+  };
+}
+
 export interface ILineUpItem {
-  createdAt?: string;
-  delivery_date?: string;
-  week:1|2;
-  plan:IPlan;
-  status:string;
-  in_week:boolean;
-  delivery_status:string;
-  tuesday: {
-    dinner: {
-      mealId: IMeal;
-    };
-  };
-  saturday: {
-    dinner: {
-      mealId: IMeal;
-    };
-  };
-  monday: {
-    dinner: {
-      mealId: IMeal;
-    };
-  };
+  _id: string;
+  customer: string;
+  coupon_applied?: string;
+  createdAt: string;
+  delivery_date: string;
+  delivery_status: "delivered" | "pending" | string;
+  plan: IPlan;
+  status: string;
+  in_week: boolean;
+  isReturningCustomer: boolean;
+  week: 1 | 2;
+  sub_end_date: string;
+  swallow: boolean;
+  updatedAt: string;
+  monday: IDayMeals;
+  tuesday: IDayMeals;
+  wednesday: IDayMeals;
+  thursday: IDayMeals;
+  friday: IDayMeals;
+  saturday: IDayMeals;
+  sunday?: IDayMeals;
 }

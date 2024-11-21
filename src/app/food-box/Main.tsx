@@ -28,6 +28,7 @@ import { useDebounce } from "use-debounce";
 import { UserContext } from "@/HOC/UserContext";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
 import Image from "next/image";
+import { useQuery } from "react-query";
 
 const SingleWeekendBreakDown = ({
   week,
@@ -334,7 +335,7 @@ export default function Main() {
   const [phrase] = useDebounce(searchPhrase, 1000);
   const setPaymentModal = useSetAtom(ATOMS.paymentModal);
   const [searchParamQuery, setSearchParamQuery] = useState("");
-  const { user } = useContext(UserContext);
+  const { user, isAuthenticated } = useContext(UserContext);
 
   const isWeekend = searchParams?.get("isWeekend") === "true";
   const deliveryDate = searchParams.get("delivery_date");
@@ -429,6 +430,17 @@ export default function Main() {
       },
     });
   };
+
+  const id = localStorage.getItem(DEVICE_ID);
+  const axiosClient = getAxiosClient(id!);
+
+  const { data: usedSubscription } = useQuery({
+    queryKey: ["usedSubscription"],
+    queryFn: async () => await axiosClient.get("subscriptions/me"),
+  });
+
+  console.log("usedSubscription", usedSubscription);
+  
 
   const createLineUp = async (date: string) => {
     let deliveryD = date;
@@ -717,7 +729,7 @@ export default function Main() {
 
                     <Button
                       onClick={() => {
-                        if (!user?.email) {
+                        if (!isAuthenticated) {
                           toast({
                             variant: "destructive",
                             title:

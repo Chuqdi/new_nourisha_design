@@ -3,6 +3,7 @@ import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import MealSelectionSection from "@/components/sections/MealSelectionSection";
+import Image from "next/image";
 
 
 export default function Main() {
@@ -39,7 +40,7 @@ export default function Main() {
         />
       </div>
       <div className="w-full mt-6.25">
-        <img src="/images/zigzag.png" className="w-full" />
+        <Image width={500} height={500} alt="" src="/images/zigzag.png" className="w-full" />
       </div>
       <div className="mt-20 mx-1.25 md:mx-6.25">
         <DownloadTheAppWidgetSection />

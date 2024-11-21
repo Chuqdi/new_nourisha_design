@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
   const searchParams = useSearchParams();
   const deliveryDate = searchParams.get("delivery_date");
+  const { createLineUp } = useFoodbox();
 
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
@@ -31,7 +32,12 @@ const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
             )}
           </div>
           <button
-            onClick={onClose}
+            onClick={() => {
+              if (deliveryDate) {
+                createLineUp(deliveryDate);
+              }
+              onClose();
+            }}
             className={`w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center `}
           >
             Continue

@@ -116,8 +116,8 @@ const useCart = () => {
     item: IMeal,
     quantity: number,
     currentQuantity: number,
-    proteinId?: string,
-    extraId?: string
+    proteinId?: string | null,
+    extraId?: string | null
   ) => {
     if (currentQuantity + quantity > parseInt(item?.available_quantity!)) {
       alert("Item available quantity exceeded");
@@ -126,7 +126,7 @@ const useCart = () => {
     const data = {
       itemId: item?._id,
       quantity,
-      proteinId: proteinId ?? "",
+      proteinId: proteinId ?? null,
       swallowId: extraId ?? null,
     };
     const id = localStorage.getItem(DEVICE_ID);
