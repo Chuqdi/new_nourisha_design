@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 const FOOD_BOX_STORE = "FOOD_BOX_STORE";
 const MEAL_EXTRA_STORE = "MEAL_EXTRA_STORE";
+const DELIVERY_DATE_STORE = "DELIVERY_DATE_STORE";
 
 export default function useFoodbox() {
   const box = localStorage.getItem(FOOD_BOX_STORE);
@@ -24,6 +25,19 @@ export default function useFoodbox() {
     ATOMS.mealExtraSelection
   );
   const showMealExtraSelection = useAtomValue(ATOMS.showMealExtraSelection);
+
+    const setDeliveryDate = (date: string) => {
+      localStorage.setItem(DELIVERY_DATE_STORE, date);
+    };
+
+    const getDeliveryDate = (): string | null => {
+      return localStorage.getItem(DELIVERY_DATE_STORE);
+    };
+
+    const clearDeliveryDate = () => {
+      localStorage.removeItem(DELIVERY_DATE_STORE);
+    };
+
   const initializeFoodBox = () => {
     const fdBox = localStorage.getItem(FOOD_BOX_STORE);
     setBoxStore(fdBox ? JSON.parse(fdBox) : {});
@@ -183,6 +197,7 @@ export default function useFoodbox() {
     setMealExtraSelection([]);
     localStorage.removeItem(FOOD_BOX_STORE);
     localStorage.removeItem(MEALEXTRASELECTIONS);
+    clearDeliveryDate();
   };
 
   const prepareMealForBE = (delivery_date: string) => {
@@ -292,8 +307,6 @@ export default function useFoodbox() {
         })
         .catch((err) => {
           let msg = err?.response?.data?.message ?? "Line-up was not created.";
-          console.log("err", err);
-          
           if (msg?.includes("Subscription is required")) {
             initializePayment!!();
           } else {
@@ -328,5 +341,8 @@ export default function useFoodbox() {
     createLineUp,
     loadingLineUpCreation,
     getMealCountInStore,
+    setDeliveryDate,
+    getDeliveryDate,
+    clearDeliveryDate,
   };
 }

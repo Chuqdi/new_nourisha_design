@@ -19,7 +19,7 @@ const FoodDeliveryDateSelection = ({
   );
   const isWeekend = (date: Date): boolean => {
     const day = date.getDay();
-    return day === 0 || day === 6;
+    return day === 6;
   };
 
   const isWeekDay = (date: Date): boolean => {
@@ -43,7 +43,7 @@ const FoodDeliveryDateSelection = ({
       return;
     }
     if (isWeekendDelivery && !isWeekend(new Date(value))) {
-      alert("Please select a valid weekend date(Saturday or Sunday).");
+      alert("Please select a valid weekend date(Saturday).");
       return;
     }
 

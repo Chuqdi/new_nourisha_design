@@ -181,7 +181,12 @@ export default function Main() {
               <p className="text-dark font-inter text-lg">
                 4.7/5 star reviews on
               </p>
-              <img src="/images/trust_pilot.png" className="h-8" />
+              <a
+                href="https://uk.trustpilot.com/review/eatnourisha.com"
+                target="__blank"
+              >
+                <img src="/images/trust_pilot.png" className="h-8" />
+              </a>
             </div>
             <div className="flex md:block justify-center md:justify-end  mt-2">
               <DownloadApp />

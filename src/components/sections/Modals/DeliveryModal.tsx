@@ -8,7 +8,7 @@ import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
 import useAuth from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 import { useQuery } from "react-query";
@@ -45,7 +45,9 @@ export default function DeliveryModal({
   setDeliveryDate: (d: string) => void;
   hidDeliveryDate?: boolean;
 }) {
-  const [delivery_date, set_delivery_date] = useState("");
+  const searchParams = useSearchParams();
+  const date = searchParams?.get("delivery_date") || "";
+  const [delivery_date, set_delivery_date] = useState(date);
   const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const userCtx = useContext(UserContext);
@@ -172,7 +174,6 @@ export default function DeliveryModal({
               delivery_date={delivery_date}
               set_delivery_date={(value)=>{
                 set_delivery_date(value);
-                // setDeliveryDate(value);
               }}
             />
           </div>

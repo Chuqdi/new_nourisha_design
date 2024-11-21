@@ -7,7 +7,6 @@ import {
   IFoodBoxDayType,
   ILocalCartItem,
   IMeal,
-  IUser,
 } from "@/config/types";
 import { UserContext } from "@/HOC/UserContext";
 import useCart from "@/hooks/useCart";
@@ -19,6 +18,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useMemo } from "react";
+import { Button } from "../Button";
+import { cn } from "@/lib/utils";
 
 export const CartManipulator = ({
   meal,
@@ -42,7 +43,7 @@ export const CartManipulator = ({
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
   const onUpdateCart = (
-    c: (proteinId?: string, extraId?: string) => void,
+    c: (proteinId?: string | null, extraId?: string | null) => void,
     isExceededQuantity?: boolean
   ) => {
     if (
@@ -98,18 +99,19 @@ export const CartManipulator = ({
         small ? "w-[4.6125rem] h-[1.5rem]" : "w-[7.68rem] h-[2.5rem]"
       }`}
     >
-      <button
+      <Button
+        disabled={parseInt(meal?.available_quantity ?? "0") === 0}
         onClick={() => {
           isLoggedIn
             ? onUpdateCart(() => removeItemFrommCart(item?.item?._id!, 1))
             : removeItem(meal, 1);
         }}
-        className={`bg-white justify-center items-center ${
+        className={`bg-white text-black hover:bg-gray-200 hover:bg-opacity-90 justify-center items-center ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
         }  p-2 rounded-full flex `}
       >
         -
-      </button>
+      </Button>
       <p
         className={`text-black-900 font-inter text-base tracking-[-0.015rem] leading-[1.5rem] ${
           small ? "text-sm" : ""
@@ -117,7 +119,8 @@ export const CartManipulator = ({
       >
         {item?.quantity ?? "0"}
       </p>
-      <button
+      <Button
+        disabled={parseInt(meal?.available_quantity ?? "0") === 0}
         onClick={() => {
           isLoggedIn
             ? onUpdateCart(
@@ -129,12 +132,12 @@ export const CartManipulator = ({
                 item?.quantity + 1 > parseInt(item?.item?.available_quantity!)
               );
         }}
-        className={`bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
+        className={`bg-primary-orange-900 hover:bg-opacity-90 hover:bg-primary-orange-900 text-white justify-center items-center  rounded-full flex  ${
           small ? "w-[0.975rem] h-[0.975rem] text-sm" : "w-8 h-8 text-3xl"
         }`}
       >
         +
-      </button>
+      </Button>
     </div>
   );
 };
@@ -253,7 +256,14 @@ export default function SingleCartItemSection({
   };
 
   return (
-    <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
+    <div
+      className={cn(
+        "flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative",
+        {
+          "opacity-50": parseInt(meal?.available_quantity ?? "0") === 0,
+        }
+      )}
+    >
       <div className="absolute top-2 left-0 right-6 w-full    flex justify-between items-center px-4 py-3 md:py-1">
         <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
           {meal?.calories}KCal
@@ -270,6 +280,7 @@ export default function SingleCartItemSection({
         </div>
       </div>
       <img
+        alt=""
         src={meal?.image_url}
         className="w-full h-[15.5625rem] rounded-[0.75rem] object-cover "
       />
@@ -292,23 +303,24 @@ export default function SingleCartItemSection({
                   meal,
                 })
               }
-              className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center"
+              className="w-[4rem] md:w-[6.56rem] h-[2.5rem] border-[1px] border-primary-orange-900 py-4 px-0 flex  items-center rounded-[0.5rem] justify-center !opacity-100"
             >
-              <p className="text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
+              <p className=" !opacity-100 text-primary-orange-900 text-[0.75rem] md:text-sm font-inter ">
                 Meal Info
               </p>
             </button>
             <div className="flex flex-col items-center gap-2">
-              <button
+              <Button
+                disabled={parseInt(meal?.available_quantity ?? "0") === 0}
                 onClick={addMealToFoodbox}
-                className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex "
+                className="w-8 h-8 rounded-full justify-center items-center bg-primary-orange-900 flex hover:bg-primary-orange-900 hover:bg-opacity-90"
               >
                 <Icon
                   className="w-6 h-6 text-3xl"
                   color="#fff"
                   icon="icon-park-outline:plus"
                 />
-              </button>
+              </Button>
             </div>
           </div>
 

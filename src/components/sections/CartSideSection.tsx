@@ -10,10 +10,13 @@ import CheckoutSection from "./CheckoutSection";
 import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useLocalCart from "@/hooks/useLocalCart";
-import usePromotionCode, { roundUpToTwoDecimalPoints } from "@/hooks/usePromotionCode";
+import usePromotionCode, {
+  roundUpToTwoDecimalPoints,
+} from "@/hooks/usePromotionCode";
 import { UserContext } from "@/HOC/UserContext";
+import { RadioGroup, RadioGroupItem } from "../ui/RadioGroup";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -97,17 +100,67 @@ function CartSideSection() {
   const isLoggedIn = useMemo(() => !!user?.email, [user]);
 
   const { getCartTotal } = useLocalCart();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [isWeekend, setIsWeekend] = useState(
+    searchParams.get("isWeekend") === "true"
+  );
+
+  // Calculate delivery fee based on weekend status
+  const deliveryFee = useMemo(() => {
+    if (isLoggedIn) {
+      // If logged in, use cart details and add weekend fee
+      const baseFee = parseInt(cartDetails?.deliveryFee || "10");
+      return isWeekend ? baseFee + 8 : baseFee;
+    } else {
+      // If not logged in, use default fee and add weekend fee
+      const baseFee = 10;
+      return isWeekend ? baseFee + 8 : baseFee;
+    }
+  }, [isLoggedIn, cartDetails?.deliveryFee, isWeekend]);
+
+  // Update URL and state when weekend toggle changes
+  const handleWeekendToggle = (value: string) => {
+    const newWeekendStatus = value === "true";
+    setIsWeekend(newWeekendStatus);
+
+    // Create a new URLSearchParams object
+    const params = new URLSearchParams(searchParams.toString());
+
+    // Set or remove the weekend parameter
+    if (newWeekendStatus) {
+      params.set("isWeekend", "true");
+    } else {
+      params.delete("isWeekend");
+    }
+
+    // Replace the current URL with updated params
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
   const total = useMemo(() => {
     if (isLoggedIn) {
       let t = parseInt(cartDetails?.total!);
 
+      // Subtract discount if applicable
       if (!!disCountedAmount) {
         t = t - disCountedAmount;
       }
+
+      // Add weekend delivery fee
+      t += isWeekend ? 8 : 0;
+
       return roundUpToTwoDecimalPoints(t);
     } else {
-      return getCartTotal()?.total;
+      let localTotal = getCartTotal()?.total;
+
+      // Add weekend delivery fee to local cart total
+      if (isWeekend) {
+        localTotal = (localTotal || 0) + 8;
+      }
+
+      return localTotal;
     }
   }, [
     disCountedAmount,
@@ -115,6 +168,7 @@ function CartSideSection() {
     cartDetails?.total,
     localCartItems,
     isLoggedIn,
+    isWeekend,
   ]);
 
   useEffect(() => {
@@ -213,15 +267,51 @@ function CartSideSection() {
           )}
 
           {!!(isLoggedIn ? cartItems : localCartItems).length && (
-            <div className=" flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
+            <div className="flex flex-col gap-2 border-[1px] border-[#EDF0F5] rounded-[0.5rem] bg-[#F4F5F8] p-3">
+              {/* Delivery fee section */}
               <div className="flex items-center justify-between">
-                <p className="font-inter text-sm">Delivery fee</p>
-                <p className="font-bold font-inter text-sm">
-                  £{isLoggedIn ? cartDetails?.deliveryFee : "10"}
+                <p className="font-inter text-sm">
+                  Delivery fee
+                  {isWeekend && (
+                    <span className="text-green-600 ml-2">
+                      (+£8 Weekend Rate)
+                    </span>
+                  )}
                 </p>
+                <p className="font-bold font-inter text-sm">£{deliveryFee}</p>
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* Weekend Toggle Radio Group */}
+              <div className="flex flex-col gap-2 mt-2">
+                <p className="font-inter text-sm">Delivery Type</p>
+                <RadioGroup
+                  defaultValue={isWeekend ? "true" : "false"}
+                  onValueChange={handleWeekendToggle}
+                  className="flex items-center space-x-3"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="false" id="weekday" />
+                    <label
+                      htmlFor="weekday"
+                      className="font-inter font-normal text-sm"
+                    >
+                      Weekday
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="true" id="weekend" />
+                    <label
+                      htmlFor="weekend"
+                      className="font-inter font-normal text-sm"
+                    >
+                      Weekend
+                    </label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {/* Total section */}
+              <div className="flex items-center justify-between mt-2">
                 <p className="font-inter text-sm">Total</p>
                 <p className="font-bold font-inter text-sm">£{total}</p>
               </div>

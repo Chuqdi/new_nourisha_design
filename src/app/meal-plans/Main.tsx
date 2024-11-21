@@ -3,7 +3,6 @@ import Footer from "@/components/commons/Footer";
 import Navbar from "@/components/commons/Navbar";
 import DownloadTheAppWidgetSection from "@/components/sections/DownloadTheAppWidgetSection";
 import SelectOrdertypeModalSection from "@/components/sections/Modals/SelectordertypeModalSection";
-import ReactSwitch from "react-switch";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { CONTINENTS } from "@/config";
@@ -17,21 +16,25 @@ import { useQuery } from "react-query";
 import { UserContext } from "@/HOC/UserContext";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
+import { Switch } from "@/components/ui/Switch";
+import { Loader2 } from "lucide-react";
+
+// Constants
+const WEEKEND_STORAGE_KEY = "nourisha_weekend_delivery";
+const CONTINENT_STORAGE_KEY = "nourisha_selected_continent";
 
 const SinglePlan = ({
   activeOptionIndex,
   index,
   onMealPlanClicked,
   option,
+  isWeekend,
 }: {
   activeOptionIndex: number;
   index: number;
-  setActiveOptionIndex: (value: number) => void;
   onMealPlanClicked: (value: number) => void;
   option: IPlan;
   isWeekend: boolean;
-  setIsWeekend: (value: boolean) => void;
-  onAfrican?: boolean;
 }) => {
   const selected = activeOptionIndex === index;
 
@@ -40,8 +43,6 @@ const SinglePlan = ({
       onClick={(e) => {
         e.stopPropagation();
         onMealPlanClicked(index);
-
-        // setIsWeekend(false);
       }}
       className={`p-4 rounded-[0.75rem] flex-1 flex flex-col gap-4 cursor-pointer justify-between
                 ${!selected ? "bg-[#F2F4F7]" : "bg-[#E1F0D0]"}
@@ -56,7 +57,7 @@ const SinglePlan = ({
         </p>
       </div>
 
-      <h3 className="font-NewSpiritBold  text-[2.5rem] text-[#323546]">
+      <h3 className="font-NewSpiritBold text-[2.5rem] text-[#323546]">
         {option?.name?.includes("5")
           ? "10 Meals"
           : option.name?.includes("MONTHLY")
@@ -70,8 +71,8 @@ const SinglePlan = ({
 
         <p className="text-black-900 font-inter tracking-[-0.01688rem] leading-[1.6875rem]">
           <span>Total: </span>
+          {/* @ts-ignore */}
           <span className="font-bold">
-            {/* @ts-ignore */}
             £{option?.amount + option?.delivery_fee}
           </span>
         </p>
@@ -79,97 +80,107 @@ const SinglePlan = ({
     </div>
   );
 };
+
 const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
-  const [activeOptionIndex, setActiveOptionIndex] = useState(1);
   const { getAxiosClient } = useAuth();
-  const [options, setOptions] = useState<IPlan[]>([]);
   const router = useRouter();
-  const [checkingSubstate, setCheckingSubstate] = useState(true);
   const { user } = useContext(UserContext);
   const {
     data: deliveryData,
     isLoading: deliveryLoading,
     convertDateFormat,
   } = useDeliveryDate();
+
+  // Persist weekend state with local storage
+  const [isWeekend, setIsWeekend] = useState(() => {
+    const storedWeekendState = localStorage.getItem(WEEKEND_STORAGE_KEY);
+    return storedWeekendState ? JSON.parse(storedWeekendState) : false;
+  });
+
+  // Update local storage when weekend state changes
+  useEffect(() => {
+    localStorage.setItem(WEEKEND_STORAGE_KEY, JSON.stringify(isWeekend));
+  }, [isWeekend]);
+
+  const [activeOptionIndex, setActiveOptionIndex] = useState(1);
+  const [checkingSubstate, setCheckingSubstate] = useState(true);
+  const [options, setOptions] = useState<IPlan[]>([]);
+
   const activeSearchContinent = useMemo(
     () => (onAfrican ? CONTINENTS[0] : CONTINENTS[1]),
     [onAfrican]
   );
-  const [isWeekend, setIsWeekend] = useState(false);
 
-  const getPlans = () => {
+  const getPlans = useCallback(() => {
     const id = localStorage.getItem(DEVICE_ID);
     const axiosClient = getAxiosClient(id!);
     return axiosClient.get(
       `plans?continent=${activeSearchContinent?.search}&weekend=${isWeekend}`
     );
-  };
-  //${activeSearchContinent.noun}
+  }, [activeSearchContinent, isWeekend, getAxiosClient]);
+
   const { data, isLoading } = useQuery(
     [queryKeys.GET_PLANS, activeSearchContinent?.search, isWeekend],
     getPlans
   );
 
+  // Optimized plan sorting
   const sortPlans = useMemo(() => {
     const containsNumber = (str?: string): boolean => /\d/.test(str ?? "");
-    options.sort((a, b) => {
-      if (containsNumber(a?.name) && !containsNumber(b?.name)) {
-        return -1;
-      } else if (!containsNumber(a?.name) && containsNumber(b?.name)) {
-        return 1;
-      } else {
-        //@ts-ignore
-        // return a.name.localeCompare(b.name);
-        // //@ts-ignore
-        return isWeekend
-          ? //@ts-ignore
-            b.name.localeCompare(a.name)
-          : //@ts-ignore
-            a.name.localeCompare(b.name);
-      }
+    return [...options].sort((a, b) => {
+      if (containsNumber(a?.name) && !containsNumber(b?.name)) return -1;
+      if (!containsNumber(a?.name) && containsNumber(b?.name)) return 1;
+      return isWeekend
+        ? // @ts-ignore
+          b?.name.localeCompare(a?.name)
+        : // @ts-ignore
+          a?.name.localeCompare(b?.name);
     });
-    return options;
-  }, [options, onAfrican]);
+  }, [options, isWeekend]);
 
-  const onContinue = (plan: IPlan) => {
-    router.push(
-      `/food-box?plan=${plan?.name}&plan_id=${plan?._id}&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}&plan_amount=${plan?.amount}&deliveryFee=${plan?.delivery_fee}&date=${deliveryData?.data?.data}
-      `
-    );
-  };
+  const onContinue = useCallback(
+    (plan: IPlan) => {
+      router.push(
+        `/food-box?plan=${plan?.name}&plan_id=${plan?._id}&search_continent=${activeSearchContinent?.search}&isWeekend=${isWeekend}&plan_amount=${plan?.amount}&deliveryFee=${plan?.delivery_fee}&date=${deliveryData?.data?.data}`
+      );
+    },
+    [router, activeSearchContinent, isWeekend, deliveryData]
+  );
 
-  const onMealPlanClicked = (index: number) => {
-    if (index === activeOptionIndex) {
-      onContinue(options.find((o, i) => i === activeOptionIndex)!);
-    } else {
-      setActiveOptionIndex(index);
-    }
-  };
-
-  const userAlreadyPaid = (plan: IPlan) => onContinue(plan);
+  const onMealPlanClicked = useCallback(
+    (index: number) => {
+      if (index === activeOptionIndex) {
+        const selectedPlan = options.find((o, i) => i === activeOptionIndex);
+        if (selectedPlan) onContinue(selectedPlan);
+      } else {
+        setActiveOptionIndex(index);
+      }
+    },
+    [activeOptionIndex, options, onContinue]
+  );
 
   const checkSub = useCallback(async () => {
     if (user?.email) {
       const id = localStorage.getItem(DEVICE_ID);
       const axiosClient = getAxiosClient(id!);
       try {
-        await axiosClient.get("subscriptions/me").then((data) => {
-          if (
-            !data?.data?.data?.used_sub &&
-            data?.data?.data?.status === "active"
-          ) {
-            userAlreadyPaid(data?.data?.data?.plan);
-          }
-        });
-      } catch (e) {}
-      setCheckingSubstate(false);
+        const { data } = await axiosClient.get("subscriptions/me");
+        if (!data?.data?.used_sub && data?.data?.status === "active") {
+          onContinue(data?.data?.plan);
+        }
+      } catch (e) {
+        console.error("Subscription check failed", e);
+      } finally {
+        setCheckingSubstate(false);
+      }
     } else {
       setCheckingSubstate(false);
     }
-  }, []);
+  }, [user, getAxiosClient, onContinue]);
+
   useEffect(() => {
     checkSub();
-  }, []);
+  }, [checkSub]);
 
   useEffect(() => {
     if (data?.data?.data?.data) {
@@ -177,6 +188,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     }
   }, [data]);
 
+  // Reset weekend state when continent changes
   useEffect(() => {
     if (!onAfrican) setIsWeekend(false);
   }, [onAfrican]);
@@ -194,46 +206,49 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       />
       <div className="mx-1.25 md:mx-[2rem] my-6">
         {isLoading && (
-          <div className="flex justify-center items-center w-full">
-            <p className="text-center font-inter text-sm">Loading...</p>
+          <div className="flex justify-center items-center w-full my-4">
+            <p className="text-center">
+              <Loader2 size={20} className="animate-spin" />
+            </p>
           </div>
         )}
-        {!checkingSubstate && !isLoading && onAfrican && (
-          <div className="flex items-center gap-1 justify-center my-3 mt-4">
-            <p>Weekend delivery (+£8)</p>
 
-            <ReactSwitch
-              checkedIcon={<></>}
-              uncheckedIcon={<></>}
-              id="switch"
+        {!checkingSubstate && !isLoading && onAfrican && (
+          <div className="flex items-center gap-2 justify-center my-3 mt-4">
+            <p className="text-sm">Weekend delivery (+£8)</p>
+            <Switch
               checked={isWeekend}
-              onChange={setIsWeekend}
+              onCheckedChange={(checked) => {
+                setIsWeekend(checked);
+                localStorage.setItem(
+                  WEEKEND_STORAGE_KEY,
+                  JSON.stringify(checked)
+                );
+              }}
+              aria-label="Toggle weekend delivery"
             />
           </div>
         )}
+
         <div className="grid grid-cols-1 md:flex gap-4">
           {!checkingSubstate &&
-            sortPlans.map((option, index) => {
-              return (
-                <SinglePlan
-                  option={option}
-                  onAfrican={onAfrican}
-                  index={index}
-                  isWeekend={isWeekend}
-                  setIsWeekend={setIsWeekend}
-                  activeOptionIndex={activeOptionIndex}
-                  setActiveOptionIndex={setActiveOptionIndex}
-                  key={`meal_selection_${index}`}
-                  onMealPlanClicked={onMealPlanClicked}
-                />
-              );
-            })}
+            sortPlans.map((option, index) => (
+              <SinglePlan
+                key={`meal_selection_${index}`}
+                option={option}
+                index={index}
+                activeOptionIndex={activeOptionIndex}
+                onMealPlanClicked={onMealPlanClicked}
+                isWeekend={isWeekend}
+              />
+            ))}
         </div>
 
+        {/* Delivery Date Section */}
         {!onAfrican && (
-          <div className="w-full flex flex-col  justify-center ">
+          <div className="w-full flex flex-col justify-center">
             <p className="text-center font-inter text-sm mt-2">DELIVERY DATE</p>
-            <div className="rounded-[0.75rem]  mx-auto bg-[#DEF54C] rounded-[0.5rem]text-center justify-center items-center p-4 text-center font-NewSpiritBold text-2xl ">
+            <div className="rounded-[0.75rem] mx-auto bg-[#DEF54C] text-center p-4 font-NewSpiritBold text-2xl">
               {deliveryLoading ? (
                 <Icon
                   color="#000"
@@ -247,14 +262,18 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
           </div>
         )}
 
+        {/* Continue Button */}
         {!checkingSubstate && !isLoading && (
-          <div className="flex justify-center items-center mt-4 ">
+          <div className="flex justify-center items-center mt-4">
             <Button
               variant="primary"
-              className="h-[2.7rem] py-6  w-full md:w-auto"
+              className="h-[2.7rem] py-6 w-full md:w-auto"
               onClick={() => {
-                if (user?.email) {
-                  onContinue(options.find((o, i) => i === activeOptionIndex)!);
+                const selectedPlan = options.find(
+                  (o, i) => i === activeOptionIndex
+                );
+                if (user?.email && selectedPlan) {
+                  onContinue(selectedPlan);
                 } else {
                   router.push("/auth");
                 }
@@ -267,14 +286,26 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     </>
   );
 };
+
 export default function MealPlan() {
-  const [orderTypeModal, setShowOrderTypeModal] = useState(false);
   const searchParams = useSearchParams();
-  const [onAfrican, setOnAfrican] = useState(
-    searchParams?.get("onAsian") && searchParams?.get("onAsian") === "1"
+  const [orderTypeModal, setShowOrderTypeModal] = useState(false);
+
+  // Persist continent selection in local storage
+  const [onAfrican, setOnAfrican] = useState(() => {
+    const storedContinent = localStorage.getItem(CONTINENT_STORAGE_KEY);
+    if (storedContinent !== null) {
+      return JSON.parse(storedContinent);
+    }
+    return searchParams?.get("onAsian") && searchParams?.get("onAsian") === "1"
       ? false
-      : true
-  );
+      : true;
+  });
+
+  // Update local storage when continent changes
+  useEffect(() => {
+    localStorage.setItem(CONTINENT_STORAGE_KEY, JSON.stringify(onAfrican));
+  }, [onAfrican]);
 
   return (
     <div className="w-full h-full relative pt-6">
@@ -284,6 +315,7 @@ export default function MealPlan() {
           close={() => setShowOrderTypeModal(false)}
         />
       </Modal>
+
       <div className="flex flex-col gap-6 mt-32">
         <h1 className="text-center font-NewSpiritBold text-primary-Green-900 text-[2rem] md:text-[4.5rem]">
           Meal Plans
@@ -295,7 +327,7 @@ export default function MealPlan() {
           Prep your daily meals to maintain healthy eating habits.
         </p>
 
-        <div className="flex justify-center ">
+        <div className="flex justify-center">
           <div className="bg-[#F2F4F7] flex w-[97%] md:w-[30.4375rem] h-[2.5rem] rounded-[2rem] overflow-hidden font-inter text-base cursor-pointer">
             <p
               onClick={() => setOnAfrican(true)}
@@ -325,6 +357,7 @@ export default function MealPlan() {
             </p>
           </div>
         </div>
+
         <div className="w-full md:w-full mx-auto">
           <MealPlanSelection onAfrican={onAfrican} />
         </div>
