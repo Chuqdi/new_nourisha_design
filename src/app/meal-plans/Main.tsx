@@ -102,7 +102,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     localStorage.setItem(WEEKEND_STORAGE_KEY, JSON.stringify(isWeekend));
   }, [isWeekend]);
 
-  const [activeOptionIndex, setActiveOptionIndex] = useState(1);
+  const [activeOptionIndex, setActiveOptionIndex] = useState(0);
   const [checkingSubstate, setCheckingSubstate] = useState(true);
   const [options, setOptions] = useState<IPlan[]>([]);
 
@@ -130,7 +130,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
     return [...options].sort((a, b) => {
       if (containsNumber(a?.name) && !containsNumber(b?.name)) return -1;
       if (!containsNumber(a?.name) && containsNumber(b?.name)) return 1;
-      return isWeekend
+      return isWeekend 
         ? // @ts-ignore
           b?.name.localeCompare(a?.name)
         : // @ts-ignore
@@ -145,12 +145,12 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
       );
     },
     [router, activeSearchContinent, isWeekend, deliveryData]
-  );
+  );  
 
   const onMealPlanClicked = useCallback(
     (index: number) => {
       if (index === activeOptionIndex) {
-        const selectedPlan = options.find((o, i) => i === activeOptionIndex);
+        const selectedPlan = sortPlans.find((o, i) => i === activeOptionIndex);        
         if (selectedPlan) onContinue(selectedPlan);
       } else {
         setActiveOptionIndex(index);
@@ -191,7 +191,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
   // Reset weekend state when continent changes
   useEffect(() => {
     if (!onAfrican) setIsWeekend(false);
-  }, [onAfrican]);
+  }, [onAfrican]);  
 
   return (
     <>

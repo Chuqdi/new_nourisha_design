@@ -167,7 +167,7 @@ export default function MealSelectionSection({
           >
             {displayMeals?.map((meal, index) => (
               <SingleCartItemSection
-                key={`cart_item_${meal._id || index}`}
+                key={`cart_item_${index}`}
                 country={activeContinent}
                 isHome={isHome}
                 meal={meal}
