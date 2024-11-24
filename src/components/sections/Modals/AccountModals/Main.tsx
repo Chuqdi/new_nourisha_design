@@ -11,7 +11,7 @@ import Order from "./Orders";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useRouter } from "next/navigation";
 import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
-import { useContext, } from "react";
+import { useContext } from "react";
 import DownloadAppModal from "../DownloadAppModal";
 import { useMediaQuery } from "react-responsive";
 import { BREAKPOINT } from "@/config";
@@ -21,14 +21,20 @@ export default function MainAccount() {
   const { deleteToken } = useAuthToken();
   const { setUser } = useContext(UserContext);
   const router = useRouter();
-  const isMobile = useMediaQuery({ maxWidth:BREAKPOINT })
-  const [showGiftCardModal, setShowGiftCardModal] = useAtom(ATOMS.showGiftCardModal);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINT });
+  const [showGiftCardModal, setShowGiftCardModal] = useAtom(
+    ATOMS.showGiftCardModal
+  );
   const onLogout = () => {
     deleteToken();
     localStorage.removeItem(LOGGED_IN_USER);
+    if (localStorage.getItem("device-id")) {
+      console.log(`deleting device id ${localStorage.getItem("device-id")}`);
+      
+      localStorage.removeItem("device-id");
+    }
     setSideModal({ ...sideModal, show: false });
-    //@ts-ignore
-    setUser(undefined);
+    setUser(null);
     router.push("/auth");
   };
 

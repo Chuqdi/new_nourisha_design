@@ -269,7 +269,7 @@ const MealPlanSelection = ({ onAfrican }: { onAfrican?: boolean }) => {
               variant="primary"
               className="h-[2.7rem] py-6 w-full md:w-auto"
               onClick={() => {
-                const selectedPlan = options.find(
+                const selectedPlan = sortPlans.find(
                   (o, i) => i === activeOptionIndex
                 );
                 if (user?.email && selectedPlan) {

@@ -11,6 +11,7 @@ import IPInfo from "ip-info-react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Head from "next/head";
 import Script from "next/script";
+import { generateRandomToken } from "@/lib/utils";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -34,14 +35,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script>
+        <meta
+          name="google-site-verification"
+          content="4TELt8M_Nb2PS40WZNWp8fbPlMg0ROxtjoOE3d6Lxpw"
+        />
+        <Script id="gtm-script">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PFSLQZK3');
-            `}
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-PFSLQZK3');
+          `}
         </Script>
 
         <Script

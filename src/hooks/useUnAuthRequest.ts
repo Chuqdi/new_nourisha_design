@@ -15,9 +15,6 @@ const useUnAuthRequest = <T>() => {
     data: null as T,
   });
 
-
- 
-
   const post = async (path: string, data: T) => {
     //Make a POST request to the unauthenticated API
     setResponse({
@@ -53,21 +50,20 @@ const useUnAuthRequest = <T>() => {
       });
   };
 
-
-  const getData =(path:string)=>{
+  const getData = (path: string) => {
     const id = localStorage.getItem(DEVICE_ID);
-    return  axios
-    .get(`${process.env.API_URL}${path}`, {
+    return axios.get(`${process.env.API_URL}${path}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "device-id": id??"29a1df4646cb3417c19994a59a3e022a",
+        "device-id": id ?? "29a1df4646cb3417c19994a59a3e022a",
       },
-    })
-  }
+    });
+  };
 
   const get = async (path: string) => {
     //Make a POST request to the unauthenticated API
+    const id = localStorage.getItem(DEVICE_ID);
     setResponse({
       data: {} as T,
       isError: false,
@@ -78,7 +74,7 @@ const useUnAuthRequest = <T>() => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          "device-id": "29a1df4646cb3417c19994a59a3e022a",
+          "device-id": id,
         },
       })
       .then((apiResponse) => {

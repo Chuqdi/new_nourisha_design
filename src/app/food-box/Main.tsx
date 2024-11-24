@@ -195,11 +195,11 @@ const OrderSummary = ({
   const deliveryFree = searchParams?.get("deliveryFee");
   const total = useMemo(() => {
     let t = amount;
-    if (isWeekend) {
-      t =
-        t +
-        (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
-    }
+    // if (isWeekend) {
+    //   t =
+    //     t +
+    //     (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
+    // }
     if (!!disCountedAmount) {
       t = roundUpToTwoDecimalPoints(t - disCountedAmount);
     }
@@ -221,7 +221,7 @@ const OrderSummary = ({
           {isMonthly ? "Monthly" : `${weeks?.length}-days`} meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
-          +£{amount}
+          +£{amount - 8}
         </p>
       </div>
 
@@ -342,11 +342,11 @@ export default function Main() {
   const deliveryFree = searchParams?.get("deliveryFee");
   const total = useMemo(() => {
     let t = amount;
-    if (isWeekend) {
-      t =
-        t +
-        (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
-    }
+    // if (isWeekend) {
+    //   t =
+    //     t +
+    //     (deliveryFree && !!parseInt(deliveryFree) ? parseInt(deliveryFree) : 0);
+    // }
     if (!!disCountedAmount) {
       t = t - disCountedAmount;
     }
@@ -429,18 +429,7 @@ export default function Main() {
         };
       },
     });
-  };
-
-  const id = localStorage.getItem(DEVICE_ID);
-  const axiosClient = getAxiosClient(id!);
-
-  const { data: usedSubscription } = useQuery({
-    queryKey: ["usedSubscription"],
-    queryFn: async () => await axiosClient.get("subscriptions/me"),
-  });
-
-  console.log("usedSubscription", usedSubscription);
-  
+  };  
 
   const createLineUp = async (date: string) => {
     let deliveryD = date;
@@ -743,6 +732,15 @@ export default function Main() {
                           if (!!deliveryDate) {
                             createLineUp(deliveryDate);
                           } else {
+                            if (numberOfMealsSelected < weeks.length) {
+                              toast({
+                                variant: "default",
+                                title: "Error",
+                                description:
+                                  "You must select meal for all weekdays.",
+                              });
+                              return;
+                            }
                             setSideModal({
                               component: (
                                 <DeliveryModal

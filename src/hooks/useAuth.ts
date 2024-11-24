@@ -1,67 +1,111 @@
 "use client";
+
 import { useToast } from "@/ui/use-toast";
-import axios from "axios";
-import { useContext, useState } from "react";
+import axios, { AxiosError, AxiosInstance } from "axios";
+import { useCallback, useState } from "react";
 import useAuthToken from "./useAuthToken";
-import { useAtomValue } from "jotai";
-import { ATOMS } from "@/store/atoms";
 import { DEVICE_ID } from "./useFingerPrint";
-import { IPInfoContext } from "ip-info-react";
+
+interface RequestError {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+const API_URL = process.env.API_URL;
 
 const useAuth = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-
   const { getToken } = useAuthToken();
   const token = getToken();
-  const userInfo = useContext(IPInfoContext);
 
-  const getAxiosClient = (device_id: string) => {
-    const axiosClient = axios.create({
-      baseURL: `${process.env.API_URL}/`,
-    });
-    axiosClient.interceptors.request.use(async function (req: any) {
-      req.headers["device-id"] = !!device_id
-        ? device_id
-        : !!userInfo?.ip
-        ? userInfo?.ip
-        : userInfo?.city;
-      req.headers["Authorization"] = `Bearer ${token}`;
-      return req;
-    });
-    return axiosClient;
-  };
+  // Memoize the axios client creation
+  const getAxiosClient = useCallback(
+    (deviceId: string): AxiosInstance => {
+      if (!API_URL) {
+        throw new Error("API_URL environment variable is not defined");
+      }
 
-  const makeRequest = async (path: string, data: any, useAlert?: boolean) => {
-    let responseData: null | any = null;
-    setIsLoading(true);
-    const id = localStorage.getItem(DEVICE_ID);
+      if (!deviceId) {
+        throw new Error("Device ID is not defined");
+      }
 
-    const axiosClient = getAxiosClient(id!);
-    await axiosClient
-      .post(path, data)
-      .then((response) => {
-        responseData = response?.data?.data;
-      })
-      .catch((err) => {
-        const status = err.response?.status;
-        const errorMessage = err?.response?.data?.message
-          ? err?.response?.data?.message
-          : "Request could not be completed";
-
-        if (useAlert) {
-          alert(errorMessage);
-        } else {
-          toast({
-            title: "Error",
-            description: errorMessage,
-            variant: "destructive",
-          });
-        }
+      const axiosClient = axios.create({
+        baseURL: API_URL,
+        timeout: 10000, // Add reasonable timeout
+        headers: {
+          "Content-Type": "application/json",
+          "device-id": deviceId,
+          "x-access-token": token,
+        },
       });
-    setIsLoading(false);
-    return responseData;
-  };
+
+      // Add response interceptor for global error handling
+      axiosClient.interceptors.response.use(
+        (response) => response,
+        (error: AxiosError) => {
+          // Handle token expiration
+          if (error.response?.status === 401) {
+            // Handle token refresh or logout logic here
+          }
+          return Promise.reject(error);
+        }
+      );
+
+      return axiosClient;
+    },
+    [token]
+  );
+
+  const handleError = useCallback(
+    (error: RequestError, useAlert: boolean) => {
+      const errorMessage =
+        error?.response?.data?.message || "Request could not be completed";
+
+      if (useAlert) {
+        alert(errorMessage); // Consider using a more modern alert system
+      } else {
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+    },
+    [toast]
+  );
+
+  const makeRequest = useCallback(
+    async <T>(
+      path: string,
+      data: unknown,
+      useAlert = false
+    ): Promise<T | null> => {
+      try {
+        setIsLoading(true);
+        const deviceId = localStorage.getItem(DEVICE_ID);
+
+        if (!deviceId) {
+          throw new Error("Device ID not found");
+        }
+
+        const axiosClient = getAxiosClient(deviceId);
+        const response = await axiosClient.post<{ data: T }>(path, data);
+
+        return response.data.data;
+      } catch (error) {
+        handleError(error as RequestError, useAlert);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [getAxiosClient, handleError]
+  );
 
   return {
     makeRequest,
