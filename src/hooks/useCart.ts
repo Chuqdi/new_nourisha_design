@@ -1,115 +1,128 @@
-import { useEffect, useMemo, useRef } from "react";
-import { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
+import { useEffect, useMemo } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { ATOMS } from "@/store/atoms";
-import queryKeys from "../config/queryKeys";
 import { useQuery } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useAuth from "./useAuth";
-import { LOGGED_IN_USER } from "@/HOC/UserContext";
 import { toast } from "@/ui/use-toast";
+import { ATOMS } from "@/store/atoms";
+import { LOGGED_IN_USER } from "@/HOC/UserContext";
 import { DEVICE_ID } from "./useFingerPrint";
+import useAuth from "./useAuth";
+import useAuthToken from "./useAuthToken";
+import type { ICartDetail, ICartItem, IMeal, IUser } from "../config/types";
+import queryKeys from "../config/queryKeys";
 
-export const CART_TEMP_ID = "cart_temp_id";
 const useCart = () => {
   const [cartItems, setCartItems] = useAtom<ICartItem[]>(ATOMS.cartItems);
   const setCartDetails = useSetAtom(ATOMS.cartDetails);
   const setCartIsLoading = useSetAtom(ATOMS.cartIsLoading);
-  const { getAxiosClient } = useAuth();
-  const { getToken } = useAuthToken();
-  const token = getToken();
   const [showCartSideModal, setShowCartSideModal] = useAtom(
     ATOMS.showMobileCartModal
   );
 
-  const getCartSessionDetails = () => {
-    let user = localStorage?.getItem(LOGGED_IN_USER);
-    let u = JSON.parse(user ?? "") as IUser;
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
+  const { getAxiosClient } = useAuth();
+  const { getToken } = useAuthToken();
 
-    return axiosClient.get(!!token && !!u ? "cart" : "");
+  const getCartSessionDetails = () => {
+    const token = getToken();
+    const deviceId = localStorage.getItem(DEVICE_ID);
+    if (!deviceId) throw new Error("Device ID not found");
+
+    const axiosClient = getAxiosClient(deviceId);
+    const user = localStorage.getItem(LOGGED_IN_USER);
+    const parsedUser = user ? (JSON.parse(user) as IUser) : null;
+
+    return axiosClient.get(token && parsedUser ? "cart" : "");
   };
+
   const {
     data,
     isLoading: IsLoadingCartItem,
     refetch: RefreshCart,
     isRefetching,
-  } = useQuery(queryKeys.GET_CART_ITEMS, getCartSessionDetails);
+  } = useQuery(queryKeys.GET_CART_ITEMS, getCartSessionDetails, {
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Failed to fetch cart",
+        description: error.message,
+      });
+    },
+  });
+
+  useEffect(() => {
+    setCartIsLoading(IsLoadingCartItem || isRefetching);
+  }, [IsLoadingCartItem, isRefetching, setCartIsLoading]);
+
+  useEffect(() => {
+    if (data?.data?.data) {
+      setCartItems(data.data.data.items?.data ?? []);
+      setCartDetails(data.data.data.cart);
+    }
+  }, [data, setCartItems, setCartDetails]);
+
+  const getCartItemTotal = useMemo(() => {
+    const totals = cartItems.reduce(
+      (acc, item) => ({
+        totalDeliveryPrice:
+          acc.totalDeliveryPrice + item.item.price.deliveryFee * item.quantity,
+        totalSubPrice:
+          acc.totalSubPrice + item.item.price.amount * item.quantity,
+        total: 0, // Will be calculated below
+      }),
+      { totalDeliveryPrice: 0, totalSubPrice: 0, total: 0 }
+    );
+
+    totals.total = totals.totalDeliveryPrice + totals.totalSubPrice;
+    return totals;
+  }, [cartItems]);
 
   const emptyCart = () => {
     setCartItems([]);
     setCartDetails({} as ICartDetail);
   };
-  useEffect(() => {
-    setCartIsLoading(isRefetching);
-  }, [IsLoadingCartItem, isRefetching]);
 
-  useEffect(() => {
-    if (data?.data?.data) {
-      setCartItems(data?.data?.data?.items?.data);
-      setCartDetails(data?.data?.data?.cart);
+  const handleCartOperation = async (operation: Promise<any>) => {
+    try {
+      await operation;
+      await RefreshCart();
+      setShowCartSideModal((prev) => ({ ...prev, show: true }));
+    } catch (error: any) {
+      toast({
+        variant: "default",
+        title: error?.response?.data?.message || "Operation failed",
+      });
     }
-  }, [data]);
-
-  const getCartItemTotal = useMemo(() => {
-    let totalDeliveryPrice = 0;
-    let totalSubPrice = 0;
-    cartItems?.map((item) => {
-      totalDeliveryPrice += item?.item?.price?.deliveryFee * item?.quantity;
-      totalSubPrice += item?.item?.price?.amount * item?.quantity;
-    });
-    return {
-      totalDeliveryPrice,
-      totalSubPrice,
-      total: totalDeliveryPrice + totalSubPrice,
-    };
-  }, [cartItems]);
+  };
 
   const updateItemBE = async (itemId: string, quantity: number) => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-
-    axiosClient
-      .put("cart", {
-        itemId,
-        quantity,
-      })
-      .then((data) => {
-        // updateLocalStorageStates(data);
+    const deviceId = localStorage.getItem(DEVICE_ID);
+    if (!deviceId) {
+      toast({
+        variant: "default",
+        title: "Device ID not found",
       });
-    RefreshCart();
-    setShowCartSideModal({
-      ...showCartSideModal,
-      show: true,
-    });
+      return;
+    }
+
+    const axiosClient = getAxiosClient(deviceId);
+    await handleCartOperation(axiosClient.put("cart", { itemId, quantity }));
   };
 
   const removeItemFrommCart = async (itemId: string, quantity: number) => {
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
-
-    await axiosClient
-      .delete(`cart`, {
-        data: {
-          itemId,
-          quantity,
-        },
-      })
-      .then((data) => {
-        // updateLocalStorageStates(data);
-      })
-      .catch((e) => {
-        toast({
-          variant: "default",
-          title: e?.response?.data?.message,
-        });
+    const deviceId = localStorage.getItem(DEVICE_ID);
+    if (!deviceId) {
+      toast({
+        variant: "default",
+        title: "Device ID not found",
       });
-    RefreshCart();
-    setShowCartSideModal({
-      ...showCartSideModal,
-      show: true,
-    });
+      return;
+    }
+
+    const axiosClient = getAxiosClient(deviceId);
+    await handleCartOperation(
+      axiosClient.delete("cart", {
+        data: { itemId, quantity },
+      })
+    );
   };
 
   const addItemToCart = async (
@@ -119,42 +132,41 @@ const useCart = () => {
     proteinId?: string | null,
     extraId?: string | null
   ) => {
-    if (currentQuantity + quantity > parseInt(item?.available_quantity!)) {
-      alert("Item available quantity exceeded");
+    const availableQuantity = parseInt(item?.available_quantity ?? "0");
+    if (currentQuantity + quantity > availableQuantity) {
+      toast({
+        variant: "default",
+        title: "Available quantity exceeded",
+        description: `Only ${availableQuantity} items available`,
+      });
       return;
     }
-    const data = {
-      itemId: item?._id,
-      quantity,
-      proteinId: proteinId ?? null,
-      swallowId: extraId ?? null,
-    };
-    const id = localStorage.getItem(DEVICE_ID);
-    const axiosClient = getAxiosClient(id!);
 
-    await axiosClient
-      .put("cart", data)
-      .then((data) => {
-        // updateLocalStorageStates(data);
-      })
-      .catch((e) => {
-        toast({
-          variant: "default",
-          title: e?.response?.data?.message,
-        });
+    const deviceId = localStorage.getItem(DEVICE_ID);
+    if (!deviceId) {
+      toast({
+        variant: "default",
+        title: "Device ID not found",
       });
-    RefreshCart();
-    setShowCartSideModal({
-      ...showCartSideModal,
-      show: true,
-    });
+      return;
+    }
+
+    const axiosClient = getAxiosClient(deviceId);
+    await handleCartOperation(
+      axiosClient.put("cart", {
+        itemId: item._id,
+        quantity,
+        proteinId: proteinId ?? null,
+        swallowId: extraId ?? null,
+      })
+    );
   };
 
-  const checkMealExistsInCart = (item: IMeal) => 
-    cartItems?.some((c) => c?.item?._id === item?._id);
+  const checkMealExistsInCart = (item: IMeal) =>
+    cartItems?.some((cartItem) => cartItem?.item?._id === item?._id);
 
-  const returnValue = useMemo(() => {
-    return {
+  const returnValue = useMemo(
+    () => ({
       addItemToCart,
       getCartItemTotal,
       getCartSessionDetails,
@@ -162,9 +174,12 @@ const useCart = () => {
       updateItemBE,
       removeItemFrommCart,
       emptyCart,
-      checkMealExistsInCart
-    };
-  }, [cartItems]);
+      checkMealExistsInCart,
+    }),
+    [cartItems]
+  );
+
   return returnValue;
 };
+
 export default useCart;

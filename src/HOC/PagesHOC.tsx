@@ -10,6 +10,7 @@ import SideModal from "@/components/ui/SideModal";
 import { BREAKPOINT } from "@/config";
 import useFingerPrint, { DEVICE_ID } from "@/hooks/useFingerPrint";
 import useLocalCart from "@/hooks/useLocalCart";
+import { generateRandomToken } from "@/lib/utils";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
@@ -41,13 +42,14 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
   const { initializeCart } = useLocalCart();
   const userInfo = useContext(IPInfoContext);
 
-
   useEffect(() => {
-    if (userInfo?.ip) {
-      set_device_id(userInfo?.ip);
-      localStorage.setItem(DEVICE_ID, userInfo?.ip);
-      setLoadingDeviceId(false);
+    const token = localStorage.getItem(DEVICE_ID);
+    if (!token) {
+      const newToken = generateRandomToken();
+      set_device_id(newToken);
+      localStorage.setItem(DEVICE_ID, newToken);
     }
+    setLoadingDeviceId(false);
   }, [userInfo?.ip]);
 
   useEffect(() => {
@@ -62,9 +64,9 @@ export default function PagesHOC({ children }: { children: React.ReactNode }) {
       setShowMobileCartModal({ ...showMobileCartModal, show: false });
     }
   }, [paymentModal?.show]);
-  useEffect(()=>{
+  useEffect(() => {
     initializeCart();
-  },[]);
+  }, []);
 
   return (
     <div>

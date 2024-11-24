@@ -214,3 +214,14 @@ export interface ILineUpItem {
   saturday: IDayMeals;
   sunday?: IDayMeals;
 }
+
+export interface ILoginResponse {
+  payload: {
+    sub: string;
+    email: string;
+    roles: string[];
+    is_verified: boolean;
+    exp: number;
+  };
+  token: string;
+}

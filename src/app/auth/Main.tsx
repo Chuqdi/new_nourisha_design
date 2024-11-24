@@ -1,22 +1,22 @@
 "use client";
 import Navbar from "@/components/commons/Navbar";
 import Button from "@/components/ui/Button";
+import { BREAKPOINT } from "@/config";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useAuth from "@/hooks/useAuth";
 import useAuthToken from "@/hooks/useAuthToken";
+import useLocalCart from "@/hooks/useLocalCart";
 import { loginUserScheme, registerUserScheme } from "@/lib/scheme";
+import { ATOMS } from "@/store/atoms";
 import { toast } from "@/ui/use-toast";
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
+import { useAtom } from "jotai";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import Login from "./Login";
 import SignUp from "./SignUp";
-import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
-import useLocalCart from "@/hooks/useLocalCart";
-import { useAtom } from "jotai";
-import { ATOMS } from "@/store/atoms";
-import { useMediaQuery } from "react-responsive";
-import { BREAKPOINT } from "@/config";
-import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Main() {
   const [onLogin, setOnLogin] = useState(true);
@@ -55,7 +55,7 @@ export default function Main() {
       ILocalCartItem: cartItem,
     };
 
-    const createdUser = await makeRequest(
+    const createdUser = await makeRequest<any>(
       onLogin ? "auth/login" : "auth/register",
       body
     );
