@@ -5,6 +5,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { useCallback, useState } from "react";
 import useAuthToken from "./useAuthToken";
 import { DEVICE_ID } from "./useFingerPrint";
+import { useLogout } from "./useLogout";
 
 interface RequestError {
   response?: {
@@ -21,6 +22,7 @@ const useAuth = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const { getToken } = useAuthToken();
+  const logout = useLogout();
   const token = getToken();
 
   // Memoize the axios client creation
@@ -36,7 +38,7 @@ const useAuth = () => {
 
       const axiosClient = axios.create({
         baseURL: API_URL,
-        timeout: 10000, // Add reasonable timeout
+        timeout: 10000,
         headers: {
           "Content-Type": "application/json",
           "device-id": deviceId,
@@ -47,10 +49,11 @@ const useAuth = () => {
       // Add response interceptor for global error handling
       axiosClient.interceptors.response.use(
         (response) => response,
-        (error: AxiosError) => {
-          // Handle token expiration
+        async (error: AxiosError) => {
+          // Handle token expiration or invalid token
           if (error.response?.status === 401) {
-            // Handle token refresh or logout logic here
+            // Prevent infinite loops if the logout request itself fails
+            logout();
           }
           return Promise.reject(error);
         }
@@ -58,7 +61,7 @@ const useAuth = () => {
 
       return axiosClient;
     },
-    [token]
+    [token, logout]
   );
 
   const handleError = useCallback(
