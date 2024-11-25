@@ -123,7 +123,7 @@ const MealPlanList = ({
           </div>
         )}
         <div>
-          <p className="font-medium text-sm">Meal Subscription</p>
+          <p className="font-medium text-sm">Meal Plan</p>
           <p className="text-gray-500 text-xs">
             {moment(lineup?.createdAt).format("MMM, YYYY-MM-DD")}
           </p>

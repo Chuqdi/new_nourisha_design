@@ -39,12 +39,13 @@ const useCart = () => {
     refetch: RefreshCart,
     isRefetching,
   } = useQuery(queryKeys.GET_CART_ITEMS, getCartSessionDetails, {
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Failed to fetch cart",
-        description: error.message,
-      });
+    retry: (failureCount: number, error: any) => {
+      // Don't retry on 401 errors
+      if (error?.response?.status === 401) {
+        return false;
+      }
+      // Retry other errors up to 3 times
+      return failureCount < 3;
     },
   });
 

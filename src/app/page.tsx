@@ -9,20 +9,17 @@ import Button from "@/components/ui/Button";
 import DownloadApp from "@/components/ui/DownloadApp";
 import Ratings from "@/components/ui/Rating";
 import { BREAKPOINT } from "@/config";
-import Marquee from "react-fast-marquee";
-//@ts-ignore
-import HTMLRenderer from "react-html-renderer";
+import BannerMarqueeSection from "@/components/sections/BannerMarqueeSection";
+import CartModal from "@/components/sections/Modals/CartModal";
+import { CART_MODAL_OPEN } from "@/config/storageKeys";
+import { ATOMS } from "@/store/atoms";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+//@ts-ignore
+import HTMLRenderer from "react-html-renderer";
 import { useMediaQuery } from "react-responsive";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { ATOMS } from "@/store/atoms";
-import { useAtomValue, useSetAtom } from "jotai";
-import { NextSeo } from "next-seo";
-import Head from "next/head";
-import BannerMarqueeSection from "@/components/sections/BannerMarqueeSection";
-import { CART_MODAL_OPEN } from "@/config/storageKeys";
-import CartModal from "@/components/sections/Modals/CartModal";
 
 export default function Main() {
   const intervalRef = useRef();

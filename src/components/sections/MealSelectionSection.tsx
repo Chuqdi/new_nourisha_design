@@ -35,12 +35,13 @@ export default function MealSelectionSection({
   onlyMeals = false,
   colCountClass,
 }: MealSelectionProps) {
-  // State Management Improvements
+  // State Management
   const [activeContinent, setActiveContinent] = useState(CONTINENTS[0]);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [meals, setMeals] = useState<IMeal[]>([]);
-  const [limit, setLimit] = useState("6");
+  const [limit, setLimit] = useState(6);
   const [allMealsLoaded, setAllMealLoaded] = useState(false);
+  const [page, setPage] = useState(1);
 
   // Hooks and Context
   const { getData } = useUnAuthRequest();
@@ -63,24 +64,35 @@ export default function MealSelectionSection({
     );
   }, [activeContinent, pathName]);
 
-  // Meal Fetching Function (Improved)
+  // Reset states when pathname changes
+  useEffect(() => {
+    setMeals([]);
+    setPage(1);
+    setLimit(6);
+    setAllMealLoaded(false);
+    setActiveContinent(CONTINENTS[0]);
+  }, [pathName]);
+
+  // Meal Fetching Function
   const getMeals = useCallback(() => {
     const orderTypeParam =
       pathName?.toUpperCase() === "/BULK-MEALS" ? "&orderType=bulk-order" : "";
 
     return getData(
-      `meals/pack?page=1&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}${orderTypeParam}`
+      `meals/pack?page=${page}&limit=${limit}&continent=${activeContinent.search}&searchPhrase=${searchPhrase}${orderTypeParam}`
     );
-  }, [activeContinent, limit, searchPhrase, pathName, getData]);
+  }, [activeContinent, limit, searchPhrase, pathName, getData, page]);
 
   // Fetch Meals
-  const { data, isLoading } = useFetch(
+  const { data, isLoading, refetch } = useFetch(
     getMeals,
     [
       queryKeys.GET_AVAILABLE_MEAL,
       activeContinent?.name,
-      limit,
+      limit.toString(),
       debouncedSearchPhrase,
+      pathName,
+      page.toString(),
     ],
     true
   );
@@ -96,22 +108,34 @@ export default function MealSelectionSection({
     },
   });
 
+  // Reset meals when continent changes
+  useEffect(() => {
+    setMeals([]);
+    setPage(1);
+    setLimit(6);
+    setAllMealLoaded(false);
+  }, [activeContinent]);
+
   // Effect to update meals
   useEffect(() => {
     //@ts-ignore
     if (data?.data?.data) {
-      //@ts-ignore
+      // @ts-ignore
       const { totalCount, data: fetchedMeals } = data.data.data;
 
-      const uniqueMeals = fetchedMeals.filter(
-        (meal: IMeal) =>
-          !meals.some((existingMeal) => existingMeal._id === meal._id)
-      );
+      if (page === 1) {
+        setMeals(fetchedMeals);
+      } else {
+        const uniqueMeals = fetchedMeals.filter(
+          (meal: IMeal) =>
+            !meals.some((existingMeal) => existingMeal._id === meal._id)
+        );
+        setMeals((prev) => [...prev, ...uniqueMeals]);
+      }
 
-      setAllMealLoaded(totalCount === meals.length + uniqueMeals.length);
-      setMeals((prev) => [...prev, ...uniqueMeals]);
+      setAllMealLoaded(totalCount <= page * limit);
     }
-  }, [data]);
+  }, [data, page, limit]);
 
   // Effect for search mutation
   useEffect(() => {
@@ -122,7 +146,13 @@ export default function MealSelectionSection({
 
   // Load More Handler
   const handleLoadMore = () => {
-    setLimit((prev) => prev + 10);
+    setPage((prev) => prev + 1);
+  };
+
+  // Continent Change Handler
+  const handleContinentChange = (continent: (typeof CONTINENTS)[0]) => {
+    setActiveContinent(continent);
+    setSearchPhrase("");
   };
 
   // Render Methods
@@ -138,7 +168,7 @@ export default function MealSelectionSection({
       {CONTINENTS.map((country, index) => (
         <button
           key={`continent_${index}`}
-          onClick={() => setActiveContinent(country)}
+          onClick={() => handleContinentChange(country)}
           className={`flex gap-3 p-3 h-12 justify-center rounded-full items-center ${
             activeContinent === country ? "bg-[#E1F0D0]" : "bg-[#F2F4F7]"
           }`}
@@ -167,7 +197,7 @@ export default function MealSelectionSection({
           >
             {displayMeals?.map((meal, index) => (
               <SingleCartItemSection
-                key={`cart_item_${index}`}
+                key={`${meal._id}_${index}`}
                 country={activeContinent}
                 isHome={isHome}
                 meal={meal}

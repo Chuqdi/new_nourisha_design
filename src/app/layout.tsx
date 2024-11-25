@@ -30,7 +30,7 @@ export default function RootLayout({
     if (window && localStorage) {
       setloading(false);
     }
-  });
+  }, []);
 
   return (
     <html lang="en">
