@@ -210,7 +210,10 @@ export default function useFoodbox() {
       try {
         const { data } = await axiosClient.get("subscriptions/me");
 
+        console.log(data?.data?.used_sub);
+        
         if (data?.data?.used_sub) {
+          console.log("Subscription is required");
           initializePayment?.();
           return;
         }
@@ -227,6 +230,8 @@ export default function useFoodbox() {
         emptyBox();
         router.push("/");
       } catch (error: any) {
+        console.log(error);
+        
         const message =
           error?.response?.data?.message ?? "Line-up was not created.";
 
