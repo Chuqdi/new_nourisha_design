@@ -12,7 +12,7 @@ import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
-export default ({ coupon, total }: { coupon: string; total: number }) => {
+const CheckoutSection = ({ coupon, total }: { coupon: string; total: number }) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const { user } = useContext(UserContext);
@@ -47,8 +47,9 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
                           city: user?.address?.city,
                           country: user?.address?.country,
                         },
-                        delivery_date:date,
+                        delivery_date: date,
                         coupon,
+                        platform: "web",
                       });
 
                       sendGAEvent({
@@ -93,3 +94,5 @@ export default ({ coupon, total }: { coupon: string; total: number }) => {
     />
   );
 };
+
+export default CheckoutSection;

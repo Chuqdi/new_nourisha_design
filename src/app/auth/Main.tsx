@@ -53,6 +53,7 @@ export default function Main() {
     const body = {
       ...(onLogin ? loginFormik?.values : signUpForm?.values),
       ILocalCartItem: cartItem,
+      platform: "web",
     };
 
     const createdUser = await makeRequest<any>(

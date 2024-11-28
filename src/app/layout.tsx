@@ -24,7 +24,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        retry: 1,
+      },
+    },
+  });
   const [loading, setloading] = useState(true);
   useEffect(() => {
     if (window && localStorage) {

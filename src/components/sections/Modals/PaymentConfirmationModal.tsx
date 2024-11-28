@@ -18,7 +18,7 @@ const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
         <img src="/images/chef.png" className="w-[17.89019rem] h-auto" />
         <div className="w-[90%] md:w-[80%] mx-auto rounded-[0.718rem] bg-white p-3 flex flex-col gap-3 -mt-6">
           <p className="font-NewSpiritBold text-[1.077rem] text-center">
-            Your payment was successfully
+            Your payment was successful
           </p>
           <p className="text-center text-[#5C5F84] font-inter w-3/4 mx-auto">
             Click continue to submit your meal selection.
@@ -83,9 +83,9 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
   return !!deliveryDate ? (
     <LineupOrderConfirmation onClose={close} />
   ) : (
-    <div className="bg-white rounded-[0.75rem] p-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-black font-inter text-2xl">Payment successful</h3>
+    <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
+      <div className="flex justify-between items-center w-full">
+        <img src="/images/icon_with_title.png" className="w-36 h-auto mx-auto" />
         <button
           className="w-10 h-10 flex justify-center items-center bg-[#EDEDF3] rounded-full"
           onClick={onClose}
@@ -93,14 +93,22 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
           <Icon className="w-4 h-4" color="#000" icon="iconoir:cancel" />
         </button>
       </div>
-      <p className="font-inter text-sm text-center text-black-900 mt-4">
-        You can access your order and any additional information through your
-        account on our website.
-      </p>
-      <p className="font-inter text-sm text-black-900 text-center">
-        If you have any questions or need further assistance, please don’t
-        hesitate to reach out.
-      </p>
+      <div className="w-full flex flex-col items-center justify-center mt-8">
+        <img src="/images/chef.png" className="w-[17.89019rem] h-auto" />
+        <div className="w-[90%] md:w-[80%] mx-auto rounded-[0.718rem] bg-white p-3 flex flex-col gap-3 -mt-6">
+          <p className="font-NewSpiritBold text-[1.077rem] text-center">
+            Your payment was successful
+          </p>
+          <p className="font-inter text-sm text-center text-black-900 mt-4">
+            You can access your order and any additional information through
+            your account on our website.{" "}
+          </p>{" "}
+          <p className="font-inter text-sm text-black-900 text-center">
+            If you have any questions or need further assistance, please don’t
+            hesitate to reach out.{" "}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
