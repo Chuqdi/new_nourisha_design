@@ -12,7 +12,15 @@ import { toast } from "@/ui/use-toast";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 
-const CheckoutSection = ({ coupon, total }: { coupon: string; total: number }) => {
+const CheckoutSection = ({
+  coupon,
+  total,
+  isWeekend,
+}: {
+  isWeekend?: boolean;
+  coupon: string;
+  total: number;
+}) => {
   const [delivery_date, set_delivery_date] = useState(Date.now().toString());
   const cartDetails = useAtomValue(ATOMS.cartDetails) as ICartDetail;
   const { user } = useContext(UserContext);
@@ -40,7 +48,7 @@ const CheckoutSection = ({ coupon, total }: { coupon: string; total: number }) =
                     onContinue: async () => {
                       const id = localStorage.getItem(DEVICE_ID);
                       const axiosClient = getAxiosClient(id!);
-                      const response = await axiosClient.post("orders", {
+                      const data = {
                         cart_session_id: cartDetails?.session_id,
                         delivery_address: {
                           address_: user?.address?.address_,
@@ -49,8 +57,11 @@ const CheckoutSection = ({ coupon, total }: { coupon: string; total: number }) =
                         },
                         delivery_date: date,
                         coupon,
+                        weekend_delivery: isWeekend || false,
+                        delivery_period: isWeekend ? "weekend" : "in-week",
                         platform: "web",
-                      });
+                      };
+                      const response = await axiosClient.post("orders", data);
 
                       sendGAEvent({
                         event: "purchase",

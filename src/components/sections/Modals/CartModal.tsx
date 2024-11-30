@@ -287,7 +287,7 @@ function CartModal() {
         )}
 
         {!!(isLoggedIn ? cartItems.length : localCartItems.length) && (
-          <CheckoutSection total={total} coupon={coupon} />
+          <CheckoutSection isWeekend={isWeekend} total={total} coupon={coupon} />
         )}
       </div>
     </SidebarHOC>
