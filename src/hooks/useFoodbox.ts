@@ -76,10 +76,7 @@ export default function useFoodbox() {
   const showMealExtraSelection = useAtomValue(ATOMS.showMealExtraSelection);
 
   // Initialize storage hooks
-  const foodBoxStorage = useLocalStorage<any>(
-    STORAGE_KEYS.FOOD_BOX,
-    {}
-  );
+  const foodBoxStorage = useLocalStorage<any>(STORAGE_KEYS.FOOD_BOX, {});
   const mealExtraStorage = useLocalStorage(STORAGE_KEYS.MEAL_EXTRA, []);
   const deliveryDateStorage = useLocalStorage<string | null>(
     STORAGE_KEYS.DELIVERY_DATE,
@@ -192,6 +189,100 @@ export default function useFoodbox() {
     [boxStore]
   );
 
+  const emptyBox = useCallback(() => {
+    setBoxStore(null);
+    setMealExtraSelection([]);
+    foodBoxStorage.removeStoredValue();
+    mealExtraStorage.removeStoredValue();
+    deliveryDateStorage.removeStoredValue();
+  }, [
+    setBoxStore,
+    setMealExtraSelection,
+    foodBoxStorage,
+    mealExtraStorage,
+    deliveryDateStorage,
+  ]);
+  const checkIfBothMealsAreSelected = useCallback(
+    (day: IFoodBoxDayType) => {
+      const currentBox = foodBoxStorage.getStoredValue();
+
+      if (!currentBox[day]) {
+        return {
+          isFirstMealAlreadySelected: false,
+          isSecondMealAlreadySelected: false,
+        };
+      }
+
+      return {
+        isFirstMealAlreadySelected: !!currentBox[day].meals.first_meal,
+        isSecondMealAlreadySelected: !!currentBox[day].meals.last_meal,
+      };
+    },
+    [foodBoxStorage]
+  );
+
+  const prepareMealForBE = useCallback(
+    async (delivery_date: string) => {
+      let returnValue: {
+        delivery_date: string;
+        platform: string;
+        [key: string]: any;
+      } = { delivery_date, platform: "web" };
+
+      // Check local storage directly if boxStore is null
+      const storedBoxStore = localStorage.getItem(STORAGE_KEYS.FOOD_BOX);
+
+      // Parse the stored box store or use an empty object
+      const parsedBoxStore = storedBoxStore ? JSON.parse(storedBoxStore) : {};
+
+      DAYS_OF_THE_WEEK.forEach((week) => {
+        // Use parsedBoxStore instead of boxStore
+        const activeDayBox = parsedBoxStore[week];
+        if (!activeDayBox?.meals) return;
+
+        const meals = activeDayBox.meals as {
+          first_meal: IMeal;
+          last_meal: IMeal;
+        };
+
+        const firstSelectedExtra = getMealExtraFromMealAndDay(
+          meals.first_meal,
+          week as IFoodBoxDayType
+        );
+
+        const secondSelectedExtra = getMealExtraFromMealAndDay(
+          meals.last_meal,
+          week as IFoodBoxDayType
+        );
+
+        const dayKey = week.toLowerCase();
+        returnValue[dayKey] = {
+          lunch: {
+            mealId: meals.first_meal?._id,
+            ...(firstSelectedExtra?.extra?._id && {
+              extraId: firstSelectedExtra.extra._id,
+            }),
+            ...(firstSelectedExtra?.protein?._id && {
+              proteinId: firstSelectedExtra.protein._id,
+            }),
+          },
+          dinner: {
+            mealId: meals.last_meal?._id,
+            ...(secondSelectedExtra?.extra?._id && {
+              extraId: secondSelectedExtra.extra._id,
+            }),
+            ...(secondSelectedExtra?.protein?._id && {
+              proteinId: secondSelectedExtra.protein._id,
+            }),
+          },
+        };
+      });
+
+      return returnValue;
+    },
+    [getMealExtraFromMealAndDay] // Removed boxStore from dependency array
+  );
+
   const createLineUp = useCallback(
     async (delivery_date: string, initializePayment?: () => void) => {
       const deviceId = localStorage.getItem(DEVICE_ID);
@@ -202,23 +293,20 @@ export default function useFoodbox() {
           description: "Device ID not found",
         });
         return;
-      }
+      }       
 
       setLoadingLineUpCreation(true);
       const axiosClient = getAxiosClient(deviceId);
 
       try {
         const { data } = await axiosClient.get("subscriptions/me");
-
-        console.log(data?.data?.used_sub);
-        
         if (data?.data?.used_sub) {
           console.log("Subscription is required");
           initializePayment?.();
           return;
         }
 
-        const lineupData = prepareMealForBE(delivery_date);
+        const lineupData = await prepareMealForBE(delivery_date);        
         await axiosClient.post("lineups/web", lineupData);
 
         toast({
@@ -231,7 +319,7 @@ export default function useFoodbox() {
         router.push("/");
       } catch (error: any) {
         console.log(error);
-        
+
         const message =
           error?.response?.data?.message ?? "Line-up was not created.";
 
@@ -251,93 +339,6 @@ export default function useFoodbox() {
     [router, getAxiosClient]
   );
 
-  const emptyBox = useCallback(() => {
-    setBoxStore(null);
-    setMealExtraSelection([]);
-    foodBoxStorage.removeStoredValue();
-    mealExtraStorage.removeStoredValue();
-    deliveryDateStorage.removeStoredValue();
-  }, [
-    setBoxStore,
-    setMealExtraSelection,
-    foodBoxStorage,
-    mealExtraStorage,
-    deliveryDateStorage,
-  ]);
-const checkIfBothMealsAreSelected = useCallback(
-  (day: IFoodBoxDayType) => {
-    const currentBox = foodBoxStorage.getStoredValue();
-
-    if (!currentBox[day]) {
-      return {
-        isFirstMealAlreadySelected: false,
-        isSecondMealAlreadySelected: false,
-      };
-    }
-
-    return {
-      isFirstMealAlreadySelected: !!currentBox[day].meals.first_meal,
-      isSecondMealAlreadySelected: !!currentBox[day].meals.last_meal,
-    };
-  },
-  [foodBoxStorage]
-);
-
-const prepareMealForBE = useCallback(
-  (delivery_date: string) => {
-    const returnValue: {
-      delivery_date: string;
-      [key: string]: any;
-    } = { delivery_date };
-
-    DAYS_OF_THE_WEEK.forEach((week) => {
-      if (!boxStore) return;
-      // @ts-ignore
-      const activeDayBox = boxStore[week];
-      if (!activeDayBox?.meals) return;
-
-      const meals = activeDayBox.meals as {
-        first_meal: IMeal;
-        last_meal: IMeal;
-      };
-
-      const firstSelectedExtra = getMealExtraFromMealAndDay(
-        meals.first_meal,
-        week as IFoodBoxDayType
-      );
-
-      const secondSelectedExtra = getMealExtraFromMealAndDay(
-        meals.last_meal,
-        week as IFoodBoxDayType
-      );
-
-      const dayKey = week.toLowerCase();
-      returnValue[dayKey] = {
-        lunch: {
-          mealId: meals.first_meal?._id,
-          ...(firstSelectedExtra?.extra?._id && {
-            extraId: firstSelectedExtra.extra._id,
-          }),
-          ...(firstSelectedExtra?.protein?._id && {
-            proteinId: firstSelectedExtra.protein._id,
-          }),
-        },
-        dinner: {
-          mealId: meals.last_meal?._id,
-          ...(secondSelectedExtra?.extra?._id && {
-            extraId: secondSelectedExtra.extra._id,
-          }),
-          ...(secondSelectedExtra?.protein?._id && {
-            proteinId: secondSelectedExtra.protein._id,
-          }),
-        },
-      };
-    });
-
-    return returnValue;
-  },
-  [boxStore, getMealExtraFromMealAndDay]
-);
   // Initialize meal extras from storage on mount
   useEffect(() => {
     const storedExtras = localStorage.getItem(MEALEXTRASELECTIONS);

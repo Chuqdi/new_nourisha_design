@@ -221,7 +221,7 @@ const OrderSummary = ({
           {isMonthly ? "Monthly" : `${weeks?.length}-days`} meal plan
         </p>
         <p className="font-inter text-black-900 text-sm font-bold">
-          +£{amount - 8}
+          +£{isWeekend ? amount - 8 : amount}
         </p>
       </div>
 

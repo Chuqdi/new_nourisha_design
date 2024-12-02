@@ -46,7 +46,7 @@ function Main() {
           city: address?.city,
           country: address?.country,
         },
-
+        platform: "web",
         delivery_date:date,
       })
       .then(() => {

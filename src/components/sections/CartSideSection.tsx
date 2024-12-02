@@ -323,7 +323,7 @@ function CartSideSection() {
         className={`w-full ${showCartSideModal?.showDetails ? "pb-8" : "pb-2"}`}
       >
         {!!(isLoggedIn ? cartItems : localCartItems).length && (
-          <CheckoutSection total={total} coupon={coupon} />
+          <CheckoutSection isWeekend={isWeekend} total={total} coupon={coupon} />
         )}
       </div>
     </div>
