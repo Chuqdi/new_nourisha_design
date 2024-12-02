@@ -189,62 +189,6 @@ export default function useFoodbox() {
     [boxStore]
   );
 
-  const createLineUp = useCallback(
-    async (delivery_date: string, initializePayment?: () => void) => {
-      const deviceId = localStorage.getItem(DEVICE_ID);
-      if (!deviceId) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Device ID not found",
-        });
-        return;
-      }
-
-      setLoadingLineUpCreation(true);
-      const axiosClient = getAxiosClient(deviceId);
-
-      try {
-        const { data } = await axiosClient.get("subscriptions/me");
-        if (data?.data?.used_sub) {
-          console.log("Subscription is required");
-          initializePayment?.();
-          return;
-        }
-
-        const lineupData = prepareMealForBE(delivery_date);
-        await axiosClient.post("lineups/web", lineupData);
-
-        toast({
-          variant: "default",
-          title: "Success",
-          description: "Line-up created successfully.",
-        });
-
-        emptyBox();
-        router.push("/");
-      } catch (error: any) {
-        console.log(error);
-
-        const message =
-          error?.response?.data?.message ?? "Line-up was not created.";
-
-        if (message.includes("Subscription is required")) {
-          initializePayment?.();
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: message,
-          });
-        }
-      } finally {
-        setLoadingLineUpCreation(false);
-      }
-    },
-    [router, getAxiosClient]
-  );
-
   const emptyBox = useCallback(() => {
     setBoxStore(null);
     setMealExtraSelection([]);
@@ -278,17 +222,22 @@ export default function useFoodbox() {
   );
 
   const prepareMealForBE = useCallback(
-    (delivery_date: string) => {
-      const returnValue: {
+    async (delivery_date: string) => {
+      let returnValue: {
         delivery_date: string;
         platform: string;
         [key: string]: any;
       } = { delivery_date, platform: "web" };
 
+      // Check local storage directly if boxStore is null
+      const storedBoxStore = localStorage.getItem(STORAGE_KEYS.FOOD_BOX);
+
+      // Parse the stored box store or use an empty object
+      const parsedBoxStore = storedBoxStore ? JSON.parse(storedBoxStore) : {};
+
       DAYS_OF_THE_WEEK.forEach((week) => {
-        if (!boxStore) return;
-        // @ts-ignore
-        const activeDayBox = boxStore[week];
+        // Use parsedBoxStore instead of boxStore
+        const activeDayBox = parsedBoxStore[week];
         if (!activeDayBox?.meals) return;
 
         const meals = activeDayBox.meals as {
@@ -331,8 +280,65 @@ export default function useFoodbox() {
 
       return returnValue;
     },
-    [boxStore, getMealExtraFromMealAndDay]
+    [getMealExtraFromMealAndDay] // Removed boxStore from dependency array
   );
+
+  const createLineUp = useCallback(
+    async (delivery_date: string, initializePayment?: () => void) => {
+      const deviceId = localStorage.getItem(DEVICE_ID);
+      if (!deviceId) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Device ID not found",
+        });
+        return;
+      }       
+
+      setLoadingLineUpCreation(true);
+      const axiosClient = getAxiosClient(deviceId);
+
+      try {
+        const { data } = await axiosClient.get("subscriptions/me");
+        if (data?.data?.used_sub) {
+          console.log("Subscription is required");
+          initializePayment?.();
+          return;
+        }
+
+        const lineupData = await prepareMealForBE(delivery_date);        
+        await axiosClient.post("lineups/web", lineupData);
+
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "Line-up created successfully.",
+        });
+
+        emptyBox();
+        router.push("/");
+      } catch (error: any) {
+        console.log(error);
+
+        const message =
+          error?.response?.data?.message ?? "Line-up was not created.";
+
+        if (message.includes("Subscription is required")) {
+          initializePayment?.();
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: message,
+          });
+        }
+      } finally {
+        setLoadingLineUpCreation(false);
+      }
+    },
+    [router, getAxiosClient]
+  );
+
   // Initialize meal extras from storage on mount
   useEffect(() => {
     const storedExtras = localStorage.getItem(MEALEXTRASELECTIONS);

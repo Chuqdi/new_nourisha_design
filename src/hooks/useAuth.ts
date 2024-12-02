@@ -36,7 +36,6 @@ const useAuth = () => {
 
       const axiosClient = axios.create({
         baseURL: API_URL,
-        timeout: 10000,
         headers: {
           "Content-Type": "application/json",
           "device-id": deviceId,
