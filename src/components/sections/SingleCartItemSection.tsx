@@ -20,6 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useContext, useMemo } from "react";
 import { Button } from "../Button";
 import { cn } from "@/lib/utils";
+import { Badge } from "../ui/Badge";
 
 export const CartManipulator = ({
   meal,
@@ -256,14 +257,7 @@ export default function SingleCartItemSection({
   };
 
   return (
-    <div
-      className={cn(
-        "flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative",
-        {
-          "opacity-50": parseInt(meal?.available_quantity ?? "0") === 0,
-        }
-      )}
-    >
+    <div className="flex-1 bg-white p-2 border-[1px] border-[#F2F4F7] shadow-cartItem rounded-[0.75rem] relative">
       <div className="absolute top-2 left-0 right-6 w-full    flex justify-between items-center px-4 py-3 md:py-1">
         <p className="font-inter text-sm p-1 rounded-[0.5rem] bg-white">
           {meal?.calories}KCal
@@ -279,6 +273,14 @@ export default function SingleCartItemSection({
           }
         </div>
       </div>
+      {parseInt(meal?.available_quantity ?? "0") === 0 && (
+        <>
+          <div className="absolute inset-0 bg-[#F2F4F7] opacity-45"></div>
+          <Badge className="text-red-500 text-base top-[calc(50%-70px)] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] font-inter absolute shadow-[0_0_20px_rgba(0_0_0_/_60%)]">
+            Sold Out
+          </Badge>
+        </>
+      )}
       <img
         alt=""
         src={meal?.image_url}
