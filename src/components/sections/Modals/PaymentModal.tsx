@@ -13,6 +13,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { ATOMS } from "@/store/atoms";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
+import { useToast } from "@/ui/use-toast";
 
 const Payment = ({
   close,
@@ -26,8 +27,6 @@ const Payment = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [paymentLoading, setPaymentLoadng] = useState(false);
   const { amount, gtagEvent } = useAtomValue(ATOMS.paymentModal);
-
- 
 
   const handleSubmitPayment = async () => {
     if (elements == null || stripe == null) {
@@ -109,6 +108,7 @@ const PaymentModal = ({
   const [paymentModal, setPaymentModal] = useAtom(ATOMS.paymentModal);
   const router = useRouter();
   const pathname = usePathname();
+  const { toast } = useToast();
   const [options, setOptions] = useState<StripeElementsOptions>({});
   useEffect(() => {
     getClientSecret()
@@ -119,7 +119,12 @@ const PaymentModal = ({
       })
       .catch((e) => {
         setError(e?.response?.data?.message);
-        alert(e?.response?.data?.message ?? "Unable to load payment modal");
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description:
+            e?.response?.data?.message ?? "Unable to load payment modal",
+        });
         setPaymentModal({
           ...paymentModal,
           show: false,

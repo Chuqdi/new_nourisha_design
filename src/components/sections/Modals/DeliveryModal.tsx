@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
-import { IUser } from "@/config/types";
+import { IAddress, IUser } from "@/config/types";
 import {
   Select,
   SelectContent,
@@ -23,15 +23,8 @@ import {
 import { cities } from "@/lib/utils";
 
 // Type definitions
-interface IAddress {
-  address_: string;
-  city: string;
-  country: string;
-  postcode: string;
-}
-
 interface DeliveryModalProps {
-  proceed: (delivery: string) => Promise<void>;
+  proceed: (delivery: string, address: IAddress) => Promise<void>;
   setDeliveryDate: (d: string) => void;
   hidDeliveryDate?: boolean;
 }
@@ -145,7 +138,7 @@ export default function DeliveryModal({
       };
 
       userCtx?.setUser(updatedUser);
-      await proceed(delivery_date);
+      await proceed(delivery_date, address);
       handleClose();
     } catch (error) {
       console.error("Error updating delivery details:", error);

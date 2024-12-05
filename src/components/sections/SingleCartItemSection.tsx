@@ -276,7 +276,7 @@ export default function SingleCartItemSection({
       {parseInt(meal?.available_quantity ?? "0") === 0 && (
         <>
           <div className="absolute inset-0 bg-[#F2F4F7] opacity-45"></div>
-          <Badge className="text-red-500 text-base top-[calc(50%-70px)] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] font-inter absolute shadow-[0_0_20px_rgba(0_0_0_/_60%)]">
+          <Badge className="text-red-500 text-base top-[calc(50%-50px)] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] font-inter absolute shadow-[0_0_20px_rgba(0_0_0_/_60%)]">
             Sold Out
           </Badge>
         </>
