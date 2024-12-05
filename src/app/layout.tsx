@@ -28,7 +28,6 @@ export default function RootLayout({
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
         retry: 1,
       },
     },

@@ -13,6 +13,14 @@ import { DEVICE_ID } from "@/hooks/useFingerPrint";
 import FoodDeliveryDateSelection from "@/components/commons/FoodboxDatePicker";
 import useDeliveryDate from "@/hooks/useDeliveryDate";
 import { IUser } from "@/config/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
+import { cities } from "@/lib/utils";
 
 // Type definitions
 interface IAddress {
@@ -40,7 +48,7 @@ export default function DeliveryModal({
   const userCtx = useContext(UserContext);
   const { getAxiosClient } = useAuth();
   const { data, isLoading, convertDateFormat } = useDeliveryDate();
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);  
 
   // State
   const [delivery_date, set_delivery_date] = useState(
@@ -61,6 +69,21 @@ export default function DeliveryModal({
     setAddress((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleCountryChange = (country: string) => {
+    setAddress((prev) => ({
+      ...prev,
+      country,
+      city: "", // Reset city when country changes
+    }));
+  };
+
+  const handleCityChange = (city: string) => {
+    setAddress((prev) => ({
+      ...prev,
+      city,
     }));
   };
 
@@ -94,7 +117,7 @@ export default function DeliveryModal({
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault();    
 
     if (!validateForm()) return;
     if (!user) return;
@@ -102,7 +125,7 @@ export default function DeliveryModal({
     setLoading(true);
 
     try {
-      const axiosClient = getAxiosClient(deviceId!);
+      const axiosClient = getAxiosClient(deviceId!);      
       await axiosClient.put(`customers/me`, { address });
 
       // Create a properly typed user object for the update
@@ -142,7 +165,7 @@ export default function DeliveryModal({
   }, [delivery_date, setDeliveryDate]);
 
   useEffect(() => {
-    if (user?.address) {
+    if (user?.address) {      
       setAddress({
         country: user.address.country || "",
         city: user.address.city || "",
@@ -219,27 +242,68 @@ export default function DeliveryModal({
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {renderDeliveryDate()}
 
-        {["country", "city", "address_", "postcode"].map((field) => (
-          <div key={field}>
-            <label>
-              {field === "address_"
-                ? "House address"
-                : field.charAt(0).toUpperCase() + field.slice(1)}
-            </label>
-            <Input
-              value={address[field as keyof IAddress]}
-              name={field}
-              type="text"
-              disabled={loading || isLoading}
-              placeholder={`Enter your ${
-                field === "address_" ? "address" : field
-              }`}
-              onChange={handleAddressChange}
-              className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
-              required
-            />
-          </div>
-        ))}
+        <div>
+          <label>District</label>
+          <Select value={address.country} onValueChange={handleCountryChange}>
+            <SelectTrigger className="bg-[#F2F4F7]">
+              <SelectValue placeholder="Select district" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.keys(cities).map((country) => (
+                <SelectItem key={country} value={country}>
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label>City</label>
+          <Select
+            value={address.city}
+            onValueChange={handleCityChange}
+            disabled={!address.country}
+          >
+            <SelectTrigger className="bg-[#F2F4F7]">
+              <SelectValue
+                placeholder={
+                  address.country ? "Select a city" : "Select country first"
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {address.country &&
+                cities[address.country as keyof typeof cities].map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Input
+          value={address.address_}
+          name="address_"
+          type="text"
+          disabled={loading || isLoading}
+          placeholder="Enter your address"
+          onChange={handleAddressChange}
+          className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          required
+        />
+
+        <Input
+          value={address.postcode}
+          name="postcode"
+          type="text"
+          disabled={loading || isLoading}
+          placeholder="Enter your postcode"
+          onChange={handleAddressChange}
+          className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem]"
+          required
+        />
 
         <Button
           variant="primary"

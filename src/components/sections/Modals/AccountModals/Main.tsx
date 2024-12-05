@@ -11,6 +11,7 @@ import Referal from "./Referal";
 import DownloadAppModal from "../DownloadAppModal";
 import { useLogout } from "@/hooks/useLogout";
 import { FC } from "react";
+import { useRouter } from "next/navigation";
 
 export interface MenuItem {
   title: string;
@@ -19,6 +20,7 @@ export interface MenuItem {
 }
 
 const Main: FC = () => {
+  const router = useRouter();
   const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
   const [showGiftCardModal, setShowGiftCardModal] = useAtom(
     ATOMS.showGiftCardModal
@@ -107,7 +109,11 @@ const Main: FC = () => {
       </div>
 
       <button
-        onClick={handleLogout}
+        onClick={() => {
+          handleLogout();
+          setSideModal({ ...sideModal, show: false });
+          router.push("/auth");
+        }}
         className="flex items-center justify-between h-[3.5rem] py-1 px-4 border rounded-[0.4rem] w-full hover:bg-[#0000002e]"
       >
         <div className="flex items-center gap-3">

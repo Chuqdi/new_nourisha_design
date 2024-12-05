@@ -113,7 +113,7 @@ export default function useFoodbox() {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Food selection completed",
+          description: "Food selection for this day is completed",
         });
         return;
       }

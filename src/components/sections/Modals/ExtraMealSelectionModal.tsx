@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { BREAKPOINT } from "@/config";
 import { IExtraItem } from "@/config/types";
 import useAuth from "@/hooks/useAuth";
@@ -34,7 +35,7 @@ const Option = ({
   const { data, isLoading } = useQuery("GET_EXTRAS" + extra_id, getPlans);
 
   useEffect(() => {
-    if (data?.data?.data) {
+    if (data?.data?.data) {      
       const ex = (
         isSwallow
           ? data?.data?.data?.swallow?.data ?? []
@@ -49,7 +50,7 @@ const Option = ({
   }, [selectedExtras, extra_id]);
 
   return isLoading ? (
-    <p className="text-center">Loading...</p>
+    <Skeleton className="w-full h-12" />
   ) : (
     extra?.name && (
       <div
@@ -86,9 +87,12 @@ function ExtraMealSelectionModal() {
   const [selectedSwallowExtras, setSelectedSwallowExtras] = useState<
     IExtraItem | undefined
   >(undefined);
-
+  
   const onContinue = () => {
-    if ((extraModal?.meal?.isSwallow && !selectedSwallowExtras?._id) || (extraModal?.meal?.isProtein && !selectedProteinExtras?._id)) {
+    if (
+      (extraModal?.meal?.isSwallow && !selectedSwallowExtras?._id) ||
+      (extraModal?.meal?.isProtein && !selectedProteinExtras?._id)
+    ) {
       alert("Please select both protein and swallow extras");
       return;
     }
@@ -98,7 +102,7 @@ function ExtraMealSelectionModal() {
       selectedProteinExtras?._id!,
       selectedSwallowExtras?._id!,
       selectedProteinExtras,
-      selectedSwallowExtras,
+      selectedSwallowExtras
     );
     setExtraModal({
       show: false,

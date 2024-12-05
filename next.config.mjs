@@ -54,13 +54,13 @@ const nextConfig = {
       },
     ];
   },
-  onError: (error) => {
-    if (process.env.NEXT_IGNORE_BUILD_ERROR === "true") {
-      console.warn("Ignoring build error:", error);
-      return;
-    }
-    throw error;
-  },
+  // onError: (error) => {
+  //   if (process.env.NEXT_IGNORE_BUILD_ERROR === "true") {
+  //     console.warn("Ignoring build error:", error);
+  //     return;
+  //   }
+  //   throw error;
+  // },
   eslint: {
     ignoreDuringBuilds: true,
   },
