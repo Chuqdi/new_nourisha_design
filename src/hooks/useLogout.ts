@@ -1,15 +1,10 @@
-import { useRouter } from "next/navigation";
+import { LOGGED_IN_USER, UserContext } from "@/HOC/UserContext";
 import useAuthToken from "@/hooks/useAuthToken";
 import { useContext } from "react";
-import { UserContext, LOGGED_IN_USER } from "@/HOC/UserContext";
-import { ATOMS } from "@/store/atoms";
-import { useAtom } from "jotai";
 
 export const useLogout = () => {
   const { deleteToken } = useAuthToken();
   const { setUser } = useContext(UserContext);
-  const router = useRouter();
-  const [sideModal, setSideModal] = useAtom(ATOMS.showSideModal);
 
   const handleLogout = () => {
     deleteToken();
@@ -20,9 +15,7 @@ export const useLogout = () => {
       localStorage.removeItem("device-id");
     }
 
-    setSideModal({ ...sideModal, show: false });
     setUser(null);
-    router.push("/auth");
   };
 
   return handleLogout;

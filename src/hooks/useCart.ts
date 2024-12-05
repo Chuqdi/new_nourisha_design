@@ -26,11 +26,13 @@ const useCart = () => {
     const deviceId = localStorage.getItem(DEVICE_ID);
     if (!deviceId) throw new Error("Device ID not found");
 
-    const axiosClient = getAxiosClient(deviceId);
     const user = localStorage.getItem(LOGGED_IN_USER);
     const parsedUser = user ? (JSON.parse(user) as IUser) : null;
 
-    return axiosClient.get(token && parsedUser ? "cart" : "");
+    if (!token && !parsedUser) return null;
+
+    const axiosClient = getAxiosClient(deviceId);
+    return axiosClient.get("cart");
   };
 
   const {
