@@ -239,7 +239,7 @@ function CartSideSection() {
                   if (isLoggedIn) {
                     setCoupon(e.target.value);
                   } else {
-                    alert("Please login/register to use coupon code");
+                    alert("Please login to use coupon code");
                   }
                 }}
                 placeholder="Enter coupon code here..."

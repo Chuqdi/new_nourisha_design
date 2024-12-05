@@ -41,7 +41,7 @@ const CheckoutSection = ({
             component: (
               <DeliveryModal
                 setDeliveryDate={set_delivery_date}
-                proceed={async (date) => {
+                proceed={async (date, address) => {
                   setPaymentModal({
                     show: true,
                     amount: total,
@@ -51,9 +51,9 @@ const CheckoutSection = ({
                       const data = {
                         cart_session_id: cartDetails?.session_id,
                         delivery_address: {
-                          address_: user?.address?.address_,
-                          city: user?.address?.city,
-                          country: user?.address?.country,
+                          address_: address?.address_,
+                          city: address?.city,
+                          country: address?.country,
                         },
                         delivery_date: date,
                         coupon,
@@ -97,7 +97,7 @@ const CheckoutSection = ({
           toast({
             variant: "destructive",
             title: "Error",
-            description: "Please login/register to continue",
+            description: "Please login to continue",
           });
           router.push("/auth");
         }

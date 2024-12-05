@@ -70,6 +70,13 @@ export interface ICartItem {
   _id: string;
 }
 
+export interface IAddress {
+  address_: string;
+  city: string;
+  country: string;
+  postcode: string;
+}
+
 export interface IExtraItem {
   _id?: string;
   name?: string;
