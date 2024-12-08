@@ -5,7 +5,6 @@ import { toast } from "@/ui/use-toast";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtom, useAtomValue } from "jotai";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { CartManipulator } from "./SingleCartItemSection";
 import CheckoutSection from "./CheckoutSection";
 import Input from "../ui/Input";
 import { useMediaQuery } from "react-responsive";
@@ -17,6 +16,7 @@ import usePromotionCode, {
 } from "@/hooks/usePromotionCode";
 import { UserContext } from "@/HOC/UserContext";
 import { RadioGroup, RadioGroupItem } from "../ui/RadioGroup";
+import CartManipulator from "../commons/CartManipulator";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();

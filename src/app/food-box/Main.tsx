@@ -429,7 +429,7 @@ export default function Main() {
         };
       },
     });
-  };  
+  };
 
   const createLineUp = async (date: string) => {
     let deliveryD = date;
@@ -606,7 +606,9 @@ export default function Main() {
 
                   <div className="flex items-center justify-center my-8">
                     <Button
-                      title={isLoading ? "Loading..." : "Load more"}
+                      title={"Load more"}
+                      isLoading={isLoading}
+                      disabled={isLoading}
                       onClick={() =>
                         setLimit((value) => (parseInt(value) + 10).toString())
                       }
@@ -717,7 +719,7 @@ export default function Main() {
                     )}
 
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         if (!isAuthenticated) {
                           toast({
                             variant: "destructive",
@@ -730,7 +732,7 @@ export default function Main() {
                           router.push(`/auth?${params}`);
                         } else {
                           if (!!deliveryDate) {
-                            createLineUp(deliveryDate);
+                            await createLineUp(deliveryDate);
                           } else {
                             if (numberOfMealsSelected < weeks.length) {
                               toast({
@@ -759,7 +761,8 @@ export default function Main() {
                         }
                       }}
                       fullWidth
-                      disabled={loadingLineUpCreation}
+                      isLoading={loadingLineUpCreation}
+                      disabled={loadingLineUpCreation || isLoading}
                       title={!!deliveryDate ? "Continue" : "Go to Checkout"}
                       variant="primary"
                       className="py-6 h-[2.7rem]"

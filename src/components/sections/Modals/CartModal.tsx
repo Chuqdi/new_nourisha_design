@@ -4,7 +4,6 @@ import useCart from "@/hooks/useCart";
 import { ATOMS } from "@/store/atoms";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAtomValue } from "jotai";
-import { CartManipulator } from "../SingleCartItemSection";
 import Input from "@/components/ui/Input";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
@@ -17,6 +16,7 @@ import usePromotionCode, {
 import { CART_MODAL_OPEN } from "@/config/storageKeys";
 import { UserContext } from "@/HOC/UserContext";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
+import CartManipulator from "@/components/commons/CartManipulator";
 
 function CartItem({ item }: { item: ICartItem | ILocalCartItem }) {
   const { removeItemFrommCart } = useCart();
@@ -287,7 +287,11 @@ function CartModal() {
         )}
 
         {!!(isLoggedIn ? cartItems.length : localCartItems.length) && (
-          <CheckoutSection isWeekend={isWeekend} total={total} coupon={coupon} />
+          <CheckoutSection
+            isWeekend={isWeekend}
+            total={total}
+            coupon={coupon}
+          />
         )}
       </div>
     </SidebarHOC>

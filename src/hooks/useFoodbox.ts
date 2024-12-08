@@ -319,7 +319,6 @@ export default function useFoodbox() {
         router.push("/");
       } catch (error: any) {
         console.log(error);
-
         const message =
           error?.response?.data?.message ?? "Line-up was not created.";
 

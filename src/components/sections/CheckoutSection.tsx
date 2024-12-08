@@ -79,7 +79,7 @@ const CheckoutSection = ({
 
                       return {
                         clientSecret: response?.data?.data?.client_secret,
-                        returnUrl: `https://www.eatnourisha.com?show_payment_modal=1&reloadWindow=1`,
+                        returnUrl: `https://www.eatnourisha.com?reloadWindow=1`,
                       };
                     },
                     gtagEvent: () => {},

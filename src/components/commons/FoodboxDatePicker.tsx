@@ -1,91 +1,90 @@
-import { ATOMS } from "@/store/atoms";
-import { useSetAtom } from "jotai";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import React from "react";
+import { DatePicker } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { useSearchParams } from "next/navigation";
 
-const FoodDeliveryDateSelection = ({
-  set_delivery_date,
-  delivery_date,
-}: {
+interface FoodDeliveryDateSelectionProps {
   set_delivery_date: (value: string) => void;
   delivery_date: string;
+}
+
+const FoodDeliveryDateSelection: React.FC<FoodDeliveryDateSelectionProps> = ({
+  set_delivery_date,
+  delivery_date,
 }) => {
-  const [minDate, setMinDate] = useState<string>("");
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const isWeekendDelivery = useMemo(
-    () => searchParams?.get("isWeekend") === "true",
-    [router]
-  );
-  const isWeekend = (date: Date): boolean => {
-    const day = date.getDay();
-    return day === 6;
+  const isWeekendDelivery = searchParams?.get("isWeekend") === "true";
+
+  // Determine minimum selectable date based on current time
+  const getMinSelectableDate = () => {
+    const now = dayjs();
+    // If it's past 12 PM, set minimum date to the day after tomorrow
+    // Otherwise, set to tomorrow
+    return now.hour() >= 12
+      ? now.add(2, "day").startOf("day")
+      : now.add(1, "day").startOf("day");
   };
 
-  const isWeekDay = (date: Date): boolean => {
-    const day = date.getDay();
-    return [2, 3, 4, 5].includes(day);
-  };
+  // Disable dates based on delivery type
+  const disabledDate = (current: Dayjs) => {
+    // If no date selected, use current date
+    const minDate = getMinSelectableDate();
 
-  const isMonday = (date: Date): boolean => {
-    const day = date.getDay();
-    return day === 1;
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (!value) return;
-    if (isMonday(new Date(value))) {
-      
-      alert(
-        "You cannot choose Monday as a delivery day. Please choose another day."
-      );
-      return;
-    }
-    if (isWeekendDelivery && !isWeekend(new Date(value))) {
-      alert("Please select a valid weekend date(Saturday).");
-      return;
+    // Ensure date is not before minimum selectable date
+    if (current.isBefore(minDate, "day")) {
+      return true;
     }
 
-    if (!isWeekendDelivery && !isWeekDay(new Date(value))) {
-      alert("Please select a valid weekday (Tuesday - Friday) ");
-      return;
+    // Weekend delivery logic
+    if (isWeekendDelivery) {
+      // Only allow Saturdays
+      return current.day() !== 6;
+    } else {
+      // Disable weekend dates
+      return [0, 6].includes(current.day());
     }
-
-    set_delivery_date(value);
   };
 
-  const setMinimumDate = () => {
-    const now = new Date();
-    const hours = now.getHours();
+  // Handle date change
+  const handleDateChange = (date: Dayjs | null) => {
+    if (!date) return;
 
-    if (hours >= 23 || hours < 1) {
-      now.setDate(now.getDate() + 1);
-    }
+    // Validate date selection
+    const selectedDate = date.format("YYYY-MM-DD");
 
-    setMinDate(now.toISOString().split("T")[0]);
+    // Additional validation can be added here if needed
+    set_delivery_date(selectedDate);
   };
-
-  useEffect(() => {
-    setMinimumDate();
-
-    // Update minDate at the start of every new day
-    const interval = setInterval(setMinimumDate, 60 * 1000); // Update every minute
-
-    return () => clearInterval(interval); // Clear the interval on component unmount
-  }, []);
 
   return (
-    <div>
-      <input
-        type="date"
+    <>
+      <DatePicker
+        className="w-full h-[3rem]"
+        style={{
+          backgroundColor: "#F2F4F7",
+          borderRadius: "0.75rem",
+          height: "3rem",
+          padding: "0.5rem",
+        }}
+        popupStyle={{ zIndex: 9999999999 }}
+        format="YYYY-MM-DD"
+        value={delivery_date ? dayjs(delivery_date) : null}
         onChange={handleDateChange}
-        min={minDate}
-        value={delivery_date}
-        disabled={false}
-        className="bg-[#F2F4F7] h-[3rem] rounded-[0.75rem] w-full p-2"
+        disabledDate={disabledDate}
+        placeholder="Select delivery date"
+        allowClear={false}
       />
-    </div>
+      {isWeekendDelivery && (
+        <p className="text-xs text-gray-500 mt-1">
+          Only Saturdays are available
+        </p>
+      )}
+      {!isWeekendDelivery && (
+        <p className="text-xs text-gray-500 mt-1">
+          Only weekday dates (Tuesday-Friday) are available
+        </p>
+      )}
+    </>
   );
 };
 
