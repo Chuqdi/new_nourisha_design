@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient, useMutation } from "react-query";
 import { toast } from "@/ui/use-toast";
 import { ATOMS } from "@/store/atoms";
 import { LOGGED_IN_USER } from "@/HOC/UserContext";
@@ -20,6 +20,7 @@ const useCart = () => {
 
   const { getAxiosClient } = useAuth();
   const { getToken } = useAuthToken();
+  const queryClient = useQueryClient();
 
   const getCartSessionDetails = () => {
     const token = getToken();
@@ -42,16 +43,102 @@ const useCart = () => {
     isRefetching,
   } = useQuery(queryKeys.GET_CART_ITEMS, getCartSessionDetails);
 
-  useEffect(() => {
-    setCartIsLoading(IsLoadingCartItem || isRefetching);
-  }, [IsLoadingCartItem, isRefetching, setCartIsLoading]);
+  // Add Item to Cart Mutation
+  const addItemMutation = useMutation(
+    async ({
+      item,
+      quantity,
+      currentQuantity,
+      proteinId,
+      extraId,
+    }: {
+      item: IMeal;
+      quantity: number;
+      currentQuantity: number;
+      proteinId?: string | null;
+      extraId?: string | null;
+    }) => {
+      const availableQuantity = parseInt(item?.available_quantity ?? "0");
+      if (currentQuantity + quantity > availableQuantity) {
+        throw new Error(`Only ${availableQuantity} items available`);
+      }
 
-  useEffect(() => {
-    if (data?.data?.data) {
-      setCartItems(data.data.data.items?.data ?? []);
-      setCartDetails(data.data.data.cart);
+      const deviceId = localStorage.getItem(DEVICE_ID);
+      if (!deviceId) {
+        throw new Error("Device ID not found");
+      }
+
+      const axiosClient = getAxiosClient(deviceId);
+      return axiosClient.put("cart", {
+        itemId: item._id,
+        quantity,
+        proteinId: proteinId ?? null,
+        swallowId: extraId ?? null,
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(queryKeys.GET_CART_ITEMS);
+        setShowCartSideModal((prev) => ({ ...prev, show: true }));
+      },
+      onError: (error: any) => {
+        toast({
+          variant: "default",
+          title: error.message || "Failed to add item to cart",
+        });
+      },
     }
-  }, [data, setCartItems, setCartDetails]);
+  );
+
+  // Update Item in Cart Mutation
+  const updateItemMutation = useMutation(
+    async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
+      const deviceId = localStorage.getItem(DEVICE_ID);
+      if (!deviceId) {
+        throw new Error("Device ID not found");
+      }
+
+      const axiosClient = getAxiosClient(deviceId);
+      return axiosClient.put("cart", { itemId, quantity });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(queryKeys.GET_CART_ITEMS);
+      },
+      onError: (error: any) => {
+        toast({
+          variant: "default",
+          title: error?.response?.data?.message || "Operation failed",
+        });
+      },
+    }
+  );
+
+  // Remove Item from Cart Mutation
+  const removeItemMutation = useMutation(
+    async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
+      const deviceId = localStorage.getItem(DEVICE_ID);
+      if (!deviceId) {
+        throw new Error("Device ID not found");
+      }
+
+      const axiosClient = getAxiosClient(deviceId);
+      return axiosClient.delete("cart", {
+        data: { itemId, quantity },
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(queryKeys.GET_CART_ITEMS);
+      },
+      onError: (error: any) => {
+        toast({
+          variant: "default",
+          title: error?.response?.data?.message || "Operation failed",
+        });
+      },
+    }
+  );
 
   const getCartItemTotal = useMemo(() => {
     const totals = cartItems.reduce(
@@ -74,51 +161,6 @@ const useCart = () => {
     setCartDetails({} as ICartDetail);
   };
 
-  const handleCartOperation = async (operation: Promise<any>) => {
-    try {
-      await operation;
-      await RefreshCart();
-      setShowCartSideModal((prev) => ({ ...prev, show: true }));
-    } catch (error: any) {
-      toast({
-        variant: "default",
-        title: error?.response?.data?.message || "Operation failed",
-      });
-    }
-  };
-
-  const updateItemBE = async (itemId: string, quantity: number) => {
-    const deviceId = localStorage.getItem(DEVICE_ID);
-    if (!deviceId) {
-      toast({
-        variant: "default",
-        title: "Device ID not found",
-      });
-      return;
-    }
-
-    const axiosClient = getAxiosClient(deviceId);
-    await handleCartOperation(axiosClient.put("cart", { itemId, quantity }));
-  };
-
-  const removeItemFrommCart = async (itemId: string, quantity: number) => {
-    const deviceId = localStorage.getItem(DEVICE_ID);
-    if (!deviceId) {
-      toast({
-        variant: "default",
-        title: "Device ID not found",
-      });
-      return;
-    }
-
-    const axiosClient = getAxiosClient(deviceId);
-    await handleCartOperation(
-      axiosClient.delete("cart", {
-        data: { itemId, quantity },
-      })
-    );
-  };
-
   const addItemToCart = async (
     item: IMeal,
     quantity: number,
@@ -126,38 +168,49 @@ const useCart = () => {
     proteinId?: string | null,
     extraId?: string | null
   ) => {
-    const availableQuantity = parseInt(item?.available_quantity ?? "0");
-    if (currentQuantity + quantity > availableQuantity) {
-      toast({
-        variant: "default",
-        title: "Available quantity exceeded",
-        description: `Only ${availableQuantity} items available`,
-      });
-      return;
-    }
+    await addItemMutation.mutateAsync({
+      item,
+      quantity,
+      currentQuantity,
+      proteinId,
+      extraId,
+    });
+  };
 
-    const deviceId = localStorage.getItem(DEVICE_ID);
-    if (!deviceId) {
-      toast({
-        variant: "default",
-        title: "Device ID not found",
-      });
-      return;
-    }
+  const updateItemBE = async (itemId: string, quantity: number) => {
+    await updateItemMutation.mutateAsync({ itemId, quantity });
+  };
 
-    const axiosClient = getAxiosClient(deviceId);
-    await handleCartOperation(
-      axiosClient.put("cart", {
-        itemId: item._id,
-        quantity,
-        proteinId: proteinId ?? null,
-        swallowId: extraId ?? null,
-      })
-    );
+  const removeItemFrommCart = async (itemId: string, quantity: number) => {
+    await removeItemMutation.mutateAsync({ itemId, quantity });
   };
 
   const checkMealExistsInCart = (item: IMeal) =>
     cartItems?.some((cartItem) => cartItem?.item?._id === item?._id);
+
+  useEffect(() => {
+    setCartIsLoading(
+      IsLoadingCartItem ||
+        isRefetching ||
+        removeItemMutation.isLoading ||
+        addItemMutation.isLoading ||
+        updateItemMutation.isLoading
+    );
+  }, [
+    IsLoadingCartItem,
+    isRefetching,
+    setCartIsLoading,
+    addItemMutation.isLoading,
+    removeItemMutation.isLoading,
+    updateItemMutation.isLoading,
+  ]);
+
+  useEffect(() => {
+    if (data?.data?.data) {
+      setCartItems(data.data.data.items?.data ?? []);
+      setCartDetails(data.data.data.cart);
+    }
+  }, [data, setCartItems, setCartDetails]);
 
   const returnValue = useMemo(
     () => ({

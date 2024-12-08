@@ -1,6 +1,7 @@
 import useFoodbox from "@/hooks/useFoodbox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { sendGAEvent } from "@next/third-parties/google";
+import { Loader2 } from "lucide-react";
 import moment from "moment";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -8,7 +9,7 @@ import { useEffect, useRef } from "react";
 const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
   const searchParams = useSearchParams();
   const deliveryDate = searchParams.get("delivery_date");
-  const { createLineUp } = useFoodbox();
+  const { createLineUp, loadingLineUpCreation } = useFoodbox();
 
   return (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
@@ -28,19 +29,19 @@ const LineupOrderConfirmation = ({ onClose }: { onClose: () => void }) => {
           </p>
           <div className=" bg-[#DEF54C] rounded-[0.8975rem] p-2 w-fit mx-auto font-bold font-NewSpiritBold">
             {moment(deliveryDate ? new Date(deliveryDate) : null).format(
-              "MMM, DD-YYYY-MM"
+              "DD/MM/YYYY"
             )}
           </div>
           <button
-            onClick={() => {
+            onClick={async () => {
               if (deliveryDate) {
-                createLineUp(deliveryDate);
+                await createLineUp(deliveryDate);
               }
               onClose();
             }}
             className={`w-full flex justify-center items-center bg-primary-orange-900 rounded-[0.47869rem] h-[3rem] font-inter text-white text-center `}
           >
-            Continue
+            {loadingLineUpCreation ? <Loader2 className="animate-spin" /> : "Continue" }
           </button>
         </div>
       </div>
@@ -85,7 +86,10 @@ function PaymentConfirmationModal({ close }: { close: () => void }) {
   ) : (
     <div className="bg-[#FE7E00] rounded-[1rem] flex flex-col items-center justify-center p-4">
       <div className="flex justify-between items-center w-full">
-        <img src="/images/icon_with_title.png" className="w-36 h-auto mx-auto" />
+        <img
+          src="/images/icon_with_title.png"
+          className="w-36 h-auto mx-auto"
+        />
         <button
           className="w-10 h-10 flex justify-center items-center bg-[#EDEDF3] rounded-full"
           onClick={onClose}

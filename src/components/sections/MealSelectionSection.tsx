@@ -208,7 +208,8 @@ export default function MealSelectionSection({
           {!allMealsLoaded && (
             <div className="flex justify-center mt-8">
               <Button
-                title={isLoading ? "Loading..." : "Load more"}
+                title={"Load more"}
+                isLoading={isLoading}
                 onClick={handleLoadMore}
                 variant="primary"
                 className="py-6 font-bold font-inter h-[2.5rem]"
@@ -258,7 +259,7 @@ export default function MealSelectionSection({
       )}
 
       {(isLoading || searchMutation.isLoading) && (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center my-8">
           <p>Loading...</p>
         </div>
       )}
